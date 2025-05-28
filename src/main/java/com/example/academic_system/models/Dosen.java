@@ -1,4 +1,42 @@
 package com.example.academic_system.models;
+import jakarta.persistence.*;
+import java.util.List;
 
-public class Dosen {
+@Entity
+public class Dosen extends User {
+    private String nip;
+    private String fakultas;
+
+    public Dosen(String nama, String email, String password) {
+        super(nama, email, password);
+    }
+
+    @OneToMany(mappedBy = "dosenPengampu")
+    private List<Kelas> kelasDiajar;
+
+
+    public String getNip() {
+        return nip;
+    }
+
+    public void setNip(String nip) {
+        this.nip = nip;
+    }
+
+    public String getFakultas() {
+        return fakultas;
+    }
+
+    public void setFakultas(String fakultas) {
+        this.fakultas = fakultas;
+    }
+
+    public List<Kelas> getKelasDiajar() {
+        return kelasDiajar;
+    }
+
+    public void setKelasDiajar(List<Kelas> kelasDiajar) {
+        this.kelasDiajar = kelasDiajar;
+    }
 }
+
