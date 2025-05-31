@@ -12,9 +12,11 @@ public class Kelas {
     private String namaKelas;
 
     @ManyToOne
+    @JoinColumn(name = "mata_kuliah_kode")
     private MataKuliah mataKuliah;
 
     @ManyToOne
+    @JoinColumn(name = "dosen_id")
     private Dosen dosenPengampu;
 
     @ManyToMany(mappedBy = "kelasDiikuti")

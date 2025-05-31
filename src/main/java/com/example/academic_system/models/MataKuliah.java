@@ -8,11 +8,13 @@ public class MataKuliah {
 
     @Id
     private String kode;
+
     private String nama;
+
     private int sks;
+
     @OneToMany(mappedBy = "mataKuliah")
     private List<Kelas> daftarKelas;
-
 
     public String getKode() {
         return kode;
@@ -46,4 +48,3 @@ public class MataKuliah {
         this.daftarKelas = daftarKelas;
     }
 }
-

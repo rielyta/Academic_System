@@ -5,15 +5,24 @@ import java.util.List;
 @Entity
 public class Mahasiswa extends User {
 
-    public Mahasiswa(String nama, String email, String password) {
-        super(nama, email, password);
-    }
-
+    @Column(unique = true, nullable = false)
     private String nim;
+
     private String jurusan;
 
     @ManyToMany
+    @JoinTable(
+            name = "mahasiswa_kelas",
+            joinColumns = @JoinColumn(name = "mahasiswa_id"),
+            inverseJoinColumns = @JoinColumn(name = "kelas_id")
+    )
     private List<Kelas> kelasDiikuti;
+
+    public Mahasiswa() {}
+
+    public Mahasiswa(String nama, String email, String password) {
+        super(nama, email, password);
+    }
 
 
     public String getNim() {

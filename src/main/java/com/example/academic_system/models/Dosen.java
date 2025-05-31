@@ -4,15 +4,20 @@ import java.util.List;
 
 @Entity
 public class Dosen extends User {
+
+    @Column(unique = true, nullable = false)
     private String nip;
+
     private String fakultas;
+
+    @OneToMany(mappedBy = "dosenPengampu")
+    private List<Kelas> kelasDiajar;
+
+    public Dosen() {}
 
     public Dosen(String nama, String email, String password) {
         super(nama, email, password);
     }
-
-    @OneToMany(mappedBy = "dosenPengampu")
-    private List<Kelas> kelasDiajar;
 
 
     public String getNip() {
@@ -39,4 +44,3 @@ public class Dosen extends User {
         this.kelasDiajar = kelasDiajar;
     }
 }
-

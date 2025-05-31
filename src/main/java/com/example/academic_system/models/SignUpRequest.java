@@ -1,40 +1,10 @@
 package com.example.academic_system.models;
 
-import jakarta.persistence.*;
-
-@Entity
-    @Inheritance(strategy = InheritanceType.JOINED)
-    @Table(name = "users")
-    public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class SignUpRequest {
     private String nama;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
     private String password;
-
-    @Column(nullable = false)
     private String role;
-
-    public User() {}
-
-    public User(String nama, String email, String password) {
-        this.nama = nama;
-        this.email = email;
-        this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNama() {
         return nama;
@@ -68,5 +38,3 @@ import jakarta.persistence.*;
         this.role = role;
     }
 }
-
-
