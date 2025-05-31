@@ -42,7 +42,7 @@ public class AuthController {
 
     @GetMapping("/profil")
     public String showProfilForm(Principal principal, Model model) {
-        Optional<User> current = userRepository.findByEmail(principal.getName());
+        Optional<Pengguna> current = userRepository.findByEmail(principal.getName());
 
         if (current.isPresent()) {
             model.addAttribute("user", current.get());
@@ -68,7 +68,7 @@ public class AuthController {
             return "signup";
         }
 
-        User user;
+        Pengguna pengguna;
 
         if ("ROLE_MAHASISWA".equals(request.getRole())) {
             Mahasiswa mhs = new Mahasiswa(
@@ -77,7 +77,7 @@ public class AuthController {
                     passwordEncoder.encode(request.getPassword())
             );
             mhs.setNim(GeneratorUtil.generateNim());
-            user = mhs;
+            pengguna = mhs;
 
         } else if ("ROLE_DOSEN".equals(request.getRole())) {
             Dosen dsn = new Dosen(
@@ -86,17 +86,17 @@ public class AuthController {
                     passwordEncoder.encode(request.getPassword())
             );
             dsn.setNip(GeneratorUtil.generateNip());
-            user = dsn;
+            pengguna = dsn;
 
         } else {
             model.addAttribute("error", "Peran tidak valid.");
             return "signup";
         }
 
-        user.setRole(request.getRole());
+        pengguna.setPeran(request.getRole());
 
         try {
-            userRepository.save(user);
+            userRepository.save(pengguna);
 
             Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
             if (currentAuth == null || !currentAuth.isAuthenticated() || currentAuth instanceof AnonymousAuthenticationToken) {
@@ -118,17 +118,17 @@ public class AuthController {
 
 
     @PostMapping("/profil")
-    public String updateProfil(@ModelAttribute("user") User user, Principal principal) {
-        Optional<User> optional = userRepository.findByEmail(principal.getName());
+    public String updateProfil(@ModelAttribute("user") Pengguna pengguna, Principal principal) {
+        Optional<Pengguna> optional = userRepository.findByEmail(principal.getName());
 
         if (optional.isPresent()) {
-            User current = optional.get();
+            Pengguna current = optional.get();
 
-            if (current instanceof Mahasiswa mhs && user instanceof Mahasiswa input) {
+            if (current instanceof Mahasiswa mhs && pengguna instanceof Mahasiswa input) {
                 mhs.setJurusan(input.getJurusan());
                 userRepository.save(mhs);
 
-            } else if (current instanceof Dosen dsn && user instanceof Dosen input) {
+            } else if (current instanceof Dosen dsn && pengguna instanceof Dosen input) {
                 dsn.setFakultas(input.getFakultas());
                 userRepository.save(dsn);
             }

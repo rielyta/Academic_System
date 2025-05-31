@@ -1,35 +1,43 @@
 package com.example.academic_system.models;
+
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
+@Table(name = "mata_kuliah")
 public class MataKuliah {
-
     @Id
-    private String kode;
+    @Column(name = "kode_mk", unique = true, nullable = false)
+    private String kodeMK;
 
-    private String nama;
+    @Column(nullable = false)
+    private String namaMK;
 
+    @Column(nullable = false)
     private int sks;
 
-    @OneToMany(mappedBy = "mataKuliah")
-    private List<Kelas> daftarKelas;
 
-    public String getKode() {
-        return kode;
+    public MataKuliah() {}
+
+    public MataKuliah(String kodeMK, String namaMK, int sks) {
+        this.kodeMK = kodeMK;
+        this.namaMK = namaMK;
+        this.sks = sks;
     }
 
-    public void setKode(String kode) {
-        this.kode = kode;
+    public String getKodeMK() {
+        return kodeMK;
     }
 
-    public String getNama() {
-        return nama;
+    public void setKodeMK(String kodeMk) {
+        this.kodeMK = kodeMk;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
+    public String getNamaMK() {
+        return namaMK;
+    }
+
+    public void setNamaMK(String namaMk) {
+        this.namaMK = namaMk;
     }
 
     public int getSks() {
@@ -38,13 +46,5 @@ public class MataKuliah {
 
     public void setSks(int sks) {
         this.sks = sks;
-    }
-
-    public List<Kelas> getDaftarKelas() {
-        return daftarKelas;
-    }
-
-    public void setDaftarKelas(List<Kelas> daftarKelas) {
-        this.daftarKelas = daftarKelas;
     }
 }

@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class Mahasiswa extends User {
+public class Mahasiswa extends Pengguna {
 
     @Column(unique = true, nullable = false)
     private String nim;

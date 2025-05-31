@@ -3,22 +3,28 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class Dosen extends User {
+public class Dosen extends Pengguna {
 
     @Column(unique = true, nullable = false)
     private String nip;
 
+    @Column(nullable = false)
     private String fakultas;
 
-    @OneToMany(mappedBy = "dosenPengampu")
+    @OneToMany(mappedBy = "dosenPengampu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Kelas> kelasDiajar;
 
-    public Dosen() {}
-
-    public Dosen(String nama, String email, String password) {
-        super(nama, email, password);
+    //Constructor
+    public Dosen() {
+        super();
+        this.setPeran("DOSEN");
     }
 
+    public Dosen(String nama, String email, String kataSandi, String nip, String fakultas) {
+        super(nama, email, kataSandi, "DOSEN");
+        this.nip = nip;
+        this.fakultas = fakultas;
+    }
 
     public String getNip() {
         return nip;

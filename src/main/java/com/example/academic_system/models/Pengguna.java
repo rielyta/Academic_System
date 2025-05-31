@@ -4,28 +4,32 @@ import jakarta.persistence.*;
 
 @Entity
     @Inheritance(strategy = InheritanceType.JOINED)
-    @Table(name = "users")
-    public class User {
+    @Table(name = "pengguna")
+    public class Pengguna {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nama;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    private String password;
+    @Column(nullable = false)
+    private String kataSandi;
 
     @Column(nullable = false)
-    private String role;
+    private String peran;
 
-    public User() {}
+    //Constructor
+    public Pengguna() {}
 
-    public User(String nama, String email, String password) {
+    public Pengguna(String nama, String email, String kataSandi, String peran) {
         this.nama = nama;
         this.email = email;
-        this.password = password;
+        this.kataSandi = kataSandi;
+        this.peran = peran;
     }
 
     public Long getId() {
@@ -52,20 +56,20 @@ import jakarta.persistence.*;
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getKataSandi() {
+        return kataSandi;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setKataSandi(String password) {
+        this.kataSandi = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getPeran() {
+        return peran;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setPeran(String peran) {
+        this.peran = peran;
     }
 }
 
