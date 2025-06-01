@@ -8,7 +8,9 @@ public class Mahasiswa extends Pengguna {
     @Column(unique = true, nullable = false)
     private String nim;
 
-    private String jurusan;
+    private String prodi;
+
+    private String fakultas;
 
     @ManyToMany
     @JoinTable(
@@ -33,13 +35,7 @@ public class Mahasiswa extends Pengguna {
         this.nim = nim;
     }
 
-    public String getJurusan() {
-        return jurusan;
-    }
 
-    public void setJurusan(String jurusan) {
-        this.jurusan = jurusan;
-    }
 
     public List<Kelas> getKelasDiikuti() {
         return kelasDiikuti;
@@ -47,6 +43,22 @@ public class Mahasiswa extends Pengguna {
 
     public void setKelasDiikuti(List<Kelas> kelasDiikuti) {
         this.kelasDiikuti = kelasDiikuti;
+    }
+
+    public String getProdi() {
+        return prodi;
+    }
+
+    public void setProdi(String prodi) {
+        this.prodi = prodi;
+    }
+
+    public String getFakultas() {
+        return fakultas;
+    }
+
+    public void setFakultas(String fakultas) {
+        this.fakultas = fakultas;
     }
 }
 

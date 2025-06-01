@@ -5,11 +5,11 @@ import java.util.Random;
 public class GeneratorUtil {
 
     public static String generateNim() {
-        return "22" + new Random().nextInt(999999); // contoh: 22xxxxxx
+        return "22" + new Random().nextInt(999999);
     }
 
     public static String generateNip() {
-        return "D" + System.currentTimeMillis(); // atau pola lainnya
+        return "D" + System.currentTimeMillis();
     }
 
 

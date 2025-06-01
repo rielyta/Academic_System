@@ -6,29 +6,29 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
-    private final Pengguna pengguna;
+    private final Pengguna user;
 
-    public CustomUserDetails(Pengguna pengguna) {
-        this.pengguna = pengguna;
+    public CustomUserDetails(Pengguna user) {
+        this.user = user;
     }
 
     public Pengguna getUser() {
-        return pengguna;
+        return user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(() -> pengguna.getPeran());
+        return Collections.singleton(() -> user.getPeran());
     }
 
     @Override
     public String getPassword() {
-        return pengguna.getKataSandi();
+        return user.getKataSandi();
     }
 
     @Override
     public String getUsername() {
-        return pengguna.getEmail();
+        return user.getEmail();
     }
 
     @Override public boolean isAccountNonExpired() { return true; }

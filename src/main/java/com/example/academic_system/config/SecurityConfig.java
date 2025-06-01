@@ -19,6 +19,9 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    @Autowired
+    private CustomSuccessHandler customSuccessHandler;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -33,16 +36,20 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/profil", true)
+                        .successHandler(customSuccessHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
+                )
+                .sessionManagement(session -> session
+                        .sessionFixation().newSession()
                 );
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

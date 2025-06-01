@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Profil Mahasiswa</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+  <h1 th:if="${mahasiswa != null}">Selamat Datang, <span th:text="${mahasiswa.nama}">Nama Mahasiswa</span></h1>
+  <h1 th:unless="${mahasiswa != null}">Data tidak tersedia</h1>
+
+</header>
+
+<section>
+  <h2>Informasi Mahasiswa</h2>
+  <ul>
+    <li><strong>NIM:</strong> <span th:text="${mahasiswa.nim}">NIM</span></li>
+    <li><strong>Program Studi:</strong> <span th:text="${mahasiswa.prodi}">Prodi</span></li>
+    <li><strong>Fakultas:</strong> <span th:text="${mahasiswa.fakultas}">Fakultas</span></li>
+    <li><strong>Email:</strong> <span th:text="${mahasiswa.email}">email@example.com</span></li>
+  </ul>
+</section>
+
+<footer>
+  <a th:href="@{/logout}">Logout</a>
+</footer>
+</body>
+</html>

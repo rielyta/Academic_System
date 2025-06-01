@@ -3,13 +3,14 @@ package com.example.academic_system.controllers;
 import com.example.academic_system.models.*;
 import com.example.academic_system.services.GeneratorUtil;
 import com.example.academic_system.services.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,6 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
 
-
     @GetMapping("/signup")
     public String showSignUpForm(Model model) {
         model.addAttribute("signupRequest", new SignUpRequest());
@@ -41,34 +41,36 @@ public class AuthController {
     }
 
     @GetMapping("/profil")
-    public String showProfilForm(Principal principal, Model model) {
+    public String showProfilForm(Principal principal) {
         Optional<Pengguna> current = userRepository.findByEmail(principal.getName());
 
         if (current.isPresent()) {
-            model.addAttribute("user", current.get());
+            String role = current.get().getPeran();
 
-            if (current.get() instanceof Mahasiswa mhs) {
-                model.addAttribute("jurusan", mhs.getJurusan());
-            } else if (current.get() instanceof Dosen dsn) {
-                model.addAttribute("fakultas", dsn.getFakultas());
+            if ("ROLE_MAHASISWA".equals(role)) {
+                return "redirect:/profil/profil_mahasiswa";
+            } else if ("ROLE_DOSEN".equals(role)) {
+                return "redirect:/profil/profil_dosen";
             }
         }
-        return "profil";
+
+        return "redirect:/dashboard";
     }
 
 
 
 
-    @PostMapping("/signup")
-    public String processSignUp(@ModelAttribute SignUpRequest request, Model model) {
-        System.out.println("Memproses signup untuk: " + request.getEmail());
 
+    @PostMapping("/signup")
+    public String processSignUp(@ModelAttribute SignUpRequest request,
+                                Model model,
+                                HttpServletRequest servletRequest) {
         if (userRepository.existsByEmail(request.getEmail())) {
             model.addAttribute("error", "Email sudah digunakan.");
             return "signup";
         }
 
-        Pengguna pengguna;
+        Pengguna user;
 
         if ("ROLE_MAHASISWA".equals(request.getRole())) {
             Mahasiswa mhs = new Mahasiswa(
@@ -77,8 +79,7 @@ public class AuthController {
                     passwordEncoder.encode(request.getPassword())
             );
             mhs.setNim(GeneratorUtil.generateNim());
-            pengguna = mhs;
-
+            user = mhs;
         } else if ("ROLE_DOSEN".equals(request.getRole())) {
             Dosen dsn = new Dosen(
                     request.getNama(),
@@ -86,27 +87,37 @@ public class AuthController {
                     passwordEncoder.encode(request.getPassword())
             );
             dsn.setNip(GeneratorUtil.generateNip());
-            pengguna = dsn;
-
+            user = dsn;
         } else {
             model.addAttribute("error", "Peran tidak valid.");
             return "signup";
         }
 
-        pengguna.setPeran(request.getRole());
+        user.setPeran(request.getRole());
 
         try {
-            userRepository.save(pengguna);
+            userRepository.save(user);
 
-            Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-            if (currentAuth == null || !currentAuth.isAuthenticated() || currentAuth instanceof AnonymousAuthenticationToken) {
-                Authentication auth = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-                );
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(), request.getPassword()
+                    )
+            );
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+
+            servletRequest.getSession().setAttribute(
+                    HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                    SecurityContextHolder.getContext()
+            );
+
+
+            servletRequest.getSession().setAttribute("FROM_SIGNUP", true);
+
 
             return "redirect:/profil";
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,18 +128,24 @@ public class AuthController {
     }
 
 
+
+
+
+
+
+
     @PostMapping("/profil")
-    public String updateProfil(@ModelAttribute("user") Pengguna pengguna, Principal principal) {
+    public String updateProfil(@ModelAttribute("user") Pengguna user, Principal principal) {
         Optional<Pengguna> optional = userRepository.findByEmail(principal.getName());
 
         if (optional.isPresent()) {
             Pengguna current = optional.get();
 
-            if (current instanceof Mahasiswa mhs && pengguna instanceof Mahasiswa input) {
-                mhs.setJurusan(input.getJurusan());
+            if (current instanceof Mahasiswa mhs && user instanceof Mahasiswa input) {
+                mhs.setProdi(input.getProdi());
                 userRepository.save(mhs);
 
-            } else if (current instanceof Dosen dsn && pengguna instanceof Dosen input) {
+            } else if (current instanceof Dosen dsn && user instanceof Dosen input) {
                 dsn.setFakultas(input.getFakultas());
                 userRepository.save(dsn);
             }
@@ -137,14 +154,16 @@ public class AuthController {
         return "redirect:/dashboard";
     }
 
+    @GetMapping("/")
+    public String redirectToLogin() {
+        return "redirect:/login";
+    }
+
     @GetMapping("/login")
     public String showLoginForm() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
-            return "redirect:/profil";
-        }
-        return "login";
+        return "login"; // biarkan form login selalu tampil
     }
+
 
 
 

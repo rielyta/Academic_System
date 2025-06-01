@@ -8,23 +8,17 @@ public class Dosen extends Pengguna {
     @Column(unique = true, nullable = false)
     private String nip;
 
-    @Column(nullable = false)
     private String fakultas;
 
-    @OneToMany(mappedBy = "dosenPengampu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dosenPengampu")
     private List<Kelas> kelasDiajar;
 
-    //Constructor
-    public Dosen() {
-        super();
-        this.setPeran("DOSEN");
+    public Dosen() {}
+
+    public Dosen(String nama, String email, String password) {
+        super(nama, email, password);
     }
 
-    public Dosen(String nama, String email, String kataSandi, String nip, String fakultas) {
-        super(nama, email, kataSandi, "DOSEN");
-        this.nip = nip;
-        this.fakultas = fakultas;
-    }
 
     public String getNip() {
         return nip;

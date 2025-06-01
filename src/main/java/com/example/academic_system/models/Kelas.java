@@ -1,45 +1,42 @@
 package com.example.academic_system.models;
-
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "kelas")
 public class Kelas {
+
     @Id
-    @Column(name = "kode_kelas", unique = true, nullable = false)
-    private String kodeKelas;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String namaKelas;
 
     @ManyToOne
-    @JoinColumn(name = "kode_mk", nullable = false)
+    @JoinColumn(name = "mata_kuliah_kode")
     private MataKuliah mataKuliah;
 
     @ManyToOne
-    @JoinColumn(name = "dosen_id", nullable = false)
+    @JoinColumn(name = "dosen_id")
     private Dosen dosenPengampu;
 
-    @ManyToMany
-    @JoinTable(
-            name = "kelas_mahasiswa",
-            joinColumns = @JoinColumn(name = "kode_kelas"),
-            inverseJoinColumns = @JoinColumn(name = "mahasiswa_id")
-    )
-    private List<Mahasiswa> daftarMahasiswa;
+    @ManyToMany(mappedBy = "kelasDiikuti")
+    private List<Mahasiswa> mahasiswaTerdaftar;
 
-    public Kelas() {}
 
-    public Kelas(String kodeKelas, MataKuliah mataKuliah, Dosen dosenPengampu) {
-        this.kodeKelas = kodeKelas;
-        this.mataKuliah = mataKuliah;
-        this.dosenPengampu = dosenPengampu;
+    public Long getId() {
+        return id;
     }
 
-    public String getKodeKelas() {
-        return kodeKelas;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setKodeKelas(String kodeKelas) {
-        this.kodeKelas = kodeKelas;
+    public String getNamaKelas() {
+        return namaKelas;
+    }
+
+    public void setNamaKelas(String namaKelas) {
+        this.namaKelas = namaKelas;
     }
 
     public MataKuliah getMataKuliah() {
@@ -58,11 +55,12 @@ public class Kelas {
         this.dosenPengampu = dosenPengampu;
     }
 
-    public List<Mahasiswa> getDaftarMahasiswa() {
-        return daftarMahasiswa;
+    public List<Mahasiswa> getMahasiswaTerdaftar() {
+        return mahasiswaTerdaftar;
     }
 
-    public void setDaftarMahasiswa(List<Mahasiswa> daftarMahasiswa) {
-        this.daftarMahasiswa = daftarMahasiswa;
+    public void setMahasiswaTerdaftar(List<Mahasiswa> mahasiswaTerdaftar) {
+        this.mahasiswaTerdaftar = mahasiswaTerdaftar;
     }
 }
+
