@@ -1,10 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ sidebarOpen: false }" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <style>
+        body {
+            background-color: #3a3a3a;
+        }
+        .jockey-font {
+            font-family: 'Jockey One', sans-serif;
+        }
+    </style>
 </head>
-<body>
+<body class="text-gray-900 font-sans" x-cloak>
+
+<div class="flex h-screen bg-[#F3F1D9]">
+
+    <!-- Sidebar -->
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
+           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+        <div class="px-6 py-4 text-red-300 font-bold text-lg jockey-font">LMS blablabla</div>
+        <nav class="px-4 py-2 space-y-2">
+            <div class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">Dasbor</div>
+            <a href="/admin/manajemen_mahasiswa" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
+                Manajemen Mahasiswa
+            </a>
+            <div class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2"> Manajemen Dosen</div>
+            <div class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2"> Manajemen Kelas</div>
+            <div class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2"> Manajemen Mata Kuliah</div>
+            <div class="mt-4 hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2"> Laporan & Log Aktivitas</div>
+        </nav>
+    </aside>
+
+    <!-- Overlay for mobile -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" x-show="sidebarOpen" @click="sidebarOpen = false"></div>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col lg:ml-64">
+        <!-- Header -->
+        <header class="bg-[#F3F1D9] p-4 flex justify-between items-center border-b border-gray-300">
+            <!-- Hamburger menu -->
+            <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">
+                ☰
+            </button>
+            <input type="text" placeholder="Cari..." class="w-1/2 px-4 py-2 rounded-md border border-green-200 focus:ring-2 focus:ring-green-400" />
+            <div class="text-sm text-gray-700">👤 Admin</div>
+        </header>
+
+        <!-- Content -->
+        <main class="p-6 flex-1 overflow-y-auto">
+            <!-- Grid stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white p-4 shadow rounded-md"> Total Dosen<br><span class="font-bold text-lg">1200</span></div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Kelas<br><span class="font-bold text-lg">1200</span></div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Mata Kuliah<br><span class="font-bold text-lg">1200</span></div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Mahasiswa<br><span class="font-bold text-lg">1200</span></div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Admin<br><span class="font-bold text-lg">1200</span></div>
+            </div>
+
+            <!-- Jam kerja -->
+            <div class="bg-white p-6 rounded-md shadow">
+                <h2 class="font-bold text-lg mb-4 flex items-center gap-2"> Atur Jam Kerja</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm mb-1">Jam Masuk</label>
+                        <input type="time" value="08:00" class="w-full px-3 py-2 border rounded-md mb-2" />
+                        <button class="bg-green-900 text-white px-4 py-1 rounded-md">Update</button>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Jam Keluar</label>
+                        <input type="time" value="16:20" class="w-full px-3 py-2 border rounded-md mb-2" />
+                        <button class="bg-green-900 text-white px-4 py-1 rounded-md">Update</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
 
 </body>
 </html>

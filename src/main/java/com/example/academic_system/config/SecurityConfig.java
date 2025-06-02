@@ -27,32 +27,27 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/encrypt", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/dosen/**").hasRole("DOSEN")
-                        .requestMatchers("/mahasiswa/**").hasRole("MAHASISWA")
+                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
-
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler(customSuccessHandler)
                         .permitAll()
                 )
+                .userDetailsService(userDetailsService) // <--- ini penting kalau kamu tidak pakai konfigurasi berbasis global auth
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
-                )
-                .sessionManagement(session -> session
-                        .sessionFixation().newSession()
                 );
-
         return http.build();
     }
+
 
 
     @Bean

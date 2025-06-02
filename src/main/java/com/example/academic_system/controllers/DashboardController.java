@@ -8,16 +8,16 @@ public class DashboardController {
 
     @GetMapping("mahasiswa/dashboard_mahasiswa")
     public String mahasiswaDashboard() {
-        return "dashboard_mahasiswa";
+        return "mahasiswa/dashboard_mahasiswa";
     }
 
     @GetMapping("dosen/dashboard_dosen")
     public String dosenDashboard() {
-        return "dashboard_dosen";
+        return "dosen/dashboard_dosen";
     }
 
     @GetMapping("admin/dashboard_admin")
     public String adminDashboard() {
-        return "dashboard_admin";
+        return "admin/dashboard_admin";
     }
 }
