@@ -34,12 +34,6 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
 
-    @GetMapping("/signup")
-    public String showSignUpForm(Model model) {
-        model.addAttribute("signupRequest", new SignUpRequest());
-        return "signup";
-    }
-
     @GetMapping("/profil")
     public String showProfilForm(Principal principal) {
         Optional<Pengguna> current = userRepository.findByEmail(principal.getName());
@@ -56,83 +50,6 @@ public class AuthController {
 
         return "redirect:/dashboard";
     }
-
-
-
-
-
-    @PostMapping("/signup")
-    public String processSignUp(@ModelAttribute SignUpRequest request,
-                                Model model,
-                                HttpServletRequest servletRequest) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            model.addAttribute("error", "Email sudah digunakan.");
-            return "signup";
-        }
-
-        Pengguna user;
-
-        if ("ROLE_MAHASISWA".equals(request.getRole())) {
-            Mahasiswa mhs = new Mahasiswa(
-                    request.getNama(),
-                    request.getEmail(),
-                    passwordEncoder.encode(request.getPassword())
-            );
-            mhs.setNim(GeneratorUtil.generateNim());
-            user = mhs;
-        } else if ("ROLE_DOSEN".equals(request.getRole())) {
-            Dosen dsn = new Dosen(
-                    request.getNama(),
-                    request.getEmail(),
-                    passwordEncoder.encode(request.getPassword())
-            );
-            dsn.setNip(GeneratorUtil.generateNip());
-            user = dsn;
-        } else {
-            model.addAttribute("error", "Peran tidak valid.");
-            return "signup";
-        }
-
-        user.setPeran(request.getRole());
-
-        try {
-            userRepository.save(user);
-
-
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(), request.getPassword()
-                    )
-            );
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
-
-            servletRequest.getSession().setAttribute(
-                    HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                    SecurityContextHolder.getContext()
-            );
-
-
-            servletRequest.getSession().setAttribute("FROM_SIGNUP", true);
-
-
-            return "redirect:/profil";
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("signupRequest", request);
-            model.addAttribute("error", "Gagal menyimpan data: " + e.getMessage());
-            return "signup";
-        }
-    }
-
-
-
-
-
-
-
 
     @PostMapping("/profil")
     public String updateProfil(@ModelAttribute("user") Pengguna user, Principal principal) {
