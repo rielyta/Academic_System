@@ -34,58 +34,45 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
 
-    @GetMapping("/profil")
-    public String showProfilForm(Principal principal) {
-        Optional<Pengguna> current = userRepository.findByEmail(principal.getName());
 
-        if (current.isPresent()) {
-            String role = current.get().getPeran();
 
-            if ("ROLE_MAHASISWA".equals(role)) {
-                return "redirect:/profil/profil_mahasiswa";
-            } else if ("ROLE_DOSEN".equals(role)) {
-                return "redirect:/profil/profil_dosen";
-            }
-        }
 
-        return "redirect:/dashboard";
-    }
-
-    @PostMapping("/profil")
-    public String updateProfil(@ModelAttribute("user") Pengguna user, Principal principal) {
-        Optional<Pengguna> optional = userRepository.findByEmail(principal.getName());
-
-        if (optional.isPresent()) {
-            Pengguna current = optional.get();
-
-            if (current instanceof Mahasiswa mhs && user instanceof Mahasiswa input) {
-                mhs.setProdi(input.getProdi());
-                userRepository.save(mhs);
-
-            } else if (current instanceof Dosen dsn && user instanceof Dosen input) {
-                dsn.setFakultas(input.getFakultas());
-                userRepository.save(dsn);
-            }
-        }
-
-        return "redirect:/dashboard";
-    }
 
     @GetMapping("/")
-    public String redirectToLogin() {
+    public String redirectToLogin(Principal principal) {
+        if (principal == null) return "redirect:/login";
+
+        String identitas = principal.getName();
+        Optional<Pengguna> user = userRepository.findByEmailOrNipOrNim(identitas, identitas, identitas);
+
+        if (user.isPresent()) {
+            return switch (user.get().getPeran()) {
+                case "ROLE_ADMIN" -> "redirect:/admin/dashboard_admin";
+                case "ROLE_DOSEN" -> "redirect:/dosen/dashboard_dosen";
+                case "ROLE_MAHASISWA" -> "redirect:/mahasiswa/dashboard_mahasiswa";
+                default -> "redirect:/login?error";
+            };
+        }
+
         return "redirect:/login";
     }
 
+
+
+
+
     @GetMapping("/login")
     public String showLoginForm() {
-        return "login"; // biarkan form login selalu tampil
+        return "login";
     }
 
 
 
-
-
-
+    @PostMapping("/encrypt")
+    @ResponseBody
+    public String encryptPassword(@RequestParam String plainPassword) {
+        return passwordEncoder.encode(plainPassword);
+    }
 
 
 }

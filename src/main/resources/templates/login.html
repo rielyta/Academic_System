@@ -6,14 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jockey+One&display=swap');
         body {
             background-color: #FFFBDF;
+        }
+        .jockey-font {
+            font-family: 'Jockey One', sans-serif;
         }
     </style>
 </head>
 <body class="font-sans text-gray-800 min-h-screen flex flex-col justify-center items-center">
 
-<!-- Header Text -->
+
 <div class="text-center mb-6 px-4">
     <h1 class="text-xl font-extrabold">Hi, Welcome to Learning Management System (LMS)!</h1>
     <p class="text-sm text-gray-700 mt-1">
@@ -22,25 +26,24 @@
     </p>
 </div>
 
-<!-- Login Box -->
-<div class="w-full max-w-sm bg-white shadow-md p-8 rounded-xl border">
-    <h2 class="text-2xl font-bold text-left mb-6" style="color:#711D1E; font-family:Jockey One ">LMS blablabla</h2>
+
+<div class="w-full max-w-lg  bg-white shadow-lg p-8 rounded-xl border border-gray-200">
+    <h2 class="text-2xl font-bold mb-6 text-left jockey-font text-[#711D1E]">LMS blablabla</h2>
 
     <form th:action="@{/login}" method="post" class="space-y-5">
         <div>
-            <label for="username" class="block text-sm font-medium">Identitas (NIP/NIM/Email Univ)</label>
+            <label for="username" class="block text-sm font-medium text-gray-700">Identitas (NIP/NIM/Email Univ)</label>
             <input type="text" id="username" name="username"
-                   class="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-300"
+                   class="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
                    required />
         </div>
         <div>
-            <label for="password" class="block text-sm font-medium">Password</label>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
             <div class="relative">
                 <input type="password" id="password" name="password"
-                       class="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-300"
+                       class="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
                        required />
-                <span class="absolute right-3 top-3 text-gray-500">
-                        <!-- Optional: icon show/hide password -->
+                <span class="absolute right-3 top-3 text-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                              viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -51,9 +54,9 @@
                     </span>
             </div>
         </div>
-        <div>
+        <div class="text-right">
             <button type="submit"
-                    class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-green-800 transition duration-200">
+                    class="w-1/5   text-white  py-2 rounded-md hover:bg-green-800 transition duration-200" style="background-color: #072D17">
                 Login
             </button>
         </div>
