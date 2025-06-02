@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler)
                         .permitAll()
                 )
-                .userDetailsService(userDetailsService) // <--- ini penting kalau kamu tidak pakai konfigurasi berbasis global auth
+                .userDetailsService(userDetailsService)
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
