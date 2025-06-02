@@ -2,16 +2,63 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Login</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #FFFBDF;
+        }
+    </style>
 </head>
-<body>
-<h2>Login</h2>
-<form th:action="@{/login}" method="post">
-    <label>Email: <input type="text" name="username"/></label><br/>
-    <label>Password: <input type="password" name="password"/></label><br/>
-    <button type="submit">Login</button>
-</form>
+<body class="font-sans text-gray-800 min-h-screen flex flex-col justify-center items-center">
 
-<p th:if="${param.error}">❌ Login gagal. Cek email dan password.</p>
-<p th:if="${param.logout}">✅ Anda telah logout.</p>
+<!-- Header Text -->
+<div class="text-center mb-6 px-4">
+    <h1 class="text-xl font-extrabold">Hi, Welcome to Learning Management System (LMS)!</h1>
+    <p class="text-sm text-gray-700 mt-1">
+        Dengan LMS dosen dan mahasiswa Universitas Blabla dapat mengakses banyak sistem.<br />
+        Enter your details to log in your account.
+    </p>
+</div>
+
+<!-- Login Box -->
+<div class="w-full max-w-sm bg-white shadow-md p-8 rounded-xl border">
+    <h2 class="text-2xl font-bold text-left mb-6" style="color:#711D1E; font-family:Jockey One ">LMS blablabla</h2>
+
+    <form th:action="@{/login}" method="post" class="space-y-5">
+        <div>
+            <label for="username" class="block text-sm font-medium">Identitas (NIP/NIM/Email Univ)</label>
+            <input type="text" id="username" name="username"
+                   class="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-300"
+                   required />
+        </div>
+        <div>
+            <label for="password" class="block text-sm font-medium">Password</label>
+            <div class="relative">
+                <input type="password" id="password" name="password"
+                       class="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-300"
+                       required />
+                <span class="absolute right-3 top-3 text-gray-500">
+                        <!-- Optional: icon show/hide password -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </span>
+            </div>
+        </div>
+        <div>
+            <button type="submit"
+                    class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-green-800 transition duration-200">
+                Login
+            </button>
+        </div>
+    </form>
+</div>
+
 </body>
 </html>
