@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" x-data="{ sidebarOpen: false }">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manajemen Dosen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <style>
+        body {
+            background-color: #3a3a3a;
+        }
+    </style>
+</head>
+<body class="font-sans bg-[#f3f1d9]" x-cloak>
+
+<div class="flex h-screen">
+
+    <!-- Sidebar -->
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
+           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+        <div class="px-6 py-4 text-red-300 font-bold text-xl">LMS blablabla</div>
+        <nav class="px-4 py-2 space-y-2">
+            <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md hover:bg-green-800">Dasbor</a>
+            <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 hover:bg-green-800 rounded-md">Manajemen Mahasiswa</a>
+            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md bg-green-900">Manajemen Dosen</a>
+            <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Kelas</a>
+            <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mata Kuliah</a>
+            <a href="/admin/log" class="block px-3 py-2 rounded-md mt-4 hover:bg-green-800">Laporan & Log Aktivitas</a>
+        </nav>
+    </aside>
+
+    <!-- Overlay -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" x-show="sidebarOpen" @click="sidebarOpen = false"></div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col lg:ml-64">
+        <!-- Header -->
+        <header class="bg-[#f3f1d9] p-4 flex justify-between items-center border-b border-gray-300">
+            <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
+            <input type="text" placeholder="Cari..." class="w-1/2 px-4 py-2 border rounded-md" />
+            <div class="text-sm text-gray-700">👤 Admin</div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="p-6 overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-gray-800">Dosen</h1>
+                <button class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-green-800">➕ Tambah Dosen</button>
+            </div>
+
+            <div class="bg-white shadow rounded-lg overflow-x-auto">
+                <table class="min-w-full text-sm text-gray-800">
+                    <thead class="bg-[#f3f1d9]">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-bold">No</th>
+                        <th class="px-6 py-3 text-left font-bold">NIP</th>
+                        <th class="px-6 py-3 text-left font-bold">Nama</th>
+                        <th class="px-6 py-3 text-left font-bold">Email</th>
+                        <th class="px-6 py-3 text-left font-bold">Fakultas</th>
+                        <th class="px-6 py-3 text-left font-bold">Password</th>
+                        <th class="px-6 py-3 text-left font-bold">Aksi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+</body>
+</html>
