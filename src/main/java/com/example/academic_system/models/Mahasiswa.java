@@ -20,8 +20,7 @@ public class Mahasiswa extends Pengguna {
     )
     private List<Kelas> kelasDiikuti;
 
-    @Transient // Ini artinya tidak disimpan ke database
-    private String kataSandiAsli;
+
 
     public Mahasiswa() {}
 
@@ -64,12 +63,5 @@ public class Mahasiswa extends Pengguna {
         this.fakultas = fakultas;
     }
 
-    public String getKataSandiAsli() {
-        return kataSandiAsli;
-    }
-
-    public void setKataSandiAsli(String kataSandiAsli) {
-        this.kataSandiAsli = kataSandiAsli;
-    }
 }
 

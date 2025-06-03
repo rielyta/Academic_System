@@ -17,6 +17,9 @@ import jakarta.persistence.*;
 
     private String kataSandi;
 
+    @Transient
+    private String kataSandiAsli;
+
     @Column(nullable = false)
     private String peran;
 
@@ -79,6 +82,13 @@ import jakarta.persistence.*;
     }
 
 
+    public String getKataSandiAsli() {
+        return kataSandiAsli;
+    }
+
+    public void setKataSandiAsli(String kataSandiAsli) {
+        this.kataSandiAsli = kataSandiAsli;
+    }
 }
 
 

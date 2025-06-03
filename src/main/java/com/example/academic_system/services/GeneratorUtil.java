@@ -14,7 +14,7 @@ public class GeneratorUtil {
     public static String generateNim() {
         String nim;
         do {
-            nim = "M" + generateRandomNumberString(10);
+            nim = "M" + generateRandomNumberString(9);
         } while (usedNims.contains(nim));
         usedNims.add(nim);
         return nim;
@@ -24,7 +24,7 @@ public class GeneratorUtil {
     public static String generateNip() {
         String nip;
         do {
-            nip = "D" + generateRandomNumberString(11);
+            nip = "D" + generateRandomNumberString(9);
         } while (usedNips.contains(nip));
         usedNips.add(nip);
         return nip;
