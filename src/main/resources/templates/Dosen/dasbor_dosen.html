@@ -20,36 +20,21 @@
 <body class="bg-gray-100 font-sans">
 <div class="flex h-screen">
     <!-- Sidebar -->
-    <div class="w-64 bg-[#072D17] text-white shadow-lg">
-        <div class="p-4 flex flex-col items-center border-b border-[#20452F] mt-8">
-            <i class="fa-solid fa-school text-5xl text-yellow-300 my-2" alt = "Logo LMS"></i>
-            <h2 class="text-xl font-bold">Fasilkom-TI</h2>
-            <p class="text-sm text-white font-medium">Learning Management System</p>
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
+           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
         </div>
-
-        <nav class="p-4 space-y-2">
-            <a href="dasbor_dosen.html" class="flex items-center p-2 rounded-lg bg-[rgba(217,217,217,0.5)]">
-                <i class="fas fa-tachometer-alt mr-3"></i>
-                Dasbor
-            </a>
-            <a href="#" class="flex items-center p-2 rounded-lg hover:bg-[rgba(217,217,217,0.2)]">
-                <i class="fas fa-chalkboard-teacher mr-3"></i>
+        <nav class="px-4 py-4 space-y-2">
+            <div class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">Dasbor</div>
+            <a href="manajemen_mahasiswa" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
                 Kelas Saya
             </a>
-            <a href="#" class="flex items-center p-2 rounded-lg hover:bg-[rgba(217,217,217,0.2)]">
-                <i class="fas fa-calendar-alt mr-3"></i>
-                Jadwal Mengajar
-            </a>
-            <a href="#" class="flex items-center p-2 rounded-lg hover:bg-[rgba(217,217,217,0.2)]">
-                <i class="fas fa-tasks mr-3"></i>
-                Penilaian
-            </a>
-            <a href="#" class="flex items-center p-2 rounded-lg hover:bg-[rgba(217,217,217,0.2)]">
-                <i class="fas fa-users mr-3"></i>
-                Mahasiswa
-            </a>
+            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Jadwal Mengajar</a>
+            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Penilaian</a>
+            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Mahasiswa</a>
         </nav>
-
         <div class="p-4 absolute bottom-0 w-64">
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
@@ -58,31 +43,24 @@
                 </button>
             </form>
         </div>
-    </div>
+    </aside>
+
+    <header class="fixed top-0 left-0 right-0 z-40">
+        <nav class="flex items-center justify-between px-6 py-4 ml-64">
+            <div class="flex-grow relative max-w-full mr-6">
+                <input type="text" placeholder="Cari..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-[#2C7148] focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
+                <i class="fas fa-search absolute left-3 top-3 text-[#514D4D]"></i>
+            </div>
+
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+                <i class="fa-solid fa-user"></i>
+                <span class="font-medium" th:text="${#authentication.name}">Ms. Jane Doe</span>
+            </div>
+        </nav>
+    </header>
 
     <!-- Main Content -->
-    <div class="flex-1 overflow-y-auto bg-[rgba(255,251,223,0.4)]">
-        <!-- Top Navigation -->
-        <header class="bg-white shadow-sm">
-            <div class="flex justify-between items-center p-4 bg-[rgba(255,251,223,0.9)]">
-                <div class="relative w-64 ml-4">
-                    <input type="text" placeholder="Cari..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-[#2C7148] focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
-                    <i class="fas fa-search absolute left-3 top-3 text-[#514D4D]"></i>
-                </div>
-                <div class="flex items-center space-x-8">
-                    <div class="relative">
-                        <i class="fas fa-bell text-gray-600 text-xl"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
-                    </div>
-                    <div class="flex items-center col-span-2 space-x-4">
-                        <i class="fa-solid fa-user"></i>
-                        <span class="font-medium" th:text="${#authentication.name}">Dr. John Doe</span>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Dashboard Content -->
+    <div class="flex-1 overflow-y-auto bg-[#F3F1D9] ml-64 pt-20">
         <main class="p-6">
             <!-- Profile Card -->
             <div class="rounded-lg shadow-md p-6 mb-6 bg-[rgba(255,251,223,0.9)]">
