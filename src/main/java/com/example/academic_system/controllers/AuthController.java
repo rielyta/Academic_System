@@ -6,7 +6,6 @@ import com.example.academic_system.Mahasiswa.MahasiswaRepository;
 import com.example.academic_system.services.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -31,8 +30,6 @@ public class AuthController {
     @Autowired
     private MahasiswaRepository mahasiswaRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
     public String redirectToDashboard(Principal principal) {
@@ -54,14 +51,8 @@ public class AuthController {
         };
     }
 
-
-
-
-    // Menampilkan form login
     @GetMapping("/login")
     public String showLoginForm() {
         return "login";
     }
-
-
 }
