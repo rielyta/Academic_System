@@ -57,13 +57,14 @@ public class AdminMahasiswaController {
         return "redirect:/admin/manajemen_mahasiswa";
     }
 
-    @PostMapping("/admin/manajemen_mahasiswa/edit/{nim}")
+    @GetMapping("/admin/manajemen_mahasiswa/{nim}")
     @Transactional
     public String hapusMahasiswa(@PathVariable("nim") String nim, RedirectAttributes redirectAttributes) {
-        mahasiswaRepository.deleteByNim(nim);
+        mahasiswaRepository.findByNim(nim).ifPresent(mahasiswaRepository::delete);
         redirectAttributes.addFlashAttribute("sukses", "Mahasiswa berhasil dihapus.");
         return "redirect:/admin/manajemen_mahasiswa";
     }
+
 
     @GetMapping("/admin/manajemen_mahasiswa/edit/{nim}")
     @Transactional
