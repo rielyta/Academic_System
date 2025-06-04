@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <title>Dashboard Mahasiswa</title>
 </head>
 
 <body>
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-        <div class="px-6 py-9 ml-9 text-red-300 font-bold text-xl jockey-font">LMS blablabla</div>
+        <div class="flex flex-col px-6 py-9 items-center">
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+        </div>
         <nav class="px-4 py-2 space-y-2">
             <div class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">Dasbor</div>
             <a href="manajemen_mahasiswa" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
@@ -19,32 +22,33 @@
             </a>
             <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Kelas Saya</a>
         </nav>
+        <div class="p-4 absolute bottom-0 w-64">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Keluar
+                </button>
+            </form>
+        </div>
     </aside>
 
-    <header class="bg-[#072D17] fixed top-0 left-0 right-0">
+    <header class="fixed top-0 left-0 right-0">
         <nav class="mx-auto flex max-w-full items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex-1">
                 <a href="#" class="-m-1.5 p-1.5">
                     <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="">
                 </a>
             </div>
-            <div class="flex lg:hidden">
-                <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-                </button>
-            </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-                <span>
-                    <i class="fa-solid fa-circle-user"></i>
-                    <a href="#" class="text-sm/6 font-semibold text-gray-900 text-white">Log in</a>
-                </span>
+            <div class="flex items-center space-x-8">
+                <div class="flex items-center col-span-2 space-x-4 mb-5">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+                </div>
             </div>
         </nav>
     </header>
 
+    <!--main content-->
     <div class="flex h-screen bg-[#F3F1D9]">
 
     </div>
