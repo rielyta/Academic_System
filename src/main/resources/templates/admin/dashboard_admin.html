@@ -20,18 +20,16 @@
 <div class="flex h-screen bg-[#F3F1D9]">
 
 
-    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-        <div class="px-6 py-4 text-red-300 font-bold text-lg jockey-font">LMS blablabla</div>
+        <div class="px-6 py-4  font-bold text-xl" style="color: #711D1E">LMS blablabla</div>
         <nav class="px-4 py-2 space-y-2">
-            <div class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">Dasbor</div>
-            <a href="manajemen_mahasiswa" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
-                Manajemen Mahasiswa
-            </a>
-            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Dosen</a>
-            <div class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2"> Manajemen Kelas</div>
-            <div class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2"> Manajemen Mata Kuliah</div>
-            <div class="mt-4 hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2"> Laporan & Log Aktivitas</div>
+            <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md  bg-green-900">Dasbor</a>
+            <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 hover:bg-green-800 rounded-md">Manajemen Mahasiswa</a>
+            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800 ">Manajemen Dosen</a>
+            <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Kelas</a>
+            <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mata Kuliah</a>
+            <a href="/admin/log" class="block px-3 py-2 rounded-md mt-4 hover:bg-green-800">Laporan & Log Aktivitas</a>
         </nav>
     </aside>
 

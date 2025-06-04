@@ -24,13 +24,24 @@ public class AdminDosenController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("admin/manajemen_dosen")
+    @GetMapping("/admin/manajemen_dosen")
     public String listDosen(Model model) {
-        List<Dosen> dosenList = dosenRepository.findAll();
-        model.addAttribute("dosenList", dosenList);
         model.addAttribute("dosen", new Dosen());
+
+        List<String> daftarFakultas = List.of(
+                "Fasilkom-TI",
+                "FEB",
+                "FH",
+                "FK"
+        );
+
+        List<Dosen> dosenList = dosenRepository.findAll();
+
+        model.addAttribute("daftarFakultas", daftarFakultas);
+        model.addAttribute("dosenList", dosenList);
         return "admin/manajemen_dosen";
     }
+
 
     @PostMapping("/admin/tambah_dosen")
     public String tambahDosen(@ModelAttribute Dosen dosenForm, RedirectAttributes redirectAttributes) {
@@ -53,4 +64,7 @@ public class AdminDosenController {
 
         return "redirect:/admin/manajemen_dosen";
     }
+
+
+
 }

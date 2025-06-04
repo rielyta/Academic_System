@@ -22,7 +22,7 @@
     <!-- Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-        <div class="px-6 py-4 text-red-300 font-bold text-xl">LMS blablabla</div>
+        <div class="px-6 py-4  font-bold text-xl" style="color: #711D1E">LMS blablabla</div>
         <nav class="px-4 py-2 space-y-2">
             <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md hover:bg-green-800">Dasbor</a>
             <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 bg-green-900 rounded-md">Manajemen Mahasiswa</a>
@@ -110,7 +110,6 @@
                         <th class="px-6 py-3 text-left font-bold">Email</th>
                         <th class="px-6 py-3 text-left font-bold">Fakultas</th>
                         <th class="px-6 py-3 text-left font-bold">Prodi</th>
-                        <th class="px-6 py-3 text-left font-bold">Password</th>
                         <th class="px-6 py-3 text-left font-bold">Aksi</th>
                     </tr>
                     </thead>
@@ -123,7 +122,6 @@
                         <td class="px-6 py-4" th:text="${email}">Email</td>
                         <td class="px-6 py-4" th:text="${fakultas}">Fakultas</td>
                         <td class="px-6 py-4" th:text="${prodi}">Prodi</td>
-                        <td class="px-6 py-4 text-red-600 font-mono font-semibold" th:text="${rawPassword}">Password</td>
 
                     </tr>
 
@@ -135,7 +133,6 @@
                         <td class="px-6 py-4" th:text="${mhs.email}">Email</td>
                         <td class="px-6 py-4" th:text="${mhs.fakultas}">Fakultas</td>
                         <td class="px-6 py-4" th:text="${mhs.prodi}">Prodi</td>
-                        <td class="px-6 py-4">********</td>
                         <td class="px-6 py-4">
                             <button class="text-green-600 hover:underline">Edit</button>
                             <button class="text-red-600 hover:underline">Hapus</button>
