@@ -20,6 +20,8 @@ public class Mahasiswa extends Pengguna {
     )
     private List<Kelas> kelasDiikuti;
 
+
+
     public Mahasiswa() {}
 
     public Mahasiswa(String nama, String email, String password) {
@@ -60,5 +62,6 @@ public class Mahasiswa extends Pengguna {
     public void setFakultas(String fakultas) {
         this.fakultas = fakultas;
     }
+
 }
 

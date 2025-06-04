@@ -1,4 +1,4 @@
-package com.example.academic_system.repository;
+package com.example.academic_system.Dosen;
 
 import com.example.academic_system.models.Dosen;
 import org.springframework.data.jpa.repository.JpaRepository;

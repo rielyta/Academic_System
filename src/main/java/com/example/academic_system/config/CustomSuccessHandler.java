@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 
 @Component
@@ -14,25 +15,16 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        if (Boolean.TRUE.equals(request.getSession().getAttribute("FROM_SIGNUP"))) {
-            request.getSession().removeAttribute("FROM_SIGNUP");
-            if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MAHASISWA"))) {
-                response.sendRedirect("/profil/profil_mahasiswa");
-                return;
-            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_DOSEN"))) {
-                response.sendRedirect("/profil/profil_dosen");
-                return;
-            }
-        }
-
+        System.out.println("LOGIN BERHASIL, ROLE: " + authentication.getAuthorities());
 
         if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MAHASISWA"))) {
-            response.sendRedirect("/dashboard/mahasiswa");
+            response.sendRedirect("/mahasiswa/dashboard_mahasiswa");
         } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_DOSEN"))) {
-            response.sendRedirect("/dashboard/dosen");
+            response.sendRedirect("/dosen/dashboard_dosen");
+        } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            response.sendRedirect("/admin/dashboard_admin");
         } else {
-            response.sendRedirect("/dashboard");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Tidak memiliki role yang valid.");
         }
     }
-
 }

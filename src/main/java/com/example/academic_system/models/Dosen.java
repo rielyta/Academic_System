@@ -10,6 +10,8 @@ public class Dosen extends Pengguna {
 
     private String fakultas;
 
+;
+
     @OneToMany(mappedBy = "dosenPengampu")
     private List<Kelas> kelasDiajar;
 
@@ -43,4 +45,6 @@ public class Dosen extends Pengguna {
     public void setKelasDiajar(List<Kelas> kelasDiajar) {
         this.kelasDiajar = kelasDiajar;
     }
+
+
 }
