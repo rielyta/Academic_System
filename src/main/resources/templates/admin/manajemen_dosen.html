@@ -39,7 +39,7 @@
     <!-- Main Content -->
     <div class="flex-1 flex flex-col lg:ml-64">
         <!-- Header -->
-        <header class="bg-[#f3f1d9] p-4 flex justify-between items-center border-b border-gray-300">
+        <header class="bg-[#002E1F] p-4 flex justify-between items-center border-b border-gray-300">
             <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
             <input type="text" placeholder="Cari..." class="w-1/2 px-4 py-2 border rounded-md" />
             <div class="text-sm text-gray-700">👤 Admin</div>
@@ -109,10 +109,44 @@
                 </form>
             </div>
 
+            <!-- Form Edit -->
+            <div th:if="${editMode}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" x-cloak>
+                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+                    <h2 class="text-xl font-bold mb-4">Form Edit Mahasiswa</h2>
+                    <form th:action="@{/admin/manajemen_dosen/edit/{nip}(nip=${dosen.nip})}" th:object="${dosen}" method="post">
+                        <input type="hidden" th:field="*{nip}" />
+
+                        <div class="mb-2">
+                            <label class="block font-semibold text-gray-700 mb-1">Nama</label>
+                            <input type="text" th:field="*{nama}" class="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="block font-semibold text-gray-700 mb-1">Email</label>
+                            <input type="email" th:field="*{email}" class="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="block font-semibold text-gray-700 mb-1">Fakultas</label>
+                            <input type="text" th:field="*{fakultas}" class="w-full px-3 py-2 border rounded" />
+                        </div>
+
+
+                        <div class="flex justify-end gap-2">
+                            <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded">Simpan</button>
+                            <a href="/admin/manajemen_dosen" class="bg-gray-300 px-4 py-2 rounded">Batal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
+
             <!-- Tabel Mahasiswa -->
             <div class="bg-white shadow rounded-lg overflow-x-auto mt-6">
                 <table class="min-w-full text-sm text-gray-800">
-                    <thead class="bg-[#f3f1d9]">
+                    <thead class="bg-[#FFFBDF]">
                     <tr>
                         <th class="px-6 py-3 text-left font-bold">No</th>
                         <th class="px-6 py-3 text-left font-bold">NIM</th>
@@ -124,13 +158,12 @@
                     </thead>
                     <tbody>
                     <!-- Baris Mahasiswa Baru -->
-                    <tr th:if="${nim}">
+                    <tr th:if="${nip}">
                         <td class="px-6 py-4 text-green-700 font-bold">Baru</td>
                         <td class="px-6 py-4" th:text="${nip}">NIP</td>
                         <td class="px-6 py-4" th:text="${nama}">Nama</td>
                         <td class="px-6 py-4" th:text="${email}">Email</td>
                         <td class="px-6 py-4" th:text="${fakultas}">Fakultas</td>
-
                     </tr>
 
                     <!-- Baris Mahasiswa dari Database -->
@@ -141,8 +174,11 @@
                         <td class="px-6 py-4" th:text="${dsn.email}">Email</td>
                         <td class="px-6 py-4" th:text="${dsn.fakultas}">Fakultas</td>
                         <td class="px-6 py-4">
-                            <button class="text-green-600 hover:underline">Edit</button>
-                            <button class="text-red-600 hover:underline">Hapus</button>
+                            <a th:href="@{/admin/manajemen_dosen/edit/{nip}(nip=${dsn.nip})}"
+                               class="text-green-600 hover:underline">Edit</a>
+                            <a th:href="@{/admin/manajemen_dosen/{nip}(nip=${dsn.nip})}"
+                               class="text-red-600 hover:underline"
+                               onclick="return confirm('Apakah anda yakin?')">Hapus</a>
                         </td>
                     </tr>
                     </tbody>

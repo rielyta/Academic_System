@@ -39,7 +39,7 @@
     <!-- Main Content -->
     <div class="flex-1 flex flex-col lg:ml-64">
         <!-- Header -->
-        <header class="bg-[#f3f1d9] p-4 flex justify-between items-center border-b border-gray-300">
+        <header class="bg-[#002E1F] p-4 flex justify-between items-center border-b border-gray-300">
             <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
             <input type="text" placeholder="Cari..." class="w-1/2 px-4 py-2 border rounded-md" />
             <div class="text-sm text-gray-700">👤 Admin</div>
@@ -63,7 +63,7 @@
 
             <!-- Form -->
             <div x-show="formOpen" x-transition class="bg-white mt-2 p-6 rounded-lg shadow-lg max-w-4xl">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800">Form Tambah Mahasiswa</h2>
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Form Tambah Mahasiwa</h2>
                 <form th:action="@{/admin/tambah_mahasiswa}" th:object="${mahasiswa}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     <div>
@@ -77,14 +77,30 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Fakultas</label>
-                        <input type="text" th:field="*{fakultas}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                        <label class="block text-sm font-semibold text-gray-700 mb-1" for="fakultas">Fakultas</label>
+                        <div class="relative">
+                            <select  id="fakultas" th:field="*{fakultas}"
+                                     class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-green-400"
+                                     required>
+                                <option value="">-- Pilih Fakultas --</option>
+                                <option th:each="fak : ${daftarFakultas}"
+                                        th:value="${fak}"
+                                        th:text="${fak}">Fakultas</option>
+                            </select>
+
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Program Studi</label>
-                        <input type="text" th:field="*{prodi}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Prodi</label>
+                        <input type="text" th:field="*{prodi}" class="w-full px-3 py-2 border rounded-md" required />
                     </div>
+
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Kata Sandi</label>
@@ -93,11 +109,48 @@
 
                     <div class="flex items-end justify-start mt-4 gap-2">
                         <button type="submit" class="bg-green-900 text-white px-5 py-2 rounded-md hover:bg-green-800">Simpan</button>
-                        <button type="button" @click="formOpen = false" class="bg-gray-300 text-black px-5 py-2 rounded-md hover:bg-gray-400">Batal</button>
+                        <button type="button" @click="formOpen = false" class="bg-gray-300 text-black px-5 py-2 rounded-md hover:bg-gray-400"> Batal</button>
                     </div>
 
                 </form>
             </div>
+
+            <!-- Form Edit -->
+            <div th:if="${editMode}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" x-cloak>
+                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+                    <h2 class="text-xl font-bold mb-4">Form Edit Mahasiswa</h2>
+                    <form th:action="@{/admin/manajemen_mahasiswa/edit/{nim}(nim=${mahasiswa.nim})}" th:object="${mahasiswa}" method="post">
+                        <input type="hidden" th:field="*{nim}" />
+
+                        <div class="mb-2">
+                            <label class="block font-semibold text-gray-700 mb-1">Nama</label>
+                            <input type="text" th:field="*{nama}" class="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="block font-semibold text-gray-700 mb-1">Email</label>
+                            <input type="email" th:field="*{email}" class="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="block font-semibold text-gray-700 mb-1">Fakultas</label>
+                            <input type="text" th:field="*{fakultas}" class="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block font-semibold text-gray-700 mb-1">Prodi</label>
+                            <input type="text" th:field="*{prodi}" class="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div class="flex justify-end gap-2">
+                            <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded">Simpan</button>
+                            <a href="/admin/manajemen_mahasiswa" class="bg-gray-300 px-4 py-2 rounded">Batal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
 
             <!-- Tabel Mahasiswa -->
             <div class="bg-white shadow rounded-lg overflow-x-auto mt-6">
@@ -114,17 +167,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- Baris Mahasiswa Baru -->
-                    <tr th:if="${nim}">
-                        <td class="px-6 py-4 text-green-700 font-bold">Baru</td>
-                        <td class="px-6 py-4" th:text="${nim}">NIM</td>
-                        <td class="px-6 py-4" th:text="${nama}">Nama</td>
-                        <td class="px-6 py-4" th:text="${email}">Email</td>
-                        <td class="px-6 py-4" th:text="${fakultas}">Fakultas</td>
-                        <td class="px-6 py-4" th:text="${prodi}">Prodi</td>
-
-                    </tr>
-
                     <!-- Baris Mahasiswa dari Database -->
                     <tr th:each="mhs, iterStat : ${mahasiswaList}">
                         <td class="px-6 py-4" th:text="${iterStat.count}">1</td>
@@ -134,8 +176,11 @@
                         <td class="px-6 py-4" th:text="${mhs.fakultas}">Fakultas</td>
                         <td class="px-6 py-4" th:text="${mhs.prodi}">Prodi</td>
                         <td class="px-6 py-4">
-                            <button class="text-green-600 hover:underline">Edit</button>
-                            <button class="text-red-600 hover:underline">Hapus</button>
+                            <a th:href="@{/admin/manajemen_mahasiswa/edit/{nim}(nim=${mhs.nim})}"
+                               class="text-green-600 hover:underline">Edit</a>
+                            <a th:href="@{/admin/manajemen_mahasiswa/{nim}(nim=${mhs.nim})}"
+                               class="text-red-600 hover:underline"
+                               onclick="return confirm('Apakah anda yakin?')">Hapus</a>
                         </td>
                     </tr>
                     </tbody>

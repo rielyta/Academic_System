@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface DosenRepository extends JpaRepository<Dosen, Long> {
     Optional<Dosen> findByNip(String nip);
     Optional<Dosen> findByEmail(String email);
+
+    String nip(String nip);
 }
