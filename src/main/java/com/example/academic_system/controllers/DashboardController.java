@@ -15,9 +15,4 @@ public class DashboardController {
     public String dosenDashboard() {
         return "dosen/dashboard_dosen";
     }
-
-    @GetMapping("admin/dashboard_admin")
-    public String adminDashboard() {
-        return "admin/dashboard_admin";
-    }
 }

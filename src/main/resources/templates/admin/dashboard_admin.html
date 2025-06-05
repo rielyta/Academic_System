@@ -52,11 +52,22 @@
         <main class="p-6 flex-1 overflow-y-auto">
             <!-- Grid stats -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white p-4 shadow rounded-md"> Total Dosen<br><span class="font-bold text-lg">1200</span></div>
-                <div class="bg-white p-4 shadow rounded-md"> Total Kelas<br><span class="font-bold text-lg">1200</span></div>
-                <div class="bg-white p-4 shadow rounded-md"> Total Mata Kuliah<br><span class="font-bold text-lg">1200</span></div>
-                <div class="bg-white p-4 shadow rounded-md"> Total Mahasiswa<br><span class="font-bold text-lg">1200</span></div>
-                <div class="bg-white p-4 shadow rounded-md"> Total Admin<br><span class="font-bold text-lg">1200</span></div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Dosen<br>
+                    <span class="font-bold text-lg" th:text="${totalDosen}">0</span>
+                </div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Mahasiswa<br>
+                    <span class="font-bold text-lg" th:text="${totalMahasiswa}">0</span>
+                </div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Kelas<br>
+                    <span class="font-bold text-lg" th:text="${totalKelas}">0</span>
+                </div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Mata Kuliah<br>
+                    <span class="font-bold text-lg" th:text="${totalMatkul}">0</span>
+                </div>
+                <div class="bg-white p-4 shadow rounded-md"> Total Admin<br>
+                    <span class="font-bold text-lg" th:text="${totalAdmin}">0</span>
+                </div>
+
             </div>
 
             <!-- Jam kerja -->

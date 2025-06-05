@@ -35,6 +35,7 @@ public class AdminMahasiswaController {
                 "FH",
                 "FK"
         );
+
         model.addAttribute("daftarFakultas", daftarFakultas);
         model.addAttribute("mahasiswaList", mahasiswaList);
         model.addAttribute("mahasiswa", new Mahasiswa());
