@@ -28,9 +28,17 @@ public class AdminMahasiswaController {
     @GetMapping("/admin/manajemen_mahasiswa")
     public String listMahasiswa(Model model) {
         List<Mahasiswa> mahasiswaList = mahasiswaRepository.findAll();
+
+        List<String> daftarFakultas = List.of(
+                "Fasilkom-TI",
+                "FEB",
+                "FH",
+                "FK"
+        );
+
+        model.addAttribute("daftarFakultas", daftarFakultas);
         model.addAttribute("mahasiswaList", mahasiswaList);
         model.addAttribute("mahasiswa", new Mahasiswa());
-        model.addAttribute("editMode", false);
         return "admin/manajemen_mahasiswa";
     }
 
@@ -57,19 +65,23 @@ public class AdminMahasiswaController {
         return "redirect:/admin/manajemen_mahasiswa";
     }
 
-    @PostMapping("/admin/manajemen_mahasiswa/edit/{nim}")
+    @GetMapping("/admin/manajemen_mahasiswa/{nim}")
     @Transactional
     public String hapusMahasiswa(@PathVariable("nim") String nim, RedirectAttributes redirectAttributes) {
-        mahasiswaRepository.deleteByNim(nim);
+        mahasiswaRepository.findByNim(nim).ifPresent(mahasiswaRepository::delete);
         redirectAttributes.addFlashAttribute("sukses", "Mahasiswa berhasil dihapus.");
         return "redirect:/admin/manajemen_mahasiswa";
     }
+
 
     @GetMapping("/admin/manajemen_mahasiswa/edit/{nim}")
     @Transactional
     public String editMahasiswaForm(@PathVariable("nim") String nim, Model model) {
         Mahasiswa mahasiswa = mahasiswaRepository.findByNim(nim).orElse(null);
         if (mahasiswa == null) return "redirect:/admin/manajemen_mahasiswa";
+
+        model.addAttribute("daftarFakultas", List.of("Fasilkom-TI", "FEB", "FH", "FK"));
+
 
         model.addAttribute("mahasiswa", mahasiswa);
         model.addAttribute("editMode", true);
@@ -79,14 +91,10 @@ public class AdminMahasiswaController {
 
 
 
-
-
-    @PostMapping("/admin/manajemen_mahasiswaedit/{nim}")
+    @PostMapping("/admin/manajemen_mahasiswa/edit/{nim}")
     @Transactional
     public String editMahasiswa(@ModelAttribute Mahasiswa mahasiswaForm, RedirectAttributes redirectAttributes) {
         Mahasiswa existing = mahasiswaRepository.findByNim(mahasiswaForm.getNim()).orElse(null);
-
-        if (existing != null) {
             // Mode edit
             existing.setNama(mahasiswaForm.getNama());
             existing.setEmail(mahasiswaForm.getEmail());
@@ -94,17 +102,6 @@ public class AdminMahasiswaController {
             existing.setProdi(mahasiswaForm.getProdi());
             mahasiswaRepository.save(existing);
             redirectAttributes.addFlashAttribute("sukses", "Data mahasiswa berhasil diperbarui.");
-        } else {
-            // Mode tambah
-            String generatedNim = GeneratorUtil.generateNim();
-            mahasiswaForm.setNim(generatedNim);
-            mahasiswaForm.setKataSandi(passwordEncoder.encode(mahasiswaForm.getKataSandi()));
-            mahasiswaForm.setKataSandiAsli(mahasiswaForm.getKataSandi());
-            mahasiswaForm.setPeran("ROLE_MAHASISWA");
-            mahasiswaRepository.save(mahasiswaForm);
-            redirectAttributes.addFlashAttribute("sukses", "Mahasiswa berhasil ditambahkan.");
-        }
-
         return "redirect:/admin/manajemen_mahasiswa";
     }
 
