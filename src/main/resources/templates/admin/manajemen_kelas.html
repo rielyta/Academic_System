@@ -96,7 +96,7 @@
                 <tr th:each="kelas, iterStat : ${kelasList}">
                     <td th:text="${iterStat.count}"></td>
                     <td th:text="${kelas.namaKelas}"></td>
-                    <td th:text="${kelas.mataKuliah.nama}"></td>
+                    <td th:text="${kelas.mataKuliah.namaMK}"></td>
                     <td th:text="${kelas.dosen.nama}"></td>
                     <td th:text="${#lists.size(kelas.mahasiswaTerdaftar)}"></td>
                     <td>
