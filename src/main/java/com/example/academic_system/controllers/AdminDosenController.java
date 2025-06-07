@@ -1,8 +1,7 @@
 package com.example.academic_system.controllers;
 
-import com.example.academic_system.Dosen.DosenRepository;
+import com.example.academic_system.repositories.DosenRepository;
 import com.example.academic_system.models.Dosen;
-import com.example.academic_system.models.Mahasiswa;
 import com.example.academic_system.services.GeneratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

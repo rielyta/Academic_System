@@ -5,11 +5,13 @@ import com.example.academic_system.services.DosenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/dosen")
 public class DosenController {
+
     private final DosenService dosenService;
 
     @Autowired

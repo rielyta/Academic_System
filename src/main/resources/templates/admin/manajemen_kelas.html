@@ -1,0 +1,190 @@
+<!-- Potongan HTML lengkap, sudah diperbaiki -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manajemen Kelas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+
+<body class="font-sans bg-[#f3f1d9]" x-data="{ sidebarOpen: false }" x-cloak>
+<div class="flex h-screen">
+
+    <!-- Sidebar -->
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
+           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+        <div class="px-6 py-4 font-bold text-xl text-[#FFD700]">LMS Admin Panel</div>
+        <nav class="px-4 py-2 space-y-2">
+            <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md hover:bg-green-800">Dasbor</a>
+            <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mahasiswa</a>
+            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Dosen</a>
+            <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md bg-green-900">Manajemen Kelas</a>
+            <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mata Kuliah</a>
+            <a href="/admin/log" class="block px-3 py-2 rounded-md mt-4 hover:bg-green-800">Laporan & Log Aktivitas</a>
+        </nav>
+    </aside>
+
+    <!-- Overlay untuk mobile -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" x-show="sidebarOpen" @click="sidebarOpen = false"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-64 p-6" x-data="kelasForm" x-init="init()" x-cloak>
+        <h2 class="text-2xl font-semibold mb-6 text-[#002E1F]">Manajemen Kelas</h2>
+
+        <!-- Tombol Tambah -->
+        <button @click="showForm = true"
+                class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md transition">
+            Tambah Kelas
+        </button>
+
+        <!-- Modal Tambah Kelas -->
+        <div x-show="showForm" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="bg-white p-6 rounded-md w-full max-w-lg relative">
+
+                <!-- Tombol Tutup -->
+                <button @click="showForm = false" class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl">&times;</button>
+
+                <h2 class="text-xl font-semibold mb-4">Tambah Kelas</h2>
+
+                <form @submit.prevent="submitForm">
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium">Nama Kelas</label>
+                        <input type="text" x-model="namaKelas" class="w-full border rounded px-3 py-2 mt-1" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium">Mata Kuliah</label>
+                        <select x-model="mataKuliahId" class="w-full border rounded px-3 py-2 mt-1" required>
+                            <template x-for="mk in mataKuliahs" :key="mk.kodeMK">
+                                <option :value="mk.kodeMK" x-text="mk.namaMK"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium">Dosen Pengampu</label>
+                        <select x-model="dosenId" class="w-full border rounded px-3 py-2 mt-1" required>
+                            <template x-for="d in dosens" :key="d.id">
+                                <option :value="d.id" x-text="d.nama"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md">Simpan</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabel -->
+        <div class="overflow-x-auto mt-6">
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-sm">
+                <thead class="bg-green-700 text-white">
+                <tr>
+                    <th class="px-4 py-2 text-left">No</th>
+                    <th class="px-4 py-2 text-left">Nama Kelas</th>
+                    <th class="px-4 py-2 text-left">Mata Kuliah</th>
+                    <th class="px-4 py-2 text-left">Dosen Pengampu</th>
+                    <th class="px-4 py-2 text-left">Jumlah Mahasiswa</th>
+                    <th class="px-4 py-2 text-left">Aksi</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="kelas, iterStat : ${kelasList}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${kelas.namaKelas}"></td>
+                    <td th:text="${kelas.mataKuliah.nama}"></td>
+                    <td th:text="${kelas.dosen.nama}"></td>
+                    <td th:text="${#lists.size(kelas.mahasiswaTerdaftar)}"></td>
+                    <td>
+                        <a th:href="@{/kelas/edit/{id}(id=${kelas.id})}" class="text-blue-600 hover:underline">Edit</a> |
+                        <a th:href="@{/kelas/hapus/{id}(id=${kelas.id})}" class="text-red-600 hover:underline">Hapus</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('kelasForm', () => ({
+            showForm: false,
+            namaKelas: '',
+            mataKuliahId: '',
+            dosenId: '',
+            mataKuliahs: [],
+            dosens: [],
+
+            async init() {
+                try {
+                    const mk = await fetch('/api/matakuliah').then(res => res.json());
+                    const dsn = await fetch('/api/dosen').then(res => res.json());
+                    this.mataKuliahs = mk;
+                    this.dosens = dsn;
+
+                    if (this.mataKuliahs.length > 0) this.mataKuliahId = this.mataKuliahs[0].kodeMK;
+                    if (this.dosens.length > 0) this.dosenId = this.dosens[0].id;
+                } catch (e) {
+                    console.error('Gagal memuat data:', e);
+                    alert('Gagal memuat data dosen atau mata kuliah');
+                }
+            },
+
+            resetForm() {
+                this.namaKelas = '';
+                this.mataKuliahId = this.mataKuliahs.length > 0 ? this.mataKuliahs[0].kodeMK : '';
+                this.dosenId = this.dosens.length > 0 ? this.dosens[0].id : '';
+            },
+
+            async submitForm() {
+                try {
+                    console.log({
+                        namaKelas: this.namaKelas,
+                        mataKuliahId: this.mataKuliahId,
+                        dosenId: this.dosenId
+                    });
+
+                    const response = await fetch('/api/kelas', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            namaKelas: this.namaKelas,
+                            mataKuliahId: this.mataKuliahId,
+                            dosenId: this.dosenId
+                        })
+                    });
+
+                    const text = await response.text();
+                    let result;
+                    try {
+                        result = JSON.parse(text);
+                    } catch (e) {
+                        result = { error: text };
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(result.error || 'Gagal menambahkan kelas.');
+                    }
+
+                    alert('Kelas berhasil ditambahkan!');
+                    this.showForm = false;
+                    this.resetForm();
+                    window.location.reload();
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error: ' + error.message);
+                }
+            }
+        }))
+    });
+</script>
+</body>
+</html>

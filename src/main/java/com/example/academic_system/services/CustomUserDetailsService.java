@@ -1,10 +1,11 @@
 package com.example.academic_system.services;
 
-import com.example.academic_system.Dosen.DosenRepository;
-import com.example.academic_system.Mahasiswa.MahasiswaRepository;
+import com.example.academic_system.repositories.DosenRepository;
+import com.example.academic_system.repositories.MahasiswaRepository;
 import com.example.academic_system.models.Dosen;
 import com.example.academic_system.models.Mahasiswa;
 import com.example.academic_system.models.Pengguna;
+import com.example.academic_system.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

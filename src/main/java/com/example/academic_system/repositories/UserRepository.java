@@ -1,7 +1,5 @@
-package com.example.academic_system.services;
+package com.example.academic_system.repositories;
 
-import com.example.academic_system.models.Dosen;
-import com.example.academic_system.models.Mahasiswa;
 import com.example.academic_system.models.Pengguna;
 import org.springframework.data.jpa.repository.JpaRepository;
 

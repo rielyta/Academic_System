@@ -1,7 +1,7 @@
 package com.example.academic_system.controllers;
 
 import com.example.academic_system.models.Mahasiswa;
-import com.example.academic_system.Mahasiswa.MahasiswaRepository;
+import com.example.academic_system.repositories.MahasiswaRepository;
 import com.example.academic_system.services.GeneratorUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
