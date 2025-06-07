@@ -60,15 +60,18 @@
                     <div class="mb-3">
                         <label class="block text-sm font-medium">Mata Kuliah</label>
                         <select x-model="mataKuliahId" class="w-full border rounded px-3 py-2 mt-1" required>
+                            <option value="" disabled selected hidden>Pilih Mata Kuliah</option>
                             <template x-for="mk in mataKuliahs" :key="mk.kodeMK">
                                 <option :value="mk.kodeMK" x-text="mk.namaMK"></option>
                             </template>
                         </select>
                     </div>
 
+
                     <div class="mb-3">
                         <label class="block text-sm font-medium">Dosen Pengampu</label>
                         <select x-model="dosenId" class="w-full border rounded px-3 py-2 mt-1" required>
+                            <option value="" disabled selected hidden>Pilih Dosen</option>
                             <template x-for="d in dosens" :key="d.id">
                                 <option :value="d.id" x-text="d.nama"></option>
                             </template>
@@ -127,8 +130,7 @@
                     this.mataKuliahs = mk;
                     this.dosens = dsn;
 
-                    if (this.mataKuliahs.length > 0) this.mataKuliahId = this.mataKuliahs[0].kodeMK;
-                    if (this.dosens.length > 0) this.dosenId = this.dosens[0].id;
+
                 } catch (e) {
                     console.error('Gagal memuat data:', e);
                     alert('Gagal memuat data dosen atau mata kuliah');

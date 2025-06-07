@@ -1,5 +1,6 @@
 package com.example.academic_system.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public class Dosen extends Pengguna {
 
     private String fakultas;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "dosen")
     private List<Kelas> kelasDiajar;
 

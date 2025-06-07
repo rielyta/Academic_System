@@ -2,8 +2,8 @@ package com.example.academic_system.controllers;
 
 import com.example.academic_system.models.Dosen;
 import com.example.academic_system.models.MataKuliah;
-import com.example.academic_system.services.DosenService;
-import com.example.academic_system.services.MataKuliahService;
+import com.example.academic_system.repositories.DosenRepository;
+import com.example.academic_system.repositories.MataKuliahRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,24 +13,19 @@ import java.util.List;
 @RequestMapping("/api")
 public class DropdownController {
 
-    private final DosenService dosenService;
-    private final MataKuliahService mataKuliahService;
+    @Autowired
+    private DosenRepository dosenRepository;
 
     @Autowired
-    public DropdownController(DosenService dosenService, MataKuliahService mataKuliahService) {
-        this.dosenService = dosenService;
-        this.mataKuliahService = mataKuliahService;
-    }
+    private MataKuliahRepository mataKuliahRepository;
 
-    // Endpoint untuk ambil semua dosen
     @GetMapping("/dosen")
-    public List<Dosen> getAllDosens() {
-        return dosenService.getAllDosen();
+    public List<Dosen> getAllDosen() {
+        return dosenRepository.findAll();
     }
 
-    // Endpoint untuk ambil semua mata kuliah
     @GetMapping("/matakuliah")
     public List<MataKuliah> getAllMataKuliah() {
-        return mataKuliahService.getAllMataKuliah();
+        return mataKuliahRepository.findAll();
     }
 }

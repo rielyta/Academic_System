@@ -13,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
-@CrossOrigin(origins = "*")
+
 @RestController
-@RequestMapping("/api/kelas")
+@RequestMapping("/api/admin/kelas")
 public class KelasController {
 
     @Autowired
