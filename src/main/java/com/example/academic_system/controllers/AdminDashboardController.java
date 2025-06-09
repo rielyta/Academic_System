@@ -1,7 +1,7 @@
 package com.example.academic_system.controllers;
 
-import com.example.academic_system.Dosen.DosenRepository;
-import com.example.academic_system.Mahasiswa.MahasiswaRepository;
+import com.example.academic_system.repositories.DosenRepository;
+import com.example.academic_system.repositories.MahasiswaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,9 +1,9 @@
 package com.example.academic_system.controllers;
 
 import com.example.academic_system.models.Pengguna;
-import com.example.academic_system.Dosen.DosenRepository;
-import com.example.academic_system.Mahasiswa.MahasiswaRepository;
-import com.example.academic_system.services.UserRepository;
+import com.example.academic_system.repositories.DosenRepository;
+import com.example.academic_system.repositories.MahasiswaRepository;
+import com.example.academic_system.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;

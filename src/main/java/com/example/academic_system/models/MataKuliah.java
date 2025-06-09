@@ -1,6 +1,10 @@
 package com.example.academic_system.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "mata_kuliah")
@@ -9,12 +13,15 @@ public class MataKuliah {
     @Column(name = "kode_mk", unique = true, nullable = false)
     private String kodeMK;
 
-    @Column(nullable = false)
+    @Column(name ="namamk", unique = true, nullable = false)
     private String namaMK;
 
     @Column(nullable = false)
     private int sks;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "mataKuliah", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Kelas> daftarKelas = new ArrayList<>();
 
     public MataKuliah() {}
 
@@ -47,4 +54,13 @@ public class MataKuliah {
     public void setSks(int sks) {
         this.sks = sks;
     }
+
+    public List<Kelas> getDaftarKelas() {
+        return daftarKelas;
+    }
+
+    public void setDaftarKelas(List<Kelas> daftarKelas) {
+        this.daftarKelas = daftarKelas;
+    }
+
 }
