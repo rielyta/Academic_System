@@ -57,7 +57,7 @@ public class AdminDosenController {
         dosenRepository.save(dosenForm);
 
         redirectAttributes.addFlashAttribute("sukses", "Dosen berhasil ditambahkan.");
-        redirectAttributes.addFlashAttribute("NIM", generatedNip);
+        redirectAttributes.addFlashAttribute("NIP", generatedNip);
         redirectAttributes.addFlashAttribute("nama", dosenForm.getNama());
         redirectAttributes.addFlashAttribute("email", dosenForm.getEmail());
         redirectAttributes.addFlashAttribute("fakultas", dosenForm.getFakultas());

@@ -105,6 +105,12 @@ public class Kelas {
         this.hariKelas = hariKelas;
     }
 
+    @PostLoad
+    public void initJumlahMahasiswa() {
+        this.jumlahMahasiswa = this.mahasiswaTerdaftar != null ? this.mahasiswaTerdaftar.size() : 0;
+    }
+
+
     @Override
     public String toString() {
         return "Kelas{" +
