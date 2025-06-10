@@ -1,6 +1,6 @@
 <!-- Potongan HTML lengkap, sudah diperbaiki -->
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" x-data="{ sidebarOpen: false, formOpen: false }">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,7 +12,7 @@
     </style>
 </head>
 
-<body class="font-sans bg-[#f3f1d9]" x-data="{ sidebarOpen: false }" x-cloak>
+<body class="font-sans bg-[#f3f1d9]" x-cloak>
 <div class="flex h-screen">
 
     <!-- Sidebar -->
@@ -33,160 +33,232 @@
     <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" x-show="sidebarOpen" @click="sidebarOpen = false"></div>
 
     <!-- Main Content -->
-    <main class="flex-1 lg:ml-64 p-6" x-data="kelasForm" x-init="init()" x-cloak>
-        <h2 class="text-2xl font-semibold mb-6 text-[#002E1F]">Manajemen Kelas</h2>
+    <div class="flex-1 flex flex-col lg:ml-64">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+            <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
+            <input type="text" placeholder="Cari..." class="w-1/2 px-4 py-2 border rounded-md" />
+            <div class="text-sm text-gray-700">👤 Admin</div>
+        </header>
 
-        <!-- Tombol Tambah -->
-        <button @click="showForm = true"
-                class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md transition">
-            Tambah Kelas
-        </button>
+        <main class="p-6 overflow-y-auto">
+            <!-- Alert Sukses -->
+            <div th:if="${sukses}" class="bg-green-100 text-green-800 px-4 py-3 rounded mb-4 border border-green-200">
+                <p th:text="${sukses}"></p>
+            </div>
 
-        <!-- Modal Tambah Kelas -->
-        <div x-show="showForm" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div class="bg-white p-6 rounded-md w-full max-w-lg relative">
+            <!-- Tombol Tambah -->
+            <div class="flex justify-between items-center mb-4 mt-6">
+                <h1 class="text-2xl font-bold text-gray-800">Daftar Kelas</h1>
+                <button @click="formOpen = !formOpen"
+                        class="bg-[#20452F] text-white px-4 py-2 rounded-md hover:bg-[rgba(32,69,47,0.9)]">
+                    Tambah Kelas
+                </button>
+            </div>
 
-                <!-- Tombol Tutup -->
-                <button @click="showForm = false" class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl">&times;</button>
+            <!-- Form -->
+            <div x-show="formOpen" x-transition class="bg-white mt-2 p-6 rounded-lg shadow-lg max-w-4xl">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Form Tambah Kelas</h2>
 
-                <h2 class="text-xl font-semibold mb-4">Tambah Kelas</h2>
+                <form th:action="@{/admin/tambah_kelas}" th:object="${kelas}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                <form @submit.prevent="submitForm">
-                    <div class="mb-3">
-                        <label class="block text-sm font-medium">Nama Kelas</label>
-                        <input type="text" x-model="namaKelas" class="w-full border rounded px-3 py-2 mt-1" required>
+                    <!-- Kiri -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Kelas</label>
+                        <input type="text" th:field="*{namaKelas}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
                     </div>
 
-                    <div class="mb-3">
-                        <label class="block text-sm font-medium">Mata Kuliah</label>
-                        <select x-model="mataKuliahId" class="w-full border rounded px-3 py-2 mt-1" required>
-                            <option value="" disabled selected hidden>Pilih Mata Kuliah</option>
-                            <template x-for="mk in mataKuliahs" :key="mk.kodeMK">
-                                <option :value="mk.kodeMK" x-text="mk.namaMK"></option>
-                            </template>
-                        </select>
+                    <!-- Kanan -->
+                    <div class="md:col-start-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Mata Kuliah</label>
+                        <div class="relative">
+                            <select th:field="*{mataKuliah}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                <option th:each="mk : ${daftarMataKuliah}" th:value="${mk.kodeMK}" th:text="${mk.namaMK}">Mata Kuliah</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
                     </div>
 
-
-                    <div class="mb-3">
-                        <label class="block text-sm font-medium">Dosen Pengampu</label>
-                        <select x-model="dosenId" class="w-full border rounded px-3 py-2 mt-1" required>
-                            <option value="" disabled selected hidden>Pilih Dosen</option>
-                            <template x-for="d in dosens" :key="d.id">
-                                <option :value="d.id" x-text="d.nama"></option>
-                            </template>
-                        </select>
+                    <!-- Kiri -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Dosen Pengampu</label>
+                        <div class="relative">
+                            <select th:field="*{dosen}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                <option th:each="dp : ${daftarDosen}" th:value="${dp.id}" th:text="${dp.nama}">Dosen</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md">Simpan</button>
+
+                    <!-- Kanan -->
+                    <div class="md:col-start-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1" for="ruangan">Ruangan</label>
+                        <div class="relative">
+                            <select th:field="*{ruangan}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                <option th:each="ruang : ${daftarRuangan}" th:value="${ruang}" th:text="${ruang}">Ruangan</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kiri -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Jam Mulai</label>
+                        <input type="time" th:field="*{jamMulai}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                    </div>
+
+                    <!-- Kanan -->
+                    <div class="md:col-start-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Jam Selesai</label>
+                        <input type="time" th:field="*{jamKeluar}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                    </div>
+
+                    <!-- Tombol -->
+                    <div class="md:col-span-2 flex justify-start gap-2 mt-4">
+                        <button type="submit" class="bg-green-900 text-white px-5 py-2 rounded-md hover:bg-green-800">Simpan</button>
+                        <button type="button" @click="formOpen = false" class="bg-gray-300 text-black px-5 py-2 rounded-md hover:bg-[#B80D0D] hover:text-white"> Batal</button>
+                    </div>
                 </form>
             </div>
-        </div>
 
-        <!-- Tabel -->
-        <div class="overflow-x-auto mt-6">
-            <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-sm">
-                <thead class="bg-green-700 text-white">
-                <tr>
-                    <th class="px-4 py-2 text-left">No</th>
-                    <th class="px-4 py-2 text-left">Nama Kelas</th>
-                    <th class="px-4 py-2 text-left">Mata Kuliah</th>
-                    <th class="px-4 py-2 text-left">Dosen Pengampu</th>
-                    <th class="px-4 py-2 text-left">Jumlah Mahasiswa</th>
-                    <th class="px-4 py-2 text-left">Aksi</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="kelas, iterStat : ${kelasList}">
-                    <td th:text="${iterStat.count}"></td>
-                    <td th:text="${kelas.namaKelas}"></td>
-                    <td th:text="${kelas.mataKuliah.namaMK}"></td>
-                    <td th:text="${kelas.dosen.nama}"></td>
-                    <td th:text="${#lists.size(kelas.mahasiswaTerdaftar)}"></td>
-                    <td>
-                        <a th:href="@{/kelas/edit/{id}(id=${kelas.id})}" class="text-blue-600 hover:underline">Edit</a> |
-                        <a th:href="@{/kelas/hapus/{id}(id=${kelas.id})}" class="text-red-600 hover:underline">Hapus</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
+            <div th:if="${editMode}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" x-cloak>
+                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Form Edit Kelas</h2>
+                    <form th:action="@{/admin/manajemen_kelas/edit/{id}(id=${kelas.id})}" th:object="${kelas}" method="post">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Kelas</label>
+                            <input type="text" th:field="*{namaKelas}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                        </div>
+
+                        <!-- Kanan -->
+                        <div class="md:col-start-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Mata Kuliah</label>
+                            <div class="relative">
+                                <select th:field="*{mataKuliah}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                    <option th:each="mk : ${daftarMataKuliah}" th:value="${mk.kodeMK}" th:text="${mk.namaMK}">Mata Kuliah</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kiri -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1" for="dosenpengampu">Dosen Pengampu</label>
+                            <div class="relative">
+                                <select id="dosenpengampu" th:field="*{dosen}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                    <option th:each="dp : ${daftarDosen}" th:value="${dp.id}" th:text="${dp.nama}">Dosen</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kanan -->
+                        <div class="md:col-start-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Semester</label>
+                            <div class="relative">
+                                <select th:field="*{semester}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                    <option th:each="sms : ${daftarSemester}" th:value="${sms}" th:text="${sms}">Semester</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kiri -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1" for="tahunajar">Tahun Ajar</label>
+                            <div class="relative">
+                                <select id="tahunajar" th:field="*{tahunAjar}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                    <option th:each="thnajr : ${daftarTahunAjar}" th:value="${thnajr}" th:text="${thnajr}">Tahun Ajar</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kanan -->
+                        <div class="md:col-start-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1" for="ruangan">Ruangan</label>
+                            <div class="relative">
+                                <select id="ruangan" th:field="*{ruangan}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                    <option th:each="ruang : ${daftarRuangan}" th:value="${ruang}" th:text="${ruang}">Ruangan</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kiri -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1" for="jamMulai">Jam Mulai</label>
+                            <input type="time" id="jamMulai" th:field="*{jamMulai}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                        </div>
+
+                        <!-- Kanan -->
+                        <div class="md:col-start-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1" for="jamKeluar">Jam Selesai</label>
+                            <input type="time" id="jamKeluar" th:field="*{jamKeluar}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                        </div>
+
+                        <!-- Tombol -->
+                        <div class="md:col-span-2 flex justify-start gap-2 mt-4">
+                            <button type="submit" class="bg-green-900 text-white px-5 py-2 rounded-md hover:bg-green-800">Simpan</button>
+                            <a href="/admin/manajemen_kelas" class="bg-gray-300 text-black px-5 py-2 rounded-md hover:bg-[#B80D0D] hover:text-white">Batal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tabel Mahasiswa -->
+            <div class="bg-white shadow rounded-lg overflow-x-auto mt-6">
+                <table class="min-w-full text-sm bg-[#F3F1D9] bg-opacity-50 text-gray-800">
+                    <thead class="bg-[#002E1F] text-white">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-bold">No</th>
+                        <th class="px-6 py-3 text-left font-bold">Nama Kelas</th>
+                        <th class="px-6 py-3 text-left font-bold">Mata Kuliah</th>
+                        <th class="px-6 py-3 text-left font-bold">Dosen Pengajar</th>
+                        <th class="px-6 py-3 text-left font-bold">Jumlah Mahasiswa</th>
+                        <th class="px-6 py-3 text-left font-bold">Ruangan</th>
+                        <th class="px-6 py-3 text-left font-bold">Aksi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Baris Mahasiswa dari Database -->
+                    <tr th:each="kls, iterStat : ${kelasList}">
+                        <td class="px-6 py-4" th:text="${iterStat.count}"></td>
+                        <td class="px-6 py-4" th:text="${kls.namaKelas}"></td>
+                        <td class="px-6 py-4" th:text="${kls.mataKuliah.namaMK}"></td>
+                        <td class="px-6 py-4" th:text="${kls.dosen.nama}"></td>
+                        <td class="px-6 py-4" th:text="${kls.jumlahMahasiswa}"></td>
+                        <td class="px-6 py-4" th:text="${kls.ruangan}"></td>
+                        <td class="px-6 py-4">
+                            <a th:href="@{/admin/manajemen_kelas/edit/{id}(id=${kls.id})}"
+                               class="text-green-600 hover:underline">Edit</a>
+                            <a th:href="@{/admin/manajemen_kelas/{id}(nim=${kls.id})}"
+                               class="text-red-600 hover:underline"
+                               onclick="return confirm('Apakah anda yakin?')">Hapus</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
 </div>
-
-<script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('kelasForm', () => ({
-            showForm: false,
-            namaKelas: '',
-            mataKuliahId: '',
-            dosenId: '',
-            mataKuliahs: [],
-            dosens: [],
-
-            async init() {
-                try {
-                    const mk = await fetch('/api/matakuliah').then(res => res.json());
-                    const dsn = await fetch('/api/dosen').then(res => res.json());
-                    this.mataKuliahs = mk;
-                    this.dosens = dsn;
-
-
-                } catch (e) {
-                    console.error('Gagal memuat data:', e);
-                    alert('Gagal memuat data dosen atau mata kuliah');
-                }
-            },
-
-            resetForm() {
-                this.namaKelas = '';
-                this.mataKuliahId = this.mataKuliahs.length > 0 ? this.mataKuliahs[0].kodeMK : '';
-                this.dosenId = this.dosens.length > 0 ? this.dosens[0].id : '';
-            },
-
-            async submitForm() {
-                try {
-                    console.log({
-                        namaKelas: this.namaKelas,
-                        mataKuliahId: this.mataKuliahId,
-                        dosenId: this.dosenId
-                    });
-
-                    const response = await fetch('/api/kelas', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            namaKelas: this.namaKelas,
-                            mataKuliahId: this.mataKuliahId,
-                            dosenId: this.dosenId
-                        })
-                    });
-
-                    const text = await response.text();
-                    let result;
-                    try {
-                        result = JSON.parse(text);
-                    } catch (e) {
-                        result = { error: text };
-                    }
-
-                    if (!response.ok) {
-                        throw new Error(result.error || 'Gagal menambahkan kelas.');
-                    }
-
-                    alert('Kelas berhasil ditambahkan!');
-                    this.showForm = false;
-                    this.resetForm();
-                    window.location.reload();
-
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error: ' + error.message);
-                }
-            }
-        }))
-    });
-</script>
 </body>
 </html>

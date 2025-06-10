@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/alpinejs" defer></script>
     <style>
         body {
@@ -19,10 +20,12 @@
 
 <div class="flex h-screen bg-[#F3F1D9]">
 
-
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-        <div class="px-6 py-4  font-bold text-xl" style="color: #711D1E">LMS blablabla</div>
+        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+        </div>
         <nav class="px-4 py-2 space-y-2">
             <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md  bg-green-900">Dasbor</a>
             <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 hover:bg-green-800 rounded-md">Manajemen Mahasiswa</a>
@@ -33,9 +36,7 @@
         </nav>
     </aside>
 
-
     <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" x-show="sidebarOpen" @click="sidebarOpen = false"></div>
-
 
     <div class="flex-1 flex flex-col lg:ml-64">
 
