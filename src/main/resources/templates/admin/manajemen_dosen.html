@@ -45,7 +45,10 @@
         <!-- Header -->
         <header class="p-4 flex justify-between items-center border-b border-gray-300">
             <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
-            <input type="text" placeholder="Cari..." class="w-1/2 px-4 py-2 border rounded-md" />
+            <div class="flex gap-2 w-1/2">
+                <input id="searchInput" type="text" placeholder="Cari kelas..." class="w-full px-4 py-2 border border-[#002E1F] rounded-md" />
+                <button id="searchButton" class="px-4 py-2 bg-green-900 text-white rounded-md hover:bg-green-800">Cari</button>
+            </div>
             <div class="text-sm text-gray-700">👤 Admin</div>
         </header>
 
@@ -146,7 +149,7 @@
 
             <!-- Tabel Mahasiswa -->
             <div class="bg-white shadow-md rounded-lg overflow-x-auto mt-6">
-                <table class="min-w-full text-sm bg-[#F3F1D9] bg-opacity-50 text-gray-800">
+                <table id="dosenTable" class="min-w-full text-sm bg-[#F3F1D9] bg-opacity-50 text-gray-800">
                     <thead class="bg-[#002E1F] text-white">
                     <tr>
                         <th class="px-6 py-3 text-left font-bold">No</th>
@@ -185,10 +188,34 @@
                     </tbody>
                 </table>
             </div>
-
         </main>
     </div>
 </div>
-
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
+        const table = document.getElementById("dosenTable");
+        const rows = table.querySelectorAll("tbody tr");
+
+        function searchTable() {
+            const query = searchInput.value.trim().toLowerCase();
+
+            rows.forEach(row => {
+                const cells = Array.from(row.cells);
+                const matchFound = cells.some(cell =>
+                    cell.textContent.toLowerCase().includes(query)
+                );
+
+                row.style.display = matchFound ? "" : "none";
+            });
+        }
+
+        searchButton.addEventListener("click", searchTable);
+        searchInput.addEventListener("keyup", function (e) {
+            if (e.key === "Enter") searchTable();
+        });
+    });
+</script>
 </html>
