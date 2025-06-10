@@ -29,6 +29,7 @@ public class AdminKelasController {
         model.addAttribute("daftarSemester", List.of("Ganjil", "Genap"));
         model.addAttribute("daftarTahunAjar", List.of("2023/2024", "2024/2025", "2025/2026"));
         model.addAttribute("daftarRuangan", List.of("A101", "A102", "B201", "B202", "C301", "C302"));
+        model.addAttribute("daftarHariKelas", List.of("Senin", "Selasa", "Rabu", "Kamis", "Jumat"));
         model.addAttribute("daftarDosen", dosenRepository.findAll());
         model.addAttribute("daftarMataKuliah", mataKuliahRepository.findAll());
     }
@@ -55,6 +56,7 @@ public class AdminKelasController {
         redirectAttributes.addFlashAttribute("tahunAjar", kelasForm.getTahunAjar());
         redirectAttributes.addFlashAttribute("ruangan", kelasForm.getRuangan());
         redirectAttributes.addFlashAttribute("jumlahMahasiswa", 0);
+        redirectAttributes.addFlashAttribute("hariKelas", kelasForm.getHariKelas());
         return "redirect:/admin/manajemen_kelas";
     }
 
@@ -90,6 +92,7 @@ public class AdminKelasController {
             existing.setSemester(kelasForm.getSemester());
             existing.setTahunAjar(kelasForm.getTahunAjar());
             existing.setRuangan(kelasForm.getRuangan());
+            existing.setHariKelas(kelasForm.getHariKelas());
 
             kelasRepository.save(existing);
             redirectAttributes.addFlashAttribute("sukses", "Data kelas berhasil diperbarui.");

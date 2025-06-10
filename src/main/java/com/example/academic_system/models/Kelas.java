@@ -1,6 +1,9 @@
 package com.example.academic_system.models;
 
 import jakarta.persistence.*;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -47,6 +50,11 @@ public class Kelas {
     @Column(name = "ruangan_kelas", nullable = false)
     private String ruangan;
 
+    @Column(name = "hari_kelas", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek hariKelas;
+
+
     // Getter dan Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -87,6 +95,14 @@ public class Kelas {
 
     public void updateJumlahMahasiswa() {
         this.jumlahMahasiswa = this.mahasiswaTerdaftar != null ? this.mahasiswaTerdaftar.size() : 0;
+    }
+
+    public DayOfWeek getHariKelas() {
+        return hariKelas;
+    }
+
+    public void setHariKelas(DayOfWeek hariKelas) {
+        this.hariKelas = hariKelas;
     }
 
     @Override
