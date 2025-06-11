@@ -33,4 +33,8 @@ public class KelasService {
     public void deleteKelas(Long id) {
         kelasRepository.deleteById(id);
     }
+
+    public long count() {
+        return kelasRepository.count();
+    }
 }

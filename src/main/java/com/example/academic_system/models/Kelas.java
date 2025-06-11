@@ -3,7 +3,6 @@ package com.example.academic_system.models;
 import jakarta.persistence.*;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class Kelas {
     private LocalTime jamKeluar;
 
     @Column(nullable = false)
-    private String semester; // Ganjil/Genap
+    private Integer semester; // Ganjil/Genap
 
     @Column(name = "tahun_ajar", nullable = false)
     private String tahunAjar; // Format: 2023/2024
@@ -84,8 +83,8 @@ public class Kelas {
     public LocalTime getJamKeluar() { return jamKeluar; }
     public void setJamKeluar(LocalTime jamKeluar) { this.jamKeluar = jamKeluar; }
 
-    public String getSemester() { return semester; }
-    public void setSemester(String semester) { this.semester = semester; }
+    public Integer getSemester() { return semester; }
+    public void setSemester(Integer semester) { this.semester = semester; }
 
     public String getTahunAjar() { return tahunAjar; }
     public void setTahunAjar(String tahunAjar) { this.tahunAjar = tahunAjar; }

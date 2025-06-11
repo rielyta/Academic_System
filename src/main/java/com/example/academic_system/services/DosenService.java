@@ -16,6 +16,10 @@ public class DosenService {
         this.dosenRepository = dosenRepository;
     }
 
+    public long count() {
+        return dosenRepository.count();
+    }
+
     public List<Dosen> getAllDosen() {
         return dosenRepository.findAll();
     }

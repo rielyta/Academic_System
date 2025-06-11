@@ -1,10 +1,212 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" x-data="{ sidebarOpen: false, formOpen: false }">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manajemen Mata Kuliah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
-<body>
-$END$
+
+<body class="font-sans bg-[#f3f1d9]" x-cloak>
+<div class="flex h-screen">
+
+    <!-- Sidebar -->
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
+           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+        </div>
+        <nav class="px-4 py-2 space-y-2">
+            <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md hover:bg-green-800">Dasbor</a>
+            <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mahasiswa</a>
+            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Dosen</a>
+            <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Kelas</a>
+            <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md bg-green-900 hover:bg-green-800">Manajemen Mata Kuliah</a>
+            <a href="/admin/activity_log" class="block px-3 py-2 mt-4 hover:bg-green-800 rounded-md">Log Aktivitas</a>
+        </nav>
+    </aside>
+
+    <!-- Overlay untuk mobile -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" x-show="sidebarOpen" @click="sidebarOpen = false"></div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col lg:ml-64">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+            <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
+            <div class="flex gap-2 w-1/2">
+                <input id="searchInput" type="text" placeholder="Cari Mata Kuliah..." class="w-full px-4 py-2 border border-[#002E1F] rounded-md" />
+                <button id="searchButton" class="px-4 py-2 bg-green-900 text-white rounded-md hover:bg-green-800">Cari</button>
+            </div>
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+                <i class="fa-solid fa-user"></i>
+                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+            </div>
+        </header>
+
+        <main class="p-6 overflow-y-auto">
+            <!-- Alert Sukses -->
+            <div th:if="${sukses}" class="bg-green-100 text-green-800 px-4 py-3 rounded mb-4 border border-green-200">
+                <p th:text="${sukses}"></p>
+            </div>
+
+            <!-- Tombol Tambah -->
+            <div class="flex justify-between items-center mb-4 mt-6">
+                <h1 class="text-2xl font-bold text-gray-800">Daftar Mata Kuliah</h1>
+                <button @click="formOpen = !formOpen"
+                        class="bg-[#20452F] text-white px-4 py-2 rounded-md hover:bg-[rgba(32,69,47,0.9)]">
+                    Tambah Mata Kuliah
+                </button>
+            </div>
+
+            <!-- Form -->
+            <div x-show="formOpen" x-transition class="bg-white mt-2 p-6 rounded-lg shadow-lg max-w-4xl">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Form Tambah Mata Kuliah</h2>
+
+                <form th:action="@{/admin/tambah_matakuliah}" th:object="${mataKuliah}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <!-- Kiri -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1" for="kodeMK">Kode</label>
+                        <input id="kodeMK" type="text" th:field="*{kodeMK}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                    </div>
+
+                    <!-- Kanan -->
+                    <div class="md:col-start-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1" for="namaMK">Mata Kuliah</label>
+                        <input id="namaMK" type="text" th:field="*{namaMK}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                    </div>
+
+                    <!-- Kiri -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1" for="sksMK">SKS</label>
+                        <input id="sksMK" type="text" th:field="*{sks}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                    </div>
+
+                    <!-- Kanan -->
+                    <div class="md:col-start-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1" for="tipeMK">Kategori</label>
+                        <div class="relative">
+                            <select id="tipeMK" th:field="*{tipeMatakuliah}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                <option th:each="kat : ${tipeMataKuliah}" th:value="${kat}" th:text="${kat}">Kategori</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Tombol -->
+                    <div class="md:col-span-2 flex justify-start gap-2 mt-4">
+                        <button type="submit" class="bg-green-900 text-white px-5 py-2 rounded-md hover:bg-green-800">Simpan</button>
+                        <button type="button" @click="formOpen = false" class="bg-gray-300 text-black px-5 py-2 rounded-md hover:bg-[#B80D0D] hover:text-white"> Batal</button>
+                    </div>
+                </form>
+            </div>
+
+            <div th:if="${editMode}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" x-cloak>
+                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">Form Edit MataKuliah</h2>
+                    <form th:action="@{/admin/manajemen_matakuliah/edit/{kodeMK}(kodeMK=${mataKuliah.kodeMK})}" th:object="${mataKuliah}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="hidden" th:field="*{kodeMK}" />
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Mata Kuliah</label>
+                            <input type="text" th:field="*{namaMK}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                        </div>
+
+                        <div class="md:col-start-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">SKS</label>
+                            <input type="text" th:field="*{sks}" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-green-400" required />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Kategori</label>
+                            <div class="relative">
+                                <select th:field="*{tipeMatakuliah}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                                    <option value="">-- Pilih Kategori --</option>
+                                    <option th:each="kat : ${tipeMataKuliah}" th:value="${kat}" th:text="${kat}">Kategori</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tombol -->
+                        <div class="md:col-span-2 flex justify-start gap-2 mt-4">
+                            <button type="submit" class="bg-green-900 text-white px-5 py-2 rounded-md hover:bg-green-800">Simpan</button>
+                            <a href="/admin/manajemen_matakuliah" class="bg-gray-300 text-black px-5 py-2 rounded-md hover:bg-[#B80D0D] hover:text-white">Batal</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg overflow-x-auto mt-6">
+                <table id="mataKuliahTable" class="min-w-full text-sm bg-[#F3F1D9] bg-opacity-50 text-gray-800">
+                    <thead class="bg-[#002E1F] text-white">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-bold">No</th>
+                        <th class="px-6 py-3 text-left font-bold">Kode</th>
+                        <th class="px-6 py-3 text-left font-bold">Mata Kuliah</th>
+                        <th class="px-6 py-3 text-left font-bold">Kategori</th>
+                        <th class="px-6 py-3 text-left font-bold">SKS</th>
+                        <th class="px-6 py-3 text-left font-bold">Jumlah Kelas</th>
+                        <th class="px-6 py-3 text-left font-bold">Aksi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="mk, iterStat : ${mataKuliahList}">
+                        <td class="px-6 py-4" th:text="${iterStat.count}"></td>
+                        <td class="px-6 py-4" th:text="${mk.kodeMK}"></td>
+                        <td class="px-6 py-4" th:text="${mk.namaMK}"></td>
+                        <td class="px-6 py-4" th:text="${mk.tipeMatakuliah}"></td>
+                        <td class="px-6 py-4" th:text="${mk.sks}"></td>
+                        <td class="px-6 py-4" th:text="${mk.jumlahKelas}"></td>
+                        <td class="px-6 py-4">
+                            <a th:href="@{'/admin/manajemen_matakuliah/edit/' + ${mk.kodeMK}}"
+                               class="text-green-600 hover:underline">Edit</a>
+                            <a th:href="@{'/admin/manajemen_matakuliah/' + ${mk.kodeMK}}"
+                               class="text-red-600 hover:underline"
+                               onclick="return confirm('Apakah anda yakin?')">Hapus</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
+        const table = document.getElementById("mataKuliahTable");
+        const rows = table.querySelectorAll("tbody tr");
+
+        function searchTable() {
+            const query = searchInput.value.trim().toLowerCase();
+
+            rows.forEach(row => {
+                const cells = Array.from(row.cells);
+                const matchFound = cells.some(cell =>
+                    cell.textContent.toLowerCase().includes(query)
+                );
+
+                row.style.display = matchFound ? "" : "none";
+            });
+        }
+
+        searchButton.addEventListener("click", searchTable);
+        searchInput.addEventListener("keyup", function (e) {
+            if (e.key === "Enter") searchTable();
+        });
+    });
+</script>
 </html>
