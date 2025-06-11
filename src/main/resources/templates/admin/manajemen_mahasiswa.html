@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manajemen Mahasiswa</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/alpinejs" defer></script>
     <style>
         body {
@@ -17,19 +18,22 @@
 
 <body class="font-sans bg-[#f3f1d9]" x-cloak>
 
-<div class="flex h-screen">
+<div class="flex h-screen bg-[#F3F1D9]">
 
     <!-- Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-        <div class="px-6 py-4  font-bold text-xl" style="color: #711D1E">LMS blablabla</div>
+        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+        </div>
         <nav class="px-4 py-2 space-y-2">
             <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md hover:bg-green-800">Dasbor</a>
             <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 bg-green-900 rounded-md">Manajemen Mahasiswa</a>
             <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Dosen</a>
             <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Kelas</a>
             <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mata Kuliah</a>
-            <a href="/admin/log" class="block px-3 py-2 rounded-md mt-4 hover:bg-green-800">Laporan & Log Aktivitas</a>
+            <a href="/admin/activity_log" class="block px-3 py-2 mt-4 hover:bg-green-800 rounded-md">Log Aktivitas</a>
         </nav>
     </aside>
 
@@ -39,10 +43,16 @@
     <!-- Main Content -->
     <div class="flex-1 flex flex-col lg:ml-64">
         <!-- Header -->
-        <header class="bg-[#002E1F] p-4 flex justify-between items-center border-b border-gray-300">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
             <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
-            <input type="text" placeholder="Cari..." class="w-1/2 px-4 py-2 border rounded-md" />
-            <div class="text-sm text-gray-700">👤 Admin</div>
+            <div class="flex gap-2 w-1/2">
+                <input id="searchInput" type="text" placeholder="Cari kelas..." class="w-full px-4 py-2 border border-[#002E1F] rounded-md" />
+                <button id="searchButton" class="px-4 py-2 bg-green-900 text-white rounded-md hover:bg-green-800">Cari</button>
+            </div>
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+                <i class="fa-solid fa-user"></i>
+                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+            </div>
         </header>
 
         <!-- Page Content -->
@@ -54,9 +64,9 @@
 
             <!-- Tombol Tambah -->
             <div class="flex justify-between items-center mb-4 mt-6">
-                <h1 class="text-2xl font-bold text-gray-800">Mahasiswa</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Daftar Mahasiswa</h1>
                 <button @click="formOpen = !formOpen"
-                        class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-green-800">
+                        class="bg-[#20452F] text-white px-4 py-2 rounded-md hover:bg-[rgba(32,69,47,0.9)]">
                     Tambah Mahasiswa
                 </button>
             </div>
@@ -111,7 +121,6 @@
                         <button type="submit" class="bg-green-900 text-white px-5 py-2 rounded-md hover:bg-green-800">Simpan</button>
                         <button type="button" @click="formOpen = false" class="bg-gray-300 text-black px-5 py-2 rounded-md hover:bg-gray-400"> Batal</button>
                     </div>
-
                 </form>
             </div>
 
@@ -150,12 +159,10 @@
                 </div>
             </div>
 
-
-
             <!-- Tabel Mahasiswa -->
             <div class="bg-white shadow rounded-lg overflow-x-auto mt-6">
-                <table class="min-w-full text-sm text-gray-800">
-                    <thead class="bg-[#f3f1d9]">
+                <table id="mahasiswaTable" class="min-w-full text-sm bg-[#F3F1D9] bg-opacity-50 text-gray-800">
+                    <thead class="bg-[#002E1F] text-white">
                     <tr>
                         <th class="px-6 py-3 text-left font-bold">No</th>
                         <th class="px-6 py-3 text-left font-bold">NIM</th>
@@ -186,10 +193,34 @@
                     </tbody>
                 </table>
             </div>
-
         </main>
     </div>
 </div>
-
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
+        const table = document.getElementById("mahasiswaTable");
+        const rows = table.querySelectorAll("tbody tr");
+
+        function searchTable() {
+            const query = searchInput.value.trim().toLowerCase();
+
+            rows.forEach(row => {
+                const cells = Array.from(row.cells);
+                const matchFound = cells.some(cell =>
+                    cell.textContent.toLowerCase().includes(query)
+                );
+
+                row.style.display = matchFound ? "" : "none";
+            });
+        }
+
+        searchButton.addEventListener("click", searchTable);
+        searchInput.addEventListener("keyup", function (e) {
+            if (e.key === "Enter") searchTable();
+        });
+    });
+</script>
 </html>

@@ -1,5 +1,7 @@
 package com.example.academic_system.models;
+
 import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity

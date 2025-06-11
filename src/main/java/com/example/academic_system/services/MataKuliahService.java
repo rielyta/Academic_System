@@ -20,4 +20,8 @@ public class MataKuliahService {
     public List<MataKuliah> getAllMataKuliah() {
         return mataKuliahRepository.findAll();
     }
+
+    public long count() {
+        return mataKuliahRepository.count();
+    }
 }

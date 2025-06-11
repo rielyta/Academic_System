@@ -1,9 +1,7 @@
 package com.example.academic_system.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,9 +17,14 @@ public class MataKuliah {
     @Column(nullable = false)
     private int sks;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "mataKuliah", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Kelas> daftarKelas = new ArrayList<>();
+    @OneToMany(mappedBy = "mataKuliah", cascade = CascadeType.ALL)
+    private List<Kelas> kelasList;
+
+    @Transient
+    private int jumlahKelas;
+
+    @Column(name = "tipe_matakuliah", nullable = false)
+    private String tipeMatakuliah;
 
     public MataKuliah() {}
 
@@ -55,12 +58,23 @@ public class MataKuliah {
         this.sks = sks;
     }
 
-    public List<Kelas> getDaftarKelas() {
-        return daftarKelas;
+    public int getJumlahKelas() {
+        return kelasList != null ? kelasList.size() : 0;
     }
 
-    public void setDaftarKelas(List<Kelas> daftarKelas) {
-        this.daftarKelas = daftarKelas;
+    public List<Kelas> getKelasList() {
+        return kelasList;
     }
 
+    public void setKelasList(List<Kelas> kelasList) {
+        this.kelasList = kelasList;
+    }
+
+    public String getTipeMatakuliah() {
+        return tipeMatakuliah;
+    }
+
+    public void setTipeMatakuliah(String tipeMatakuliah) {
+        this.tipeMatakuliah = tipeMatakuliah;
+    }
 }
