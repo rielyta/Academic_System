@@ -21,60 +21,53 @@
 <body class="bg-gray-100 font-sans">
 <div class="flex h-screen">
   <!-- Sidebar -->
-  <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-green-800 to-green-900 text-white">
-    <div class="flex flex-col px-6 py-6 items-center border-b border-green-700">
-      <div class="bg-yellow-400 rounded-full p-4 mb-3">
-        <i class="fas fa-graduation-cap text-2xl text-green-800"></i>
-      </div>
-      <h1 class="text-sm font-bold text-center leading-tight">Fakultas A</h1>
-      <p class="text-xs text-green-200 text-center">Learning Management System</p>
+  <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white">
+    <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+      <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+      <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
     </div>
-
     <nav class="px-4 py-4 space-y-2">
-      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-green-700 transition-colors">
-        <i class="fas fa-tachometer-alt w-5"></i>
-        <span>Dasbor</span>
+      <a href="manajemen_mahasiswa" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
+        <i class="fas fa-tachometer-alt"></i>
+        Dasbor
       </a>
-      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-green-700 transition-colors">
-        <i class="fas fa-chalkboard-teacher w-5"></i>
-        <span>Kelas Saya</span>
+      <a href="manajemen_mahasiswa" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
+        <i class="fas fa-chalkboard-teacher"></i>
+        Kelas Saya
       </a>
-      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-green-700 transition-colors">
-        <i class="fas fa-calendar-alt w-5"></i>
-        <span>Jadwal Mengajar</span>
+      <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
+        <i class="fas fa-calendar-alt mr-2"></i>
+        Jadwal Mengajar
       </a>
-      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-green-700 transition-colors">
-        <i class="fas fa-star w-5"></i>
-        <span>Penilaian</span>
-      </a>
-      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md bg-green-700 text-white">
-        <i class="fas fa-users w-5"></i>
-        <span>Mahasiswa</span>
-      </a>
+      <div class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">
+        <i class="fas fa-users mr-2"></i>
+        Mahasiswa
+      </div>
     </nav>
-
-    <div class="absolute bottom-0 w-full p-4">
-      <button class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Keluar</span>
-      </button>
+    <div class="p-4 absolute bottom-0 w-64">
+      <form th:action="@{/logout}" method="post">
+        <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
+          <i class="fas fa-sign-out-alt mr-2"></i>
+          Keluar
+        </button>
+      </form>
     </div>
   </aside>
 
   <!-- Main Content -->
-  <div class="flex-1 ml-64 bg-gray-50">
+  <div class="flex-1 ml-64 bg-[#F3F1D9]">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
+    <header class="bg-[rgba(255,251,223,0.9)] shadow-sm border-b border-[#2C7148]">
       <div class="flex items-center justify-between px-6 py-4">
         <div class="flex items-center gap-4">
-          <i class="fas fa-users text-green-700 text-xl"></i>
-          <h1 class="text-xl font-semibold text-gray-800">Data Mahasiswa</h1>
+          <i class="fas fa-users text-[#20452F] text-xl"></i>
+          <h1 class="text-xl font-semibold text-[rgba(0,0,0,0.8)]">Data Mahasiswa</h1>
         </div>
 
         <div class="flex items-center gap-4">
-          <i class="fas fa-bell text-gray-500"></i>
-          <i class="fas fa-user-circle text-gray-500"></i>
-          <span class="text-sm font-medium text-gray-700">Nama Dosen</span>
+          <i class="fas fa-bell text-[#514D4D]"></i>
+          <i class="fas fa-user-circle text-[#514D4D]"></i>
+          <span class="text-sm font-medium text-[rgba(0,0,0,0.8)]">Nama Dosen</span>
         </div>
       </div>
     </header>
@@ -82,32 +75,32 @@
     <!-- Content -->
     <main class="p-6">
       <!-- Filter and Search Section -->
-      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 mb-6">
         <div class="flex flex-col md:flex-row gap-4 items-center">
           <div class="flex-1 max-w-xs">
             <div class="relative">
-              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+              <i class="fas fa-search absolute left-3 top-3 text-[#514D4D]"></i>
               <input type="text" placeholder="Cari mahasiswa..."
-                     class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                     class="w-full pl-10 pr-4 py-2 border border-[#2C7148] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C7148] focus:border-transparent">
             </div>
           </div>
 
           <div class="flex gap-3">
-            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            <select class="px-4 py-2 border border-[#2C7148] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
               <option>Kelas</option>
               <option>ILK2201</option>
               <option>ILK2202</option>
               <option>ILK2203</option>
             </select>
 
-            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            <select class="px-4 py-2 border border-[#2C7148] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
               <option>Angkatan</option>
               <option>2023</option>
               <option>2022</option>
               <option>2021</option>
             </select>
 
-            <button class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+            <button class="bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
               <i class="fas fa-download"></i>
               Ekspor Data
             </button>
@@ -116,146 +109,146 @@
       </div>
 
       <!-- Data Table -->
-      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full">
-            <thead class="bg-gray-50 border-b border-gray-200">
+            <thead class="bg-[rgba(44,113,72,0.1)] border-b border-[#2C7148] border-opacity-20">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Mahasiswa</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Angkatan</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode Kelas</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-[rgba(0,0,0,0.8)] uppercase tracking-wider">No</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-[rgba(0,0,0,0.8)] uppercase tracking-wider">NIM</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-[rgba(0,0,0,0.8)] uppercase tracking-wider">Nama Mahasiswa</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-[rgba(0,0,0,0.8)] uppercase tracking-wider">Prodi</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-[rgba(0,0,0,0.8)] uppercase tracking-wider">Fakultas</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-[rgba(0,0,0,0.8)] uppercase tracking-wider">Angkatan</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-[rgba(0,0,0,0.8)] uppercase tracking-wider">Kode Kelas</th>
             </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-[rgba(255,251,223,0.9)] divide-y divide-[#2C7148] divide-opacity-20">
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401000</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Parulian Dwi Reslia</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">1</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401000</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Parulian Dwi Reslia</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401001</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Parulian Dwi Reslia</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401001</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Parulian Dwi Reslia</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401002</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Parulian Dwi Reslia</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">3</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401002</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Parulian Dwi Reslia</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">4</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401003</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Parulian Dwi Reslia</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">4</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401003</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Parulian Dwi Reslia</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401004</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ahmad Rizki Pratama</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">5</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401004</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ahmad Rizki Pratama</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">6</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401005</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Siti Nurhaliza</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">6</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401005</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Siti Nurhaliza</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">7</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401006</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Budi Santoso</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">7</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401006</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Budi Santoso</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">8</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401007</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maya Anggraini</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">8</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401007</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Maya Anggraini</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">9</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401008</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dedi Kurniawan</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">9</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401008</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Dedi Kurniawan</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             <tr class="table-row">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">10</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">231401009</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rina Fitriani</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilmu Komputer</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ilkom-TI</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2023</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ILK2201</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">10</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">231401009</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Rina Fitriani</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilmu Komputer</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">Ilkom-TI</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">2023</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-[rgba(0,0,0,0.8)]">ILK2201</td>
             </tr>
             </tbody>
           </table>
         </div>
 
         <!-- Pagination -->
-        <div class="bg-white px-6 py-4 flex items-center justify-between border-t border-gray-200">
+        <div class="bg-[rgba(255,251,223,0.9)] px-6 py-4 flex items-center justify-between border-t border-[#2C7148] border-opacity-20">
           <div class="flex-1 flex justify-between sm:hidden">
-            <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <button class="relative inline-flex items-center px-4 py-2 border border-[#2C7148] text-sm font-medium rounded-md text-[rgba(0,0,0,0.8)] bg-[rgba(255,251,223,0.9)] hover:bg-[rgba(44,113,72,0.1)]">
               Previous
             </button>
-            <button class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <button class="ml-3 relative inline-flex items-center px-4 py-2 border border-[#2C7148] text-sm font-medium rounded-md text-[rgba(0,0,0,0.8)] bg-[rgba(255,251,223,0.9)] hover:bg-[rgba(44,113,72,0.1)]">
               Next
             </button>
           </div>
           <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
-              <p class="text-sm text-gray-700">
+              <p class="text-sm text-[rgba(0,0,0,0.7)]">
                 Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">10</span> dari <span class="font-medium">200</span> item
               </p>
             </div>
             <div>
               <nav class="relative z-0 inline-flex rounded-md shadow-sm">
-                <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-[#2C7148] bg-[rgba(255,251,223,0.9)] text-sm font-medium text-[rgba(0,0,0,0.7)] hover:bg-[rgba(44,113,72,0.1)]">
                   <i class="fas fa-chevron-left"></i>
                 </button>
-                <button class="bg-green-600 border-green-600 text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                <button class="bg-[#20452F] border-[#20452F] text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                   1
                 </button>
-                <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                <button class="bg-[rgba(255,251,223,0.9)] border-[#2C7148] text-[rgba(0,0,0,0.7)] hover:bg-[rgba(44,113,72,0.1)] relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                   2
                 </button>
-                <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                <button class="bg-[rgba(255,251,223,0.9)] border-[#2C7148] text-[rgba(0,0,0,0.7)] hover:bg-[rgba(44,113,72,0.1)] relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                   3
                 </button>
-                <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-[#2C7148] bg-[rgba(255,251,223,0.9)] text-sm font-medium text-[rgba(0,0,0,0.7)] hover:bg-[rgba(44,113,72,0.1)]">
                   <i class="fas fa-chevron-right"></i>
                 </button>
               </nav>
