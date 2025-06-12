@@ -3,90 +3,92 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
+    <title>Dashboard Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/alpinejs" defer></script>
-    <style>
-        body {
-            background-color: #3a3a3a;
-        }
-        .jockey-font {
-            font-family: 'Jockey One', sans-serif;
-        }
-    </style>
 </head>
-<body class="text-gray-900 font-sans" x-cloak>
+<body class="bg-[#F3F1D9] font-sans text-gray-900" x-cloak>
 
-<div class="flex h-screen bg-[#F3F1D9]">
+<div class="flex h-screen">
 
+    <!-- Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
         <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
-            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
-            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+            <p class="text-lg font-bold text-center">Learning Management System</p>
+            <i class="fa-solid fa-school text-6xl text-yellow-300 mt-4"></i>
         </div>
         <nav class="px-4 py-2 space-y-2">
-            <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md  bg-green-900">Dasbor</a>
-            <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 hover:bg-green-800 rounded-md">Manajemen Mahasiswa</a>
-            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800 ">Manajemen Dosen</a>
+            <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md bg-green-900">Dasbor</a>
+            <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mahasiswa</a>
+            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Dosen</a>
             <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Kelas</a>
             <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mata Kuliah</a>
-            <a href="/admin/log" class="block px-3 py-2 rounded-md mt-4 hover:bg-green-800">Laporan & Log Aktivitas</a>
+            <a href="/admin/activity_log" class="block px-3 py-2 mt-4 hover:bg-green-800 rounded-md">Log Aktivitas</a>
         </nav>
     </aside>
 
-    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" x-show="sidebarOpen" @click="sidebarOpen = false"></div>
-
+    <!-- Main -->
     <div class="flex-1 flex flex-col lg:ml-64">
-
-        <header class="bg-[#F3F1D9] p-4 flex justify-between items-center border-b border-gray-300">
-
-            <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">
-                ☰
-            </button>
-            <input type="text" placeholder="Cari..." class="w-1/2 px-4 py-2 rounded-md border border-[#002E1F] focus:ring-2 focus:ring-[#002E1F]"/>
-            <div class="text-sm text-gray-700">👤 Admin</div>
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+            <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
+            <h1 class="text-xl font-bold">Dashboard Admin</h1>
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+                <i class="fa-solid fa-user"></i>
+                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+            </div>
         </header>
 
-
         <main class="p-6 flex-1 overflow-y-auto">
-            <!-- Grid stats -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white p-4 shadow rounded-md"> Total Dosen<br>
-                    <span class="font-bold text-lg" th:text="${totalDosen}">0</span>
-                </div>
-                <div class="bg-white p-4 shadow rounded-md"> Total Mahasiswa<br>
-                    <span class="font-bold text-lg" th:text="${totalMahasiswa}">0</span>
-                </div>
-                <div class="bg-white p-4 shadow rounded-md"> Total Kelas<br>
-                    <span class="font-bold text-lg" th:text="${totalKelas}">0</span>
-                </div>
-                <div class="bg-white p-4 shadow rounded-md"> Total Mata Kuliah<br>
-                    <span class="font-bold text-lg" th:text="${totalMatkul}">0</span>
-                </div>
-                <div class="bg-white p-4 shadow rounded-md"> Total Admin<br>
-                    <span class="font-bold text-lg" th:text="${totalAdmin}">0</span>
-                </div>
 
+            <!-- Statistik Ringkas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 shadow rounded-md">
+                    <p class="text-sm text-gray-500">Total Dosen</p>
+                    <p class="text-2xl font-bold text-green-900" th:text="${totalDosen}">0</p>
+                </div>
+                <div class="bg-white p-4 shadow rounded-md">
+                    <p class="text-sm text-gray-500">Total Mahasiswa</p>
+                    <p class="text-2xl font-bold text-green-900" th:text="${totalMahasiswa}">0</p>
+                </div>
+                <div class="bg-white p-4 shadow rounded-md">
+                    <p class="text-sm text-gray-500">Total Kelas</p>
+                    <p class="text-2xl font-bold text-green-900" th:text="${totalKelas}">0</p>
+                </div>
+                <div class="bg-white p-4 shadow rounded-md">
+                    <p class="text-sm text-gray-500">Total Mata Kuliah</p>
+                    <p class="text-2xl font-bold text-green-900" th:text="${totalMatkul}">0</p>
+                </div>
             </div>
 
-            <!-- Jam kerja -->
+            <!-- Tabel Log Aktivitas Terbaru -->
             <div class="bg-white p-6 rounded-md shadow">
-                <h2 class="font-bold text-lg mb-4 flex items-center gap-2"> Atur Jam Kerja</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm mb-1">Jam Masuk</label>
-                        <input type="time" value="08:00" class="w-full px-3 py-2 border rounded-md mb-2" />
-                        <button class="bg-green-900 text-white px-4 py-1 rounded-md">Update</button>
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-1">Jam Keluar</label>
-                        <input type="time" value="16:20" class="w-full px-3 py-2 border rounded-md mb-2" />
-                        <button class="bg-green-900 text-white px-4 py-1 rounded-md">Update</button>
-                    </div>
+                <h2 class="text-lg font-semibold mb-4">Log Aktivitas Terbaru</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm divide-y divide-gray-200">
+                        <thead class="bg-[#002E1F] text-white">
+                        <tr>
+                            <th class="px-4 py-2 text-left">No</th>
+                            <th class="px-4 py-2 text-left">Waktu</th>
+                            <th class="px-4 py-2 text-left">Entitas</th>
+                            <th class="px-4 py-2 text-left">Aksi</th>
+                            <th class="px-4 py-2 text-left">Pelaku</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-gray-700 divide-y divide-gray-200">
+                        <tr th:each="log, iterStat : ${recentLogs}">
+                            <td class="px-4 py-2" th:text="${iterStat.count}">1</td>
+                            <td class="px-4 py-2" th:text="${#dates.format(log.timestamp, 'yyyy-MM-dd HH:mm')}">2025-06-11</td>
+                            <td class="px-4 py-2" th:text="${log.entityName}">Mahasiswa</td>
+                            <td class="px-4 py-2" th:text="${log.action}">UPDATE</td>
+                            <td class="px-4 py-2" th:text="${log.performedBy}">admin</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
         </main>
     </div>
 </div>

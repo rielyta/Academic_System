@@ -1,7 +1,10 @@
 package com.example.academic_system.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+
 import java.util.List;
 
 @Entity
