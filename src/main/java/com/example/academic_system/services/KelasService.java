@@ -37,4 +37,8 @@ public class KelasService {
     public long count() {
         return kelasRepository.count();
     }
+
+    public int countByDosenId(Long dosenId) {
+        return kelasRepository.countByDosenId(dosenId);
+    }
 }

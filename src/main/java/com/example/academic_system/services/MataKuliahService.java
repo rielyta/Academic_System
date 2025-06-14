@@ -24,4 +24,8 @@ public class MataKuliahService {
     public long count() {
         return mataKuliahRepository.count();
     }
+
+    public int countByDosenId(Long dosenId) {
+        return mataKuliahRepository.countByDosenId(dosenId);
+    }
 }

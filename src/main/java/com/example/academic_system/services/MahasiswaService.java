@@ -52,4 +52,8 @@ public class MahasiswaService {
     public void deleteMahasiswa(Long id) {
         mahasiswaRepository.deleteById(id);
     }
+
+    public int countByDosenId(Long dosenId) {
+        return mahasiswaRepository.countByKelasDosenId(dosenId);
+    }
 }

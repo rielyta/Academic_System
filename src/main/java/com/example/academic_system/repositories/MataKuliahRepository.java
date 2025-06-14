@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MataKuliahRepository extends JpaRepository<MataKuliah, String> {
     MataKuliah findByKodeMK(String kodeMK);
+
+    int countByDosenId(Long dosenId);
 }

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Dosen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+        .table-row:hover {
+            background-color: rgba(34, 197, 94, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-green-900 text-white">
+        <div class="flex flex-col px-6 py-6 items-center border-b border-green-800">
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
+        </div>
+        <nav class="px-4 py-4 space-y-2">
+            <a href="#" class="hover:bg-green-700 rounded-md px-3 py-2 flex items-center gap-2 block">
+                <i class="fas fa-tachometer-alt"></i>
+                Dasbor
+            </a>
+            <a href="#" class="hover:bg-green-700 rounded-md px-3 py-2 flex items-center gap-2 block">
+                <i class="fas fa-chalkboard-teacher"></i>
+                Kelas
+            </a>
+            <a href="#" class="block px-3 py-2 rounded-md hover:bg-green-700">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                Jadwal
+            </a>
+            <div class="bg-green-800 rounded-md px-3 py-2 flex items-center gap-2">
+                <i class="fas fa-users"></i>
+                Dosen
+            </div>
+            <a href="#" class="block px-3 py-2 rounded-md hover:bg-green-700">
+                <i class="fas fa-user-graduate mr-2"></i>
+                Mahasiswa
+            </a>
+        </nav>
+        <div class="p-4 absolute bottom-0 w-64">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Keluar
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 ml-64 bg-yellow-50">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-green-200">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-users text-green-800 text-xl"></i>
+                    <h1 class="text-xl font-semibold text-gray-800">Daftar Dosen</h1>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-bell text-gray-600"></i>
+                    <i class="fas fa-user-circle text-gray-600"></i>
+                    <span class="text-sm font-medium text-gray-800">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="p-6">
+            <!-- Action Bar -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6 border border-green-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            <i class="fas fa-chalkboard-teacher text-green-800 mr-2"></i>
+                            Manajemen Dosen
+                        </h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="relative">
+                            <input type="text" placeholder="Cari dosen..." class="pl-10 pr-4 py-2 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        <button class="bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                            <i class="fas fa-plus mr-2"></i>
+                            Tambah Dosen
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-6 border border-green-200">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 text-green-800">
+                            <i class="fas fa-chalkboard-teacher text-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-semibold text-gray-800" th:text="${totalDosen ?: 0}">12</h3>
+                            <p class="text-sm text-gray-600">Total Dosen</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-6 border border-green-200">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-800">
+                            <i class="fas fa-user-check text-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-semibold text-gray-800">10</h3>
+                            <p class="text-sm text-gray-600">Dosen Aktif</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-6 border border-green-200">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-800">
+                            <i class="fas fa-book text-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-semibold text-gray-800">25</h3>
+                            <p class="text-sm text-gray-600">Mata Kuliah</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-6 border border-green-200">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-800">
+                            <i class="fas fa-graduation-cap text-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-semibold text-gray-800">150</h3>
+                            <p class="text-sm text-gray-600">Mahasiswa Dibimbing</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-green-200">
+                <div class="bg-green-800 text-white p-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-list mr-2"></i>
+                            Data Dosen
+                        </h2>
+                        <div class="flex items-center gap-2">
+                            <select class="bg-green-700 text-white px-3 py-1 rounded text-sm">
+                                <option>Semua Status</option>
+                                <option>Aktif</option>
+                                <option>Non-Aktif</option>
+                            </select>
+                            <button class="bg-green-700 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                                <i class="fas fa-download mr-1"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-green-50 border-b border-green-200">
+                        <tr>
+                            <th class="text-left p-4 font-semibold text-green-800">ID</th>
+                            <th class="text-left p-4 font-semibold text-green-800">Foto</th>
+                            <th class="text-left p-4 font-semibold text-green-800">Nama Dosen</th>
+                            <th class="text-left p-4 font-semibold text-green-800">NIP</th>
+                            <th class="text-left p-4 font-semibold text-green-800">Email</th>
+                            <th class="text-left p-4 font-semibold text-green-800">No. Telepon</th>
+                            <th class="text-left p-4 font-semibold text-green-800">Status</th>
+                            <th class="text-center p-4 font-semibold text-green-800">Aksi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="dosen : ${dosenList}" class="table-row border-b border-gray-100">
+                            <td class="p-4 text-gray-800" th:text="${dosen.id}">1</td>
+                            <td class="p-4">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-green-800"></i>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <div>
+                                    <div class="font-medium text-gray-800" th:text="${dosen.nama}">Dr. Ahmad Susanto</div>
+                                    <div class="text-sm text-gray-600">Dosen Tetap</div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-gray-800" th:text="${dosen.nip ?: '-'}">198501012010121001</td>
+                            <td class="p-4 text-gray-800" th:text="${dosen.email}">ahmad.susanto@univ.ac.id</td>
+                            <td class="p-4 text-gray-800" th:text="${dosen.noTelepon ?: '-'}">+62 812-3456-7890</td>
+                            <td class="p-4">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                                        Aktif
+                                    </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a th:href="@{/dosen/{id}(id=${dosen.id})}"
+                                       class="bg-green-800 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Detail
+                                    </a>
+                                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-edit mr-1"></i>
+                                        Edit
+                                    </button>
+                                    <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-trash mr-1"></i>
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Sample data untuk demonstrasi -->
+                        <tr class="table-row border-b border-gray-100">
+                            <td class="p-4 text-gray-800">2</td>
+                            <td class="p-4">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-green-800"></i>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <div>
+                                    <div class="font-medium text-gray-800">Prof. Dr. Siti Nurhaliza</div>
+                                    <div class="text-sm text-gray-600">Profesor</div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-gray-800">197803152005012001</td>
+                            <td class="p-4 text-gray-800">siti.nurhaliza@univ.ac.id</td>
+                            <td class="p-4 text-gray-800">+62 813-2468-1357</td>
+                            <td class="p-4">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                                        Aktif
+                                    </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="#" class="bg-green-800 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Detail
+                                    </a>
+                                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-edit mr-1"></i>
+                                        Edit
+                                    </button>
+                                    <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-trash mr-1"></i>
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="table-row border-b border-gray-100">
+                            <td class="p-4 text-gray-800">3</td>
+                            <td class="p-4">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-green-800"></i>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <div>
+                                    <div class="font-medium text-gray-800">Dr. Budi Santoso, M.Kom</div>
+                                    <div class="text-sm text-gray-600">Dosen Tetap</div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-gray-800">198712052012121002</td>
+                            <td class="p-4 text-gray-800">budi.santoso@univ.ac.id</td>
+                            <td class="p-4 text-gray-800">+62 814-9876-5432</td>
+                            <td class="p-4">
+                                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                                        Cuti
+                                    </span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="#" class="bg-green-800 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Detail
+                                    </a>
+                                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-edit mr-1"></i>
+                                        Edit
+                                    </button>
+                                    <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                                        <i class="fas fa-trash mr-1"></i>
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                    <div class="flex items-center text-sm text-gray-600">
+                        Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">10</span> dari <span class="font-medium">12</span> data
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100 disabled:opacity-50" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-3 py-1 bg-green-800 text-white rounded text-sm">1</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">2</button>
+                        <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

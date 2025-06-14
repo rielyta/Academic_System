@@ -2,48 +2,59 @@ package com.example.academic_system.controllers;
 
 import com.example.academic_system.models.Dosen;
 import com.example.academic_system.services.DosenService;
+import com.example.academic_system.services.KelasService;
+import com.example.academic_system.services.MahasiswaService;
+import com.example.academic_system.services.MataKuliahService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@CrossOrigin(origins = "*")
-@RestController
+@Controller
+@RequestMapping("/dosen")
 public class DosenController {
 
-    private final DosenService dosenService;
+    @Autowired
+    private DosenService dosenService;
 
     @Autowired
-    public DosenController(DosenService dosenService) {
-        this.dosenService = dosenService;
-    }
+    private KelasService kelasService;
 
-    @GetMapping
-    public List<Dosen> getAllDosen() {
-        return dosenService.getAllDosen();
+    @Autowired
+    private MahasiswaService mahasiswaService;
+
+    @Autowired
+    private MataKuliahService mataKuliahService;
+
+    @GetMapping("/list")
+    public String listDosen(Model model) {
+        List<Dosen> dosenList = dosenService.findAll();
+        model.addAttribute("dosenList", dosenList);
+        return "dosen/list";
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dosen> getDosenById(@PathVariable Long id) {
-        Dosen dosen = dosenService.getDosenById(id);
-        return dosen != null ? ResponseEntity.ok(dosen) : ResponseEntity.notFound().build();
+    public String detailDosen(@PathVariable Long id, Model model) {
+        Optional<Dosen> dosen = dosenService.findById(id);
+        if (dosen.isPresent()) {
+            model.addAttribute("dosen", dosen.get());
+
+            // Calculate statistics
+            int totalKelas = kelasService.countByDosenId(id);
+            int totalMahasiswa = mahasiswaService.countByDosenId(id);
+            int totalMataKuliah = mataKuliahService.countByDosenId(id);
+
+            model.addAttribute("totalKelas", totalKelas);
+            model.addAttribute("totalMahasiswa", totalMahasiswa);
+            model.addAttribute("totalMataKuliah", totalMataKuliah);
+
+            return "dosen/detail";
+        }
+        return "redirect:/dosen";
     }
 
-    @PostMapping
-    public Dosen createDosen(@RequestBody Dosen dosen) {
-        return dosenService.createDosen(dosen);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Dosen> updateDosen(@PathVariable Long id, @RequestBody Dosen dosenDetails) {
-        Dosen updatedDosen = dosenService.updateDosen(id, dosenDetails);
-        return updatedDosen != null ? ResponseEntity.ok(updatedDosen) : ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDosen(@PathVariable Long id) {
-        dosenService.deleteDosen(id);
-        return ResponseEntity.noContent().build();
-    }
+    // Add other controller methods as needed
 }

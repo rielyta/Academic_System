@@ -10,4 +10,5 @@ public interface MahasiswaRepository extends JpaRepository<Mahasiswa, Long> {
 
     void deleteByNim(String nim);
 
+    int countByKelasDosenId(Long dosenId);
 }

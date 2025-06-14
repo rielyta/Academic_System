@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DosenService {
+
     private final DosenRepository dosenRepository;
 
     @Autowired
@@ -16,41 +18,84 @@ public class DosenService {
         this.dosenRepository = dosenRepository;
     }
 
-    public long count() {
-        return dosenRepository.count();
+    // Basic CRUD operations
+    public List<Dosen> findAll() {
+        return dosenRepository.findAll();
     }
 
     public List<Dosen> getAllDosen() {
         return dosenRepository.findAll();
     }
 
-    // Ambil dosen berdasarkan ID (Long)
+    public Optional<Dosen> findById(Long id) {
+        return dosenRepository.findById(id);
+    }
+
     public Dosen getDosenById(Long id) {
         return dosenRepository.findById(id).orElse(null);
     }
 
-    // Ambil dosen berdasarkan NIP (kalau kamu tambahkan method-nya)
-    public Dosen getDosenByNip(String nip) {
-        return dosenRepository.findByNip(nip).orElse(null);
-    }
-
-    public Dosen createDosen(Dosen dosen) {
+    public Dosen save(Dosen dosen) {
         return dosenRepository.save(dosen);
     }
 
-    public Dosen updateDosen(Long id, Dosen dosenDetails) {
-        Dosen dosen = dosenRepository.findById(id).orElse(null);
-        if (dosen != null) {
-            dosen.setNama(dosenDetails.getNama());
-            dosen.setEmail(dosenDetails.getEmail());
-            dosen.setFakultas(dosenDetails.getFakultas());
-            dosen.setNip(dosenDetails.getNip());
-            return dosenRepository.save(dosen);
-        }
-        return null;
+    public Dosen saveDosen(Dosen dosen) {
+        return dosenRepository.save(dosen);
+    }
+
+    public void deleteById(Long id) {
+        dosenRepository.deleteById(id);
     }
 
     public void deleteDosen(Long id) {
         dosenRepository.deleteById(id);
+    }
+
+    public long count() {
+        return dosenRepository.count();
+    }
+
+    // Search operations
+    public Optional<Dosen> findByNip(String nip) {
+        return dosenRepository.findByNip(nip);
+    }
+
+    public Dosen getDosenByNip(String nip) {
+        return dosenRepository.findByNip(nip).orElse(null);
+    }
+
+    public List<Dosen> findByNamaContainingIgnoreCase(String nama) {
+        return dosenRepository.findByNamaContainingIgnoreCase(nama);
+    }
+
+    public List<Dosen> findByEmailContainingIgnoreCase(String email) {
+        return dosenRepository.findByEmailContainingIgnoreCase(email);
+    }
+
+    public boolean existsByNip(String nip) {
+        return dosenRepository.existsByNip(nip);
+    }
+
+    public boolean existsByEmail(String email) {
+        return dosenRepository.existsByEmail(email);
+    }
+
+    // Validation methods
+    public boolean isNipAvailable(String nip) {
+        return !dosenRepository.existsByNip(nip);
+    }
+
+    public boolean isEmailAvailable(String email) {
+        return !dosenRepository.existsByEmail(email);
+    }
+
+    public boolean isNipAvailableForUpdate(String nip, Long dosenId) {
+        Optional<Dosen> existingDosen = dosenRepository.findByNip(nip);
+        return existingDosen.isEmpty() || existingDosen.get().getId().equals(dosenId);
+    }
+
+    public boolean isEmailAvailableForUpdate(String email, Long dosenId) {
+        Optional<Dosen> existingDosen = dosenRepository.findByEmail(email);
+        return existingDosen.isEmpty() || existingDosen.get().getId().equals(dosenId);
     }
 }
