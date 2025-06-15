@@ -39,6 +39,13 @@ public class AdminKelasController {
         model.addAttribute("daftarDosen", dosenRepository.findAll());
         model.addAttribute("daftarMataKuliah", mataKuliahRepository.findAll());
 
+        model.addAttribute("daftarFakultas", List.of(
+                "Fasilkom-TI",
+                "FH",
+                "FEB",
+                "FK"
+        ));
+
         Map<String, String> hariMap = new LinkedHashMap<>();
         hariMap.put("MONDAY", "Senin");
         hariMap.put("TUESDAY", "Selasa");
@@ -61,16 +68,13 @@ public class AdminKelasController {
     public String tambahKelas(@ModelAttribute Kelas kelasForm, RedirectAttributes redirectAttributes, Principal principal) {
         kelasRepository.save(kelasForm);
 
-        String detail = String.format("Kelas %s - %s (%s) oleh %s, Semester %s, TA %s, Ruangan %s, Jam %s-%s",
+        String detail = String.format("Tambah: %s (%s) - %s oleh %s, Sem %s, TA %s",
                 kelasForm.getNamaKelas(),
+                kelasForm.getKodeKelas(),
                 kelasForm.getMataKuliah().getNamaMK(),
-                kelasForm.getMataKuliah().getKodeMK(),
                 kelasForm.getDosen().getNama(),
                 kelasForm.getSemester(),
-                kelasForm.getTahunAjar(),
-                kelasForm.getRuangan(),
-                kelasForm.getJamMulai(),
-                kelasForm.getJamKeluar());
+                kelasForm.getTahunAjar());
 
         activityLogService.log("Kelas", String.valueOf(kelasForm.getId()), "CREATE", detail, principal.getName());
 
@@ -82,13 +86,12 @@ public class AdminKelasController {
     @Transactional
     public String hapusKelas(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, Principal principal) {
         kelasRepository.findById(id).ifPresent(kelas -> {
-            String detail = String.format("Menghapus kelas %s - %s (%s), oleh %s, Semester %s, TA %s",
+            // SHORTENED LOG
+            String detail = String.format("Hapus: %s (%s) - %s oleh %s",
                     kelas.getNamaKelas(),
+                    kelas.getKodeKelas(),
                     kelas.getMataKuliah().getNamaMK(),
-                    kelas.getMataKuliah().getKodeMK(),
-                    kelas.getDosen().getNama(),
-                    kelas.getSemester(),
-                    kelas.getTahunAjar());
+                    kelas.getDosen().getNama());
 
             kelasRepository.delete(kelas);
             activityLogService.log("Kelas", String.valueOf(kelas.getId()), "DELETE", detail, principal.getName());
@@ -116,15 +119,17 @@ public class AdminKelasController {
     public String editKelas(@ModelAttribute Kelas kelasForm, RedirectAttributes redirectAttributes, Principal principal) {
         Kelas existing = kelasRepository.findById(kelasForm.getId()).orElse(null);
         if (existing != null) {
-            String oldDetail = String.format("Sebelum: Kelas %s, MK %s, Dosen %s, Ruangan %s, Hari %s, Jam %s-%s",
+            // SHORTENED LOG - Simple and concise
+            String detail = String.format("Edit: %s (%s) → MK: %s, Dosen: %s, Ruang: %s",
                     existing.getNamaKelas(),
-                    existing.getMataKuliah().getNamaMK(),
-                    existing.getDosen().getNama(),
-                    existing.getRuangan(),
-                    existing.getHariKelas(),
-                    existing.getJamMulai(),
-                    existing.getJamKeluar());
+                    existing.getKodeKelas(),
+                    kelasForm.getMataKuliah().getNamaMK(),
+                    kelasForm.getDosen().getNama(),
+                    kelasForm.getRuangan());
 
+            existing.setKodeKelas(kelasForm.getKodeKelas());
+            existing.setNamaKelas(kelasForm.getNamaKelas());
+            existing.setFakultas(kelasForm.getFakultas());
             existing.setMataKuliah(kelasForm.getMataKuliah());
             existing.setDosen(kelasForm.getDosen());
             existing.setRuangan(kelasForm.getRuangan());
@@ -135,17 +140,7 @@ public class AdminKelasController {
             existing.setJamKeluar(kelasForm.getJamKeluar());
 
             kelasRepository.save(existing);
-
-            String newDetail = String.format("Sesudah: Kelas %s, MK %s, Dosen %s, Ruangan %s, Hari %s, Jam %s-%s",
-                    existing.getNamaKelas(),
-                    existing.getMataKuliah().getNamaMK(),
-                    existing.getDosen().getNama(),
-                    existing.getRuangan(),
-                    existing.getHariKelas(),
-                    existing.getJamMulai(),
-                    existing.getJamKeluar());
-
-            activityLogService.log("Kelas", String.valueOf(existing.getId()), "UPDATE", oldDetail + " -> " + newDetail, principal.getName());
+            activityLogService.log("Kelas", String.valueOf(existing.getId()), "UPDATE", detail, principal.getName());
 
             redirectAttributes.addFlashAttribute("sukses", "Data kelas berhasil diperbarui.");
         }
