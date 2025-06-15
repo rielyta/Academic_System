@@ -1,11 +1,9 @@
 package com.example.academic_system.controllers;
 
-import com.example.academic_system.models.Dosen;
 import com.example.academic_system.models.Mahasiswa;
 import com.example.academic_system.services.DosenService;
 import com.example.academic_system.services.KelasService;
 import com.example.academic_system.services.MahasiswaService;
-import com.example.academic_system.services.MataKuliahService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
