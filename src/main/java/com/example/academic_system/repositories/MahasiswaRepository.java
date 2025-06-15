@@ -6,15 +6,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface MahasiswaRepository extends JpaRepository<Mahasiswa, Long> {
     Optional<Mahasiswa> findByNim(String nim);
+    Optional<Mahasiswa> findByEmail(String email);
+
+    List<Mahasiswa> findByNamaContainingIgnoreCase(String nama);
+    List<Mahasiswa> findByEmailContainingIgnoreCase(String email);
+
+    boolean existsByNim(String nim);
+    boolean existsByEmail(String email);
 
     void deleteByNim(String nim);
-
-
 
     @Query("SELECT COUNT(DISTINCT m) FROM Kelas k " +
             "JOIN k.mahasiswaTerdaftar m WHERE k.dosen.id = :dosenId")

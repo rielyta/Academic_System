@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Kelas Saya</title>
+</head>
+
+<body>
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
+           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+        </div>
+        <nav class="px-4 py-4 space-y-2">
+            <a href="dashboard_mahasiswa.html" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">Dasbor</a>
+            <a href="MataKuliah.html" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
+                Mata kuliah Ditawarkan
+            </a>
+            <a class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">Kelas Saya</a>
+        </nav>
+        <div class="p-4 absolute bottom-0 w-64">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Keluar
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <header class="fixed top-0 left-0 right-0 z-40 bg-[#F3F1D9]">
+        <nav class="flex items-right content-end px-6 py-4 ml-64">
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+                <i class="fa-solid fa-user"></i>
+                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+            </div>
+        </nav>
+    </header>
+
+    <!--main content-->
+    <div class="flex-1 overflow-y-auto bg-[#F3F1D9] ml-64 pt-20 pl-6 h-screen">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 mb-3">Kelas Saya</h1>
+        </div>
+        <div class="flex-grow relative max-w-full mr-6">
+            <input type="text" placeholder="Cari kelas..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-[#2C7148] focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
+            <i class="fas fa-search absolute left-3 top-3 text-[#514D4D]"></i>
+        </div>
+
+        <!-- card kelas -->
+        <div class="flex flex-row gap-10 items-center justify-center mt-4">
+            <div class="relative bg-[rgba(255,251,223,0.9)] shadow-md hover:shadow-lg rounded-xl flex w-full md:max-w-2xl h-24 mb-6 border border-transparent hover:border-[#072D17] transition-all duration-200 overflow-hidden">
+                <!-- info Kelas -->
+                <div class="flex items-center gap-4 px-4 py-4">
+                    <div class="bg-[#20452F] w-14 h-14 text-lg flex items-center justify-center rounded-full text-white font-bold">
+                        B
+                    </div>
+                    <div>
+                        <p class="text-lg font-semibold text-gray-800">Pemrograman Berorientasi Objek | ILK2201</p>
+                        <p class="text-base text-gray-600">Genap T.A 2024/2025</p>
+                    </div>
+                </div>
+                <!-- gambar default -->
+                <div class="absolute right-0 top-0 bottom-0 bg-[#C8CFBE] w-24 flex items-center justify-center rounded-r-xl">
+                    <i class="fas fa-cogs text-[#20452F] text-3xl"></i>
+                </div>
+            </div>
+
+            <div class="relative bg-[rgba(255,251,223,0.9)] shadow-md hover:shadow-lg rounded-xl flex w-full md:max-w-2xl h-24 mb-6 border border-transparent hover:border-[#072D17] transition-all duration-200 overflow-hidden">
+                <!-- info Kelas -->
+                <div class="flex items-center gap-4 px-4 py-4">
+                    <div class="bg-[#20452F] w-14 h-14 text-lg flex items-center justify-center rounded-full text-white font-bold">
+                        B
+                    </div>
+                    <div>
+                        <p class="text-lg font-semibold text-gray-800">Pemrograman Berorientasi Objek | ILK2201</p>
+                        <p class="text-base text-gray-600">Genap T.A 2024/2025</p>
+                    </div>
+                </div>
+                <!-- gambar default -->
+                <div class="absolute right-0 top-0 bottom-0 bg-[#C8CFBE] w-24 flex items-center justify-center rounded-r-xl">
+                    <i class="fas fa-cogs text-[#20452F] text-3xl"></i>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+</html>

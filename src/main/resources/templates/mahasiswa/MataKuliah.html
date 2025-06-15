@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Mata Kuliah Ditawarkan</title>
+</head>
+<body>
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
+           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+        </div>
+        <nav class="px-4 py-4 space-y-2">
+            <a href="dashboard_mahasiswa.html" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">Dasbor</a>
+            <a href="#" class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">
+                Mata kuliah Ditawarkan
+            </a>
+            <a href="KelasSaya.html" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">Kelas Saya</a>
+        </nav>
+        <div class="p-4 absolute bottom-0 w-64">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Keluar
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <header class="fixed top-0 left-0 right-0 z-40 bg-[#F3F1D9]">
+        <nav class="flex items-right content-end px-6 py-4 ml-64">
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+                <i class="fa-solid fa-user"></i>
+                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+            </div>
+        </nav>
+    </header>
+
+    <!--main content-->
+    <div class="flex-1 overflow-y-auto bg-[#F3F1D9] ml-64 pt-20 pl-6 h-screen">
+
+    </div>
+</body>
+</html>
