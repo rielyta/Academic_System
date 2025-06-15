@@ -22,6 +22,8 @@ public class KelasService {
         return kelasRepository.findAll();
     }
 
+
+
     public Optional<Kelas> getKelasById(Long id) {
         return kelasRepository.findById(id);
     }
@@ -36,5 +38,9 @@ public class KelasService {
 
     public long count() {
         return kelasRepository.count();
+    }
+
+    public int countByDosenId(Long dosenId) {
+        return kelasRepository.countByDosenId(dosenId);
     }
 }

@@ -41,7 +41,7 @@ public class Kelas {
     private LocalTime jamKeluar;
 
     @Column(nullable = false)
-    private Integer semester; // Ganjil/Genap
+    private String semester;
 
     @Column(name = "tahun_ajar", nullable = false)
     private String tahunAjar; // Format: 2023/2024
@@ -73,6 +73,7 @@ public class Kelas {
         this.jumlahMahasiswa = mahasiswaTerdaftar != null ? mahasiswaTerdaftar.size() : 0;
     }
 
+
     public int getJumlahMahasiswa() {
         return mahasiswaTerdaftar != null ? mahasiswaTerdaftar.size() : 0;
     }
@@ -83,8 +84,8 @@ public class Kelas {
     public LocalTime getJamKeluar() { return jamKeluar; }
     public void setJamKeluar(LocalTime jamKeluar) { this.jamKeluar = jamKeluar; }
 
-    public Integer getSemester() { return semester; }
-    public void setSemester(Integer semester) { this.semester = semester; }
+    public String getSemester() { return semester; }
+    public void setSemester(String semester) { this.semester = semester; }
 
     public String getTahunAjar() { return tahunAjar; }
     public void setTahunAjar(String tahunAjar) { this.tahunAjar = tahunAjar; }
@@ -94,6 +95,24 @@ public class Kelas {
 
     public void updateJumlahMahasiswa() {
         this.jumlahMahasiswa = this.mahasiswaTerdaftar != null ? this.mahasiswaTerdaftar.size() : 0;
+    }
+
+    public boolean isGanjil() {
+        return "1".equals(semester) || "3".equals(semester) ||
+                "5".equals(semester) || "7".equals(semester);
+    }
+
+    public boolean isGenap() {
+        return "2".equals(semester) || "4".equals(semester) ||
+                "6".equals(semester) || "8".equals(semester);
+    }
+
+    public Integer getSemesterAsInteger() {
+        try {
+            return Integer.parseInt(semester);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     public DayOfWeek getHariKelas() {
@@ -108,6 +127,8 @@ public class Kelas {
     public void initJumlahMahasiswa() {
         this.jumlahMahasiswa = this.mahasiswaTerdaftar != null ? this.mahasiswaTerdaftar.size() : 0;
     }
+
+
 
 
     @Override

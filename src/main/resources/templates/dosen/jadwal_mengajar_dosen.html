@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Mengajar - LMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+    }
+    .schedule-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .day-column {
+      min-height: 400px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white">
+    <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+      <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+      <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
+    </div>
+    <nav class="px-4 py-4 space-y-2">
+      <a href="manajemen_mahasiswa" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
+        <i class="fas fa-tachometer-alt"></i>
+        Dasbor
+      </a>
+      <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
+        <i class="fas fa-chalkboard-teacher"></i>
+        Kelas Saya
+      </a>
+      <div class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">
+        <i class="fas fa-calendar-alt mr-2"></i>
+        Jadwal Mengajar
+      </div>
+      <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
+        <i class="fas fa-users mr-2"></i>
+        Mahasiswa
+      </a>
+    </nav>
+    <div class="p-4 absolute bottom-0 w-64">
+      <form th:action="@{/logout}" method="post">
+        <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
+          <i class="fas fa-sign-out-alt mr-2"></i>
+          Keluar
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 ml-64 bg-[#F3F1D9]">
+    <!-- Header -->
+    <header class="bg-[rgba(255,251,223,0.9)] shadow-sm border-b border-[#2C7148]">
+      <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center gap-4">
+          <i class="fas fa-calendar-alt text-[#20452F] text-xl"></i>
+          <h1 class="text-xl font-semibold text-[rgba(0,0,0,0.8)]">Jadwal Mengajar</h1>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <i class="fas fa-bell text-[#514D4D]"></i>
+          <i class="fas fa-user-circle text-[#514D4D]"></i>
+          <span class="text-sm font-medium text-[rgba(0,0,0,0.8)]">Nama Dosen</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="p-6">
+      <!-- Filter Section -->
+      <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 mb-6">
+        <div class="flex flex-col md:flex-row gap-4 items-center">
+          <div class="flex gap-3">
+            <select class="px-4 py-2 border border-[#2C7148] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
+              <option>Semester</option>
+              <option>Ganjil 2024/2025</option>
+              <option>Genap 2023/2024</option>
+              <option>Ganjil 2023/2024</option>
+            </select>
+
+            <select class="px-4 py-2 border border-[#2C7148] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
+              <option>Minggu</option>
+              <option>Minggu ke-1</option>
+              <option>Minggu ke-2</option>
+              <option>Minggu ke-3</option>
+              <option>Minggu ke-4</option>
+            </select>
+
+            <button class="bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+              <i class="fas fa-print"></i>
+              Cetak Jadwal
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule Grid -->
+      <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm overflow-hidden border border-[#2C7148]">
+        <div class="bg-[#20452F] text-white p-4">
+          <h2 class="text-lg font-semibold">Jadwal Mengajar Mingguan</h2>
+        </div>
+
+        <div class="grid grid-cols-7 gap-px bg-[rgba(44,113,72,0.2)]">
+          <!-- Header Days -->
+          <div class="bg-[rgba(44,113,72,0.1)] p-4 text-center font-semibold text-[rgba(0,0,0,0.8)]">
+            <div class="text-sm">SENIN</div>
+          </div>
+          <div class="bg-[rgba(44,113,72,0.1)] p-4 text-center font-semibold text-[rgba(0,0,0,0.8)]">
+            <div class="text-sm">SELASA</div>
+          </div>
+          <div class="bg-[rgba(44,113,72,0.1)] p-4 text-center font-semibold text-[rgba(0,0,0,0.8)]">
+            <div class="text-sm">RABU</div>
+          </div>
+          <div class="bg-[rgba(44,113,72,0.1)] p-4 text-center font-semibold text-[rgba(0,0,0,0.8)]">
+            <div class="text-sm">KAMIS</div>
+          </div>
+          <div class="bg-[rgba(44,113,72,0.1)] p-4 text-center font-semibold text-[rgba(0,0,0,0.8)]">
+            <div class="text-sm">JUMAT</div>
+          </div>
+          <div class="bg-[rgba(44,113,72,0.1)] p-4 text-center font-semibold text-[rgba(0,0,0,0.8)]">
+            <div class="text-sm">SABTU</div>
+          </div>
+          <div class="bg-[rgba(44,113,72,0.1)] p-4 text-center font-semibold text-[rgba(0,0,0,0.8)]">
+            <div class="text-sm">MINGGU</div>
+          </div>
+
+          <!-- Schedule Content -->
+          <!-- Monday -->
+          <div class="bg-[rgba(255,251,223,0.9)] p-3 day-column">
+            <div class="schedule-card bg-[rgba(44,113,72,0.1)] border-l-4 border-[#20452F] p-3 mb-3 rounded-lg transition-all duration-200">
+              <div class="text-xs font-semibold text-[#20452F] mb-1">08:00 - 10:00</div>
+              <div class="text-sm font-medium text-[rgba(0,0,0,0.8)] mb-1">Pemrograman Web</div>
+              <div class="text-xs text-[rgba(0,0,0,0.7)]">Ruang A201</div>
+              <div class="text-xs text-[#514D4D]">ILK2201</div>
+            </div>
+            <div class="schedule-card bg-[rgba(44,113,72,0.1)] border-l-4 border-[#20452F] p-3 mb-3 rounded-lg transition-all duration-200">
+              <div class="text-xs font-semibold text-[#20452F] mb-1">13:00 - 15:00</div>
+              <div class="text-sm font-medium text-[rgba(0,0,0,0.8)] mb-1">Basis Data</div>
+              <div class="text-xs text-[rgba(0,0,0,0.7)]">Ruang B102</div>
+              <div class="text-xs text-[#514D4D]">ILK2202</div>
+            </div>
+          </div>
+
+          <!-- Tuesday -->
+          <div class="bg-[rgba(255,251,223,0.9)] p-3 day-column">
+            <div class="schedule-card bg-[rgba(44,113,72,0.1)] border-l-4 border-[#20452F] p-3 mb-3 rounded-lg transition-all duration-200">
+              <div class="text-xs font-semibold text-[#20452F] mb-1">10:00 - 12:00</div>
+              <div class="text-sm font-medium text-[rgba(0,0,0,0.8)] mb-1">Algoritma</div>
+              <div class="text-xs text-[rgba(0,0,0,0.7)]">Ruang C301</div>
+              <div class="text-xs text-[#514D4D]">ILK2203</div>
+            </div>
+          </div>
+
+          <!-- Wednesday -->
+          <div class="bg-[rgba(255,251,223,0.9)] p-3 day-column">
+            <div class="schedule-card bg-[rgba(44,113,72,0.1)] border-l-4 border-[#20452F] p-3 mb-3 rounded-lg transition-all duration-200">
+              <div class="text-xs font-semibold text-[#20452F] mb-1">09:00 - 11:00</div>
+              <div class="text-sm font-medium text-[rgba(0,0,0,0.8)] mb-1">Sistem Operasi</div>
+              <div class="text-xs text-[rgba(0,0,0,0.7)]">Lab Komputer 1</div>
+              <div class="text-xs text-[#514D4D]">ILK2204</div>
+            </div>
+            <div class="schedule-card bg-[rgba(44,113,72,0.1)] border-l-4 border-[#20452F] p-3 mb-3 rounded-lg transition-all duration-200">
+              <div class="text-xs font-semibold text-[#20452F] mb-1">14:00 - 16:00</div>
+              <div class="text-sm font-medium text-[rgba(0,0,0,0.8)] mb-1">Jaringan Komputer</div>
+              <div class="text-xs text-[rgba(0,0,0,0.7)]">Lab Jaringan</div>
+              <div class="text-xs text-[#514D4D]">ILK2205</div>
+            </div>
+          </div>
+
+          <!-- Thursday -->
+          <div class="bg-[rgba(255,251,223,0.9)] p-3 day-column">
+            <div class="schedule-card bg-[rgba(44,113,72,0.1)] border-l-4 border-[#20452F] p-3 mb-3 rounded-lg transition-all duration-200">
+              <div class="text-xs font-semibold text-[#20452F] mb-1">08:00 - 10:00</div>
+              <div class="text-sm font-medium text-[rgba(0,0,0,0.8)] mb-1">Rekayasa Perangkat Lunak</div>
+              <div class="text-xs text-[rgba(0,0,0,0.7)]">Ruang D401</div>
+              <div class="text-xs text-[#514D4D]">ILK2206</div>
+            </div>
+          </div>
+
+          <!-- Friday -->
+          <div class="bg-[rgba(255,251,223,0.9)] p-3 day-column">
+            <div class="schedule-card bg-[rgba(44,113,72,0.1)] border-l-4 border-[#20452F] p-3 mb-3 rounded-lg transition-all duration-200">
+              <div class="text-xs font-semibold text-[#20452F] mb-1">07:30 - 09:30</div>
+              <div class="text-sm font-medium text-[rgba(0,0,0,0.8)] mb-1">Pemrograman Mobile</div>
+              <div class="text-xs text-[rgba(0,0,0,0.7)]">Lab Mobile</div>
+              <div class="text-xs text-[#514D4D]">ILK2207</div>
+            </div>
+            <div class="schedule-card bg-[rgba(44,113,72,0.1)] border-l-4 border-[#20452F] p-3 mb-3 rounded-lg transition-all duration-200">
+              <div class="text-xs font-semibold text-[#20452F] mb-1">13:00 - 15:00</div>
+              <div class="text-sm font-medium text-[rgba(0,0,0,0.8)] mb-1">Kecerdasan Buatan</div>
+              <div class="text-xs text-[rgba(0,0,0,0.7)]">Ruang E501</div>
+              <div class="text-xs text-[#514D4D]">ILK2208</div>
+            </div>
+          </div>
+
+          <!-- Saturday -->
+          <div class="bg-[rgba(255,251,223,0.9)] p-3 day-column">
+            <!-- Empty -->
+          </div>
+
+          <!-- Sunday -->
+          <div class="bg-[rgba(255,251,223,0.9)] p-3 day-column">
+            <!-- Empty -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+        <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 border border-[#2C7148]">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-[rgba(44,113,72,0.2)] text-[#20452F]">
+              <i class="fas fa-calendar-week text-xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-[rgba(0,0,0,0.8)]">12</h3>
+              <p class="text-sm text-[rgba(0,0,0,0.7)]">Jam Mengajar/Minggu</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 border border-[#2C7148]">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-[rgba(44,113,72,0.2)] text-[#20452F]">
+              <i class="fas fa-chalkboard-teacher text-xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-[rgba(0,0,0,0.8)]">8</h3>
+              <p class="text-sm text-[rgba(0,0,0,0.7)]">Mata Kuliah</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 border border-[#2C7148]">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-[rgba(44,113,72,0.2)] text-[#20452F]">
+              <i class="fas fa-users text-xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-[rgba(0,0,0,0.8)]">245</h3>
+              <p class="text-sm text-[rgba(0,0,0,0.7)]">Total Mahasiswa</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 border border-[#2C7148]">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-[rgba(44,113,72,0.2)] text-[#20452F]">
+              <i class="fas fa-door-open text-xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-[rgba(0,0,0,0.8)]">6</h3>
+              <p class="text-sm text-[rgba(0,0,0,0.7)]">Ruang Kelas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>
