@@ -26,6 +26,16 @@
       <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Kelas</a>
       <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mata Kuliah</a>
       <a href="/admin/activity_log" class="block px-3 py-2 mt-4 bg-green-900 hover:bg-green-800 rounded-md">Log Aktivitas</a>
+      <div class="px-4 py-6 border-t border-[#20452F]">
+        <form th:action="@{/logout}" method="post">
+          <button
+                  type="submit"
+                  class="flex items-center justify-center w-full px-3 py-2 text-sm font-semibold text-center text-white transition-colors duration-150 bg-red-600 rounded-md hover:bg-red-700">
+            <i class="fas fa-sign-out-alt mr-2"></i>
+            Keluar
+          </button>
+        </form>
+      </div>
     </nav>
   </aside>
 
