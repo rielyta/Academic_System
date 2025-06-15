@@ -7,6 +7,7 @@ import com.example.academic_system.repositories.DosenRepository;
 import com.example.academic_system.repositories.MahasiswaRepository;
 import com.example.academic_system.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,8 +21,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired private DosenRepository dosenRepository;
-    @Autowired private MahasiswaRepository mahasiswaRepository;
+    @Autowired
+    @Lazy
+    private DosenRepository dosenRepository;
+    @Autowired
+    @Lazy
+    private MahasiswaRepository mahasiswaRepository;
 
     @Override
     public UserDetails loadUserByUsername(String input) throws UsernameNotFoundException {
