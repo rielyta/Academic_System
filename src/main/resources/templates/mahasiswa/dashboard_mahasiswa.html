@@ -9,99 +9,102 @@
 </head>
 
 <body>
-    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
-           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
-            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
-            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+<aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
+       :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+    <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+        <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+        <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+    </div>
+    <nav class="px-4 py-4 space-y-2">
+        <a class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">Dasbor</a>
+        <a href="MataKuliah.html" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
+            Mata kuliah Ditawarkan
+        </a>
+        <a href="KelasSaya.html" class="block px-3 py-2 rounded-md hover:bg-green-800">Kelas Saya</a>
+    </nav>
+    <div class="p-4 absolute bottom-0 w-64">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Keluar
+            </button>
+        </form>
+    </div>
+</aside>
+
+<header class="fixed top-0 left-0 right-0 z-40 bg-[#F3F1D9]">
+    <nav class="flex items-center justify-between px-6 py-4 ml-64">
+        <div class="flex-grow relative max-w-full mr-6">
+            <input type="text" placeholder="Cari..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-[#2C7148] focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
+            <i class="fas fa-search absolute left-3 top-3 text-[#514D4D]"></i>
         </div>
-        <nav class="px-4 py-4 space-y-2">
-            <a class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">Dasbor</a>
-            <a href="MataKuliah.html" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
-                Mata kuliah Ditawarkan
-            </a>
-            <a href="KelasSaya.html" class="block px-3 py-2 rounded-md hover:bg-green-800">Kelas Saya</a>
-        </nav>
-        <div class="p-4 absolute bottom-0 w-64">
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    Keluar
-                </button>
-            </form>
+
+        <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+            <i class="fa-solid fa-user"></i>
+            <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
         </div>
-    </aside>
+    </nav>
+</header>
 
-    <header class="fixed top-0 left-0 right-0 z-40 bg-[#F3F1D9]">
-        <nav class="flex items-center justify-between px-6 py-4 ml-64">
-            <div class="flex-grow relative max-w-full mr-6">
-                <input type="text" placeholder="Cari..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-[#2C7148] focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
-                <i class="fas fa-search absolute left-3 top-3 text-[#514D4D]"></i>
-            </div>
-
-            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
-                <i class="fa-solid fa-user"></i>
-                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
-            </div>
-        </nav>
-    </header>
-
-    <!--main content-->
-    <div class="flex-1 overflow-y-auto bg-[#F3F1D9] ml-64 pt-20 h-screen">
-        <main class="p-6">
-            <!-- Profile Card -->
-            <div class="rounded-lg shadow-md p-6 mb-6 bg-[rgba(255,251,223,0.9)]">
-                <h1 class="text-2xl font-bold text-gray-800 mb-3">Detail Mahasiswa</h1>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-gray-600">Nama</p>
-                        <p class="font-medium" th:text="${Mahasiswa.namaLengkap}">Jane Doe</p>
-                    </div>
-                    <div>
-                        <p class="text-gray-600">Nomor Induk Mahasiswa</p>
-                        <p class="font-medium" th:text="${Mahasiswa.nip}">M231401113</p>
-                    </div>
-                    <div>
-                        <p class="text-gray-600">Fakultas</p>
-                        <p class="font-medium" th:text="${Mahasiswa.fakultas}">Fasilkom-TI</p>
-                    </div>
-                    <div>
-                        <p class="text-gray-600">Program Studi</p>
-                        <p class="font-medium" th:text="${Mahasiswa.programStudi}">Ilmu Komputer</p>
-                    </div>
+<!--main content-->
+<div class="flex-1 overflow-y-auto bg-[#F3F1D9] ml-64 pt-20 h-screen">
+    <main class="p-6">
+        <!-- Profile Card -->
+        <div class="rounded-lg shadow-md p-6 mb-6 bg-[rgba(255,251,223,0.9)]">
+            <h1 class="text-2xl font-bold text-gray-800 mb-3">Detail Mahasiswa</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p class="text-gray-600">Nama</p>
+                    <p class="font-medium" th:text="${mahasiswa != null ? mahasiswa.nama : 'N/A'}">Jane Doe</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Nomor Induk Mahasiswa</p>
+                    <p class="font-medium" th:text="${mahasiswa != null ? mahasiswa.nim : 'N/A'}">M231401113</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Fakultas</p>
+                    <p class="font-medium" th:text="${mahasiswa != null ? mahasiswa.fakultas : 'N/A'}">Fasilkom-TI</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Program Studi</p>
+                    <p class="font-medium" th:text="${mahasiswa != null ? mahasiswa.prodi : 'N/A'}">Ilmu Komputer</p>
                 </div>
             </div>
+        </div>
 
-            <div class="flex flex-row items-center text-lg ml-2">
-                <i class="fa-solid fa-clock"></i>
-                <h2 class="text-xl font-bold text-gray-800 px-5"> Jadwal Kuliah</h2>
-            </div>
+        <div class="flex flex-row items-center text-lg ml-2">
+            <i class="fa-solid fa-clock"></i>
+            <h2 class="text-xl font-bold text-gray-800 px-5"> Jadwal Kuliah</h2>
+        </div>
 
         <!--jadwal kelas-->
-            <div class="rounded-lg shadow-md p-6 mt-3 bg-[rgba(255,251,223,0.9)]">
-                <!-- Tab Days -->
-                <div class="flex flex-wrap gap-9 mb-6 font-bold text-m">
-                    <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Senin</button>
-                    <button class="px-15 py-2 rounded-md bg-[#072D17] text-white">Selasa</button>
-                    <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Rabu</button>
-                    <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Kamis</button>
-                    <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Jumat</button>
-                    <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Sabtu</button>
-                </div>
+        <div class="rounded-lg shadow-md p-6 mt-3 bg-[rgba(255,251,223,0.9)]">
+            <!-- Tab Days -->
+            <div class="flex flex-wrap gap-9 mb-6 font-bold text-m">
+                <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Senin</button>
+                <button class="px-15 py-2 rounded-md bg-[#072D17] text-white">Selasa</button>
+                <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Rabu</button>
+                <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Kamis</button>
+                <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Jumat</button>
+                <button class="px-15 py-2 rounded-md border border-gray-400 text-gray-700 bg-[rgba(255,251,223,0.9)]">Sabtu</button>
+            </div>
 
-                <div class="bg-[rgba(255,251,223,0.9)] rounded-lg p-2 border border-gray-400 shadow-sm">
-                    <div class="flex flex-col items-left justify-between">
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-gray-800 text-base">Pemrograman Berorientasi Objek | ILK2201</h3>
-                        </div>
-                        <div class="flex items-center gap-4 font-semibold text-gray-800">
-                            <span class="bg-[#072D17] text-white px-2 py-1 rounded text-xs">08:00 - 10:30</span>
-                            <span>D-103</span>
-                        </div>
+            <div class="bg-[rgba(255,251,223,0.9)] rounded-lg p-2 border border-gray-400 shadow-sm">
+                <div class="flex flex-col items-left justify-between">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-800 text-base">Pemrograman Berorientasi Objek | ILK2201</h3>
+                    </div>
+                    <div class="flex items-center gap-4 font-semibold text-gray-800">
+                        <span class="bg-[#072D17] text-white px-2 py-1 rounded text-xs">08:00 - 10:30</span>
+                        <span>D-103</span>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
+
+<!-- Alpine.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </body>
 </html>
