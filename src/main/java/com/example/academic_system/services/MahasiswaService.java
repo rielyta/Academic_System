@@ -54,6 +54,6 @@ public class MahasiswaService {
     }
 
     public int countByDosenId(Long dosenId) {
-        return mahasiswaRepository.countByKelasDosenId(dosenId);
+        return mahasiswaRepository.countByDosenId(dosenId);
     }
 }

@@ -6,55 +6,105 @@ import com.example.academic_system.services.KelasService;
 import com.example.academic_system.services.MahasiswaService;
 import com.example.academic_system.services.MataKuliahService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-@Controller
-@RequestMapping("/dosen")
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/api/dosen")
 public class DosenController {
 
-    @Autowired
-    private DosenService dosenService;
+    private final DosenService dosenService;
+    private final KelasService kelasService;
+    private final MahasiswaService mahasiswaService;
+    private final MataKuliahService mataKuliahService;
 
     @Autowired
-    private KelasService kelasService;
+    public DosenController(DosenService dosenService,
+                           KelasService kelasService,
+                           MahasiswaService mahasiswaService,
+                           MataKuliahService mataKuliahService) {
+        this.dosenService = dosenService;
+        this.kelasService = kelasService;
+        this.mahasiswaService = mahasiswaService;
+        this.mataKuliahService = mataKuliahService;
+    }
 
-    @Autowired
-    private MahasiswaService mahasiswaService;
-
-    @Autowired
-    private MataKuliahService mataKuliahService;
-
-    @GetMapping("/list")
-    public String listDosen(Model model) {
+    @GetMapping
+    public ResponseEntity<List<Dosen>> getAllDosen() {
         List<Dosen> dosenList = dosenService.findAll();
-        model.addAttribute("dosenList", dosenList);
-        return "dosen/list";
+        return ResponseEntity.ok(dosenList);
     }
 
     @GetMapping("/{id}")
-    public String detailDosen(@PathVariable Long id, Model model) {
+    public ResponseEntity<Dosen> getDosenById(@PathVariable Long id) {
         Optional<Dosen> dosen = dosenService.findById(id);
-        if (dosen.isPresent()) {
-            model.addAttribute("dosen", dosen.get());
-
-            // Calculate statistics
-            int totalKelas = kelasService.countByDosenId(id);
-            int totalMahasiswa = mahasiswaService.countByDosenId(id);
-            int totalMataKuliah = mataKuliahService.countByDosenId(id);
-
-            model.addAttribute("totalKelas", totalKelas);
-            model.addAttribute("totalMahasiswa", totalMahasiswa);
-            model.addAttribute("totalMataKuliah", totalMataKuliah);
-
-            return "dosen/detail";
-        }
-        return "redirect:/dosen";
+        return dosen.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Add other controller methods as needed
+    @GetMapping("/{id}/statistics")
+    public ResponseEntity<Map<String, Object>> getDosenStatistics(@PathVariable Long id) {
+        Optional<Dosen> dosen = dosenService.findById(id);
+
+        if (dosen.isPresent()) {
+            Map<String, Object> statistics = new HashMap<>();
+            statistics.put("dosen", dosen.get());
+            statistics.put("totalKelas", kelasService.countByDosenId(id));
+            statistics.put("totalMahasiswa", mahasiswaService.countByDosenId(id));
+            statistics.put("totalMataKuliah", mataKuliahService.countByDosenId(id));
+
+            return ResponseEntity.ok(statistics);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Dosen> createDosen(@RequestBody Dosen dosen) {
+        Dosen createdDosen = dosenService.createDosen(dosen);
+        return ResponseEntity.ok(createdDosen);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Dosen> updateDosen(@PathVariable Long id, @RequestBody Dosen dosenDetails) {
+        Optional<Dosen> existingDosen = dosenService.findById(id);
+
+        if (existingDosen.isPresent()) {
+            Dosen dosen = existingDosen.get();
+            // Update fields - adjust based on your Dosen model
+            if (dosenDetails.getNama() != null) {
+                dosen.setNama(dosenDetails.getNama());
+            }
+            if (dosenDetails.getNip() != null) {
+                dosen.setNip(dosenDetails.getNip());
+            }
+            if (dosenDetails.getEmail() != null) {
+                dosen.setEmail(dosenDetails.getEmail());
+            }
+            // Add other fields as needed
+
+            Dosen updatedDosen = dosenService.save(dosen);
+            return ResponseEntity.ok(updatedDosen);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDosen(@PathVariable Long id) {
+        Optional<Dosen> dosen = dosenService.findById(id);
+
+        if (dosen.isPresent()) {
+            dosenService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 }

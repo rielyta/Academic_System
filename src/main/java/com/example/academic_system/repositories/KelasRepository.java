@@ -24,8 +24,6 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
     // Query untuk mencari kelas berdasarkan nama kelas (case insensitive)
     List<Kelas> findByNamaKelasContainingIgnoreCase(String namaKelas);
 
-    // Query untuk mencari kelas berdasarkan kode kelas
-    List<Kelas> findByKodeKelasContainingIgnoreCase(String kodeKelas);
 
     // Cari berdasarkan kombinasi mata kuliah dan dosen
     List<Kelas> findByMataKuliah_KodeMKAndDosen_Nip(String kodeMK, String nip);
@@ -34,14 +32,14 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
     boolean existsByNamaKelasAndMataKuliah_KodeMK(String namaKelas, String kodeMK);
 
     // Query untuk mendapatkan statistik mata kuliah yang diajar dosen
-    @Query("SELECT mk.nama, COUNT(k), SUM(SIZE(k.mahasiswaList)) " +
+    @Query("SELECT mk.namaMK, COUNT(k), SUM(SIZE(k.mahasiswaTerdaftar)) " +
             "FROM Kelas k JOIN k.mataKuliah mk " +
             "WHERE k.dosen.id = :dosenId " +
-            "GROUP BY mk.nama")
+            "GROUP BY mk.namaMK")
     List<Object[]> findStatistikMataKuliahByDosenId(@Param("dosenId") Long dosenId);
 
     // Query untuk menghitung total mahasiswa semua kelas dosen
-    @Query("SELECT COALESCE(SUM(SIZE(k.mahasiswaList)), 0) " +
+    @Query("SELECT COALESCE(SUM(SIZE(k.mahasiswaTerdaftar)), 0) " +
             "FROM Kelas k WHERE k.dosen.id = :dosenId")
     Long countTotalMahasiswaByDosenId(@Param("dosenId") Long dosenId);
 
@@ -50,5 +48,6 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
             "FROM Kelas k WHERE k.dosen.id = :dosenId")
     Long countDistinctMataKuliahByDosenId(@Param("dosenId") Long dosenId);
 
+    // Count method untuk statistik
     int countByDosenId(Long dosenId);
 }

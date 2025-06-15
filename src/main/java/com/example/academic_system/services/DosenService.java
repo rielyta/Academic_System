@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Service
 public class DosenService {
-
     private final DosenRepository dosenRepository;
 
     @Autowired
@@ -23,10 +22,6 @@ public class DosenService {
         return dosenRepository.findAll();
     }
 
-    public List<Dosen> getAllDosen() {
-        return dosenRepository.findAll();
-    }
-
     public Optional<Dosen> findById(Long id) {
         return dosenRepository.findById(id);
     }
@@ -35,19 +30,44 @@ public class DosenService {
         return dosenRepository.findById(id).orElse(null);
     }
 
+    public Dosen createDosen(Dosen dosen) {
+        // Add validation before save if needed
+        return dosenRepository.save(dosen);
+    }
+
+    // ADD THIS METHOD:
     public Dosen save(Dosen dosen) {
         return dosenRepository.save(dosen);
     }
 
-    public Dosen saveDosen(Dosen dosen) {
-        return dosenRepository.save(dosen);
+
+
+    public Dosen updateDosen(Long id, Dosen dosenDetails) {
+        Optional<Dosen> existingDosen = dosenRepository.findById(id);
+
+        if (existingDosen.isPresent()) {
+            Dosen dosen = existingDosen.get();
+
+            // Explicit field updates
+            if (dosenDetails.getNama() != null) {
+                dosen.setNama(dosenDetails.getNama());
+            }
+            if (dosenDetails.getEmail() != null) {
+                dosen.setEmail(dosenDetails.getEmail());
+            }
+            if (dosenDetails.getFakultas() != null) {
+                dosen.setFakultas(dosenDetails.getFakultas());
+            }
+            if (dosenDetails.getNip() != null) {
+                dosen.setNip(dosenDetails.getNip());
+            }
+
+            return dosenRepository.save(dosen);
+        }
+        return null;
     }
 
     public void deleteById(Long id) {
-        dosenRepository.deleteById(id);
-    }
-
-    public void deleteDosen(Long id) {
         dosenRepository.deleteById(id);
     }
 
@@ -72,6 +92,7 @@ public class DosenService {
         return dosenRepository.findByEmailContainingIgnoreCase(email);
     }
 
+    // Validation methods
     public boolean existsByNip(String nip) {
         return dosenRepository.existsByNip(nip);
     }
@@ -80,7 +101,6 @@ public class DosenService {
         return dosenRepository.existsByEmail(email);
     }
 
-    // Validation methods
     public boolean isNipAvailable(String nip) {
         return !dosenRepository.existsByNip(nip);
     }

@@ -22,6 +22,8 @@ public class KelasService {
         return kelasRepository.findAll();
     }
 
+
+
     public Optional<Kelas> getKelasById(Long id) {
         return kelasRepository.findById(id);
     }
