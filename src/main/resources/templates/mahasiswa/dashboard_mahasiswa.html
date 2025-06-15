@@ -16,11 +16,9 @@
         <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
     </div>
     <nav class="px-4 py-4 space-y-2">
-        <a class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">Dasbor</a>
-        <a href="MataKuliah.html" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
-            Mata kuliah Ditawarkan
-        </a>
-        <a href="KelasSaya.html" class="block px-3 py-2 rounded-md hover:bg-green-800">Kelas Saya</a>
+        <a href="/mahasiswa/dashboard_mahasiswa" class="block px-3 py-2 bg-green-900 rounded-md">Dasbor</a>
+        <a href="/mahasiswa/KelasSaya" class="block px-3 py-2 rounded-md hover:bg-green-800">Kelas Saya</a>
+        <a href="/mahasiswa/daftarKelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Daftar Kelas</a>
     </nav>
     <div class="p-4 absolute bottom-0 w-64">
         <form th:action="@{/logout}" method="post">
@@ -55,19 +53,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <p class="text-gray-600">Nama</p>
-                    <p class="font-medium" th:text="${mahasiswa != null ? mahasiswa.nama : 'N/A'}">Jane Doe</p>
+                    <p class="font-medium" th:text="${mhs.nama}">Nama</p>
                 </div>
                 <div>
                     <p class="text-gray-600">Nomor Induk Mahasiswa</p>
-                    <p class="font-medium" th:text="${mahasiswa != null ? mahasiswa.nim : 'N/A'}">M231401113</p>
+                    <p class="font-medium" th:text="${mhs.nim}">Nim</p>
                 </div>
                 <div>
                     <p class="text-gray-600">Fakultas</p>
-                    <p class="font-medium" th:text="${mahasiswa != null ? mahasiswa.fakultas : 'N/A'}">Fasilkom-TI</p>
+                    <p class="font-medium" th:text="${mhs.fakultas}">Fakultas</p>
                 </div>
                 <div>
                     <p class="text-gray-600">Program Studi</p>
-                    <p class="font-medium" th:text="${mahasiswa != null ? mahasiswa.prodi : 'N/A'}">Ilmu Komputer</p>
+                    <p class="font-medium" th:text="${mhs.prodi}">Prodi</p>
                 </div>
             </div>
         </div>

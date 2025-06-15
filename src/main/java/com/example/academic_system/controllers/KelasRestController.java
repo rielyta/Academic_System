@@ -9,6 +9,8 @@ import com.example.academic_system.repositories.MataKuliahRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/kelas")
 public class KelasRestController {
@@ -53,4 +55,5 @@ public class KelasRestController {
         public Long getDosenId() { return dosenId; }
         public void setDosenId(Long dosenId) { this.dosenId = dosenId; }
     }
+
 }

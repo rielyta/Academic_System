@@ -50,4 +50,7 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
 
     // Count method untuk statistik
     int countByDosenId(Long dosenId);
+
+    List<Kelas> findByMahasiswaTerdaftarContaining(com.example.academic_system.models.Mahasiswa mahasiswa);
+
 }
