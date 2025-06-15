@@ -1,5 +1,6 @@
 package com.example.academic_system.config;
 
+import com.example.academic_system.services.ActivityLogService;
 import com.example.academic_system.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,9 @@ public class SecurityConfig {
     @Autowired
     @Lazy
     private CustomSuccessHandler customSuccessHandler;
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -47,7 +51,15 @@ public class SecurityConfig {
                 )
 
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            if (authentication != null) {
+                                String username = authentication.getName();
+                                String detail = String.format("User %s logged out from IP: %s",
+                                        username, getClientIP(request));
+                                activityLogService.log("Authentication", username, "LOGOUT", detail, username);
+                            }
+                            response.sendRedirect("/login?logout");
+                        })
                         .permitAll()
                 )
 
@@ -57,6 +69,14 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    private String getClientIP(jakarta.servlet.http.HttpServletRequest request) {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
     }
 
     @Bean
