@@ -1,14 +1,17 @@
 package com.example.academic_system.controllers;
 
+import com.example.academic_system.models.Pengguna;
 import com.example.academic_system.repositories.ActivityLogRepository;
 import com.example.academic_system.models.ActivityLog;
+import com.example.academic_system.repositories.UserRepository;
+import com.example.academic_system.services.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +20,15 @@ public class AdminActivityLogController {
 
     @Autowired
     private ActivityLogRepository activityLogRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     @GetMapping("/admin/activity_log")
     public String viewActivityLog(Model model, @RequestParam(required = false) String search,
@@ -78,5 +90,38 @@ public class AdminActivityLogController {
     @GetMapping("/admin/activity_log/filter")
     public String filterActivityLog(@RequestParam String action, Model model) {
         return "redirect:/admin/activity_log?filter=" + action;
+    }
+
+    @PostMapping("/update_profile/{id}")
+    public String updateProfile(@PathVariable Long id,
+                                @ModelAttribute Pengguna formPengguna,
+                                RedirectAttributes redirectAttributes,
+                                Principal principal) {
+
+        Pengguna existing = userRepository.findById(id).orElse(null);
+        if (existing == null) {
+            redirectAttributes.addFlashAttribute("error", "Pengguna tidak ditemukan.");
+            return "redirect:/admin/profile";
+        }
+        // Simpan detail sebelum dan sesudah
+        String oldDetails = String.format("Sebelum: Nama = %s, Kata Sandi = [PROTECTED]",
+                existing.getNama());
+
+        existing.setNama(formPengguna.getNama());
+
+        // Hash password sebelum menyimpan
+        existing.setKataSandi(passwordEncoder.encode(formPengguna.getKataSandi()) );
+
+        userRepository.save(existing);
+        String newDetails = String.format("Sesudah: Nama = %s, Kata Sandi = [PROTECTED]",
+                existing.getNama());
+
+        // Simpan ke activity log
+        activityLogService.log("Pengguna", existing.getId().toString(), "UPDATE",
+                oldDetails + " -> " + newDetails, principal.getName());
+
+        redirectAttributes.addFlashAttribute("sukses", "Profil berhasil diperbarui.");
+
+        return "redirect:/admin/profile";
     }
 }

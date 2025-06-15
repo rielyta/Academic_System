@@ -34,9 +34,10 @@
         <header class="p-4 flex justify-between items-center border-b border-gray-300">
             <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
             <h1 class="text-xl font-bold">Dashboard Admin</h1>
-            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap cursor-pointer hover:underline"
+                 onclick="window.location.href='/admin/profile'">
                 <i class="fa-solid fa-user"></i>
-                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+                <span class="font-medium" th:text="${#authentication.name}"></span>
             </div>
         </header>
 
