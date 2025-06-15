@@ -1,9 +1,11 @@
 package com.example.academic_system.controllers;
 
+import com.example.academic_system.models.Mahasiswa;
 import com.example.academic_system.models.Pengguna;
 import com.example.academic_system.repositories.DosenRepository;
 import com.example.academic_system.repositories.MahasiswaRepository;
 import com.example.academic_system.repositories.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
@@ -30,9 +32,8 @@ public class AuthController {
     @Autowired
     private MahasiswaRepository mahasiswaRepository;
 
-
     @GetMapping("/")
-    public String redirectToDashboard(Principal principal) {
+    public String redirectToDashboard(Principal principal, HttpSession session) {
         if (principal == null) return "redirect:/login";
 
         String identitas = principal.getName();
@@ -46,7 +47,18 @@ public class AuthController {
         return switch (user.getPeran()) {
             case "ROLE_ADMIN" -> "redirect:/admin/dashboard_admin";
             case "ROLE_DOSEN" -> "redirect:/dosen/dashboard_dosen";
-            case "ROLE_MAHASISWA" -> "redirect:/mahasiswa/dashboard_mahasiswa";
+            case "ROLE_MAHASISWA" -> {
+                Mahasiswa mhs = mahasiswaRepository.findByEmail(identitas).orElse(null);
+                if (mhs == null) {
+                    mhs = mahasiswaRepository.findByNim(identitas).orElse(null);
+                }
+                if (mhs != null) {
+                    session.setAttribute("mahasiswa", mhs);
+                    yield "redirect:/mahasiswa/dashboard_mahasiswa";
+                } else {
+                    yield "redirect:/login?error=mahasiswaNotFound";
+                }
+            }
             default -> "redirect:/login?error=invalidrole";
         };
     }

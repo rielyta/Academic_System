@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface MahasiswaRepository extends JpaRepository<Mahasiswa, Long> {
+    Optional<Mahasiswa> findByEmail(String email);
     Optional<Mahasiswa> findByNim(String nim);
-
     void deleteByNim(String nim);
 
 }

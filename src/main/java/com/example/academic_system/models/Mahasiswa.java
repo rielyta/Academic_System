@@ -40,7 +40,6 @@ public class Mahasiswa extends Pengguna {
     }
 
 
-
     public List<Kelas> getKelasDiikuti() {
         return kelasDiikuti;
     }
