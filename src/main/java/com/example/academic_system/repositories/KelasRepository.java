@@ -86,4 +86,6 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
     @Query("SELECT COUNT(DISTINCT k.mataKuliah.kodeMK) " +
             "FROM Kelas k WHERE k.dosen.id = :dosenId")
     Long countDistinctMataKuliahByDosenId(@Param("dosenId") Long dosenId);
+
+    List<Kelas> findByDosen_Id(Long dosenId);
 }

@@ -163,4 +163,8 @@ public class KelasService {
             return false;
         }
     }
+
+    public List<Kelas> findByDosenId(Long dosenId) {
+        return kelasRepository.findByDosen_Id(dosenId);
+    }
 }
