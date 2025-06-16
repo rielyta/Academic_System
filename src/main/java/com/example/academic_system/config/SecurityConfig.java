@@ -18,13 +18,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final CustomSuccessHandler customSuccessHandler;
+    private final ActivityLogService activityLogService;
 
-    @Autowired
-    @Lazy
-    private CustomSuccessHandler customSuccessHandler;
-
-    @Autowired
-    private ActivityLogService activityLogService;
+    // Constructor injection untuk menghindari circular dependency
+    public SecurityConfig(@Lazy CustomSuccessHandler customSuccessHandler,
+                          ActivityLogService activityLogService) {
+        this.customSuccessHandler = customSuccessHandler;
+        this.activityLogService = activityLogService;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -37,36 +39,63 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**", "/public/**").permitAll()
+                        .requestMatchers("/login", "/css/**", "/js/**", "/public/**", "/images/**").permitAll()
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/dosen/**").hasRole("DOSEN")
                         .requestMatchers("/mahasiswa/**").hasRole("MAHASISWA")
+
+                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/dosen/**").hasRole("DOSEN")
+                        .requestMatchers("/api/mahasiswa/**").hasRole("MAHASISWA")
+                        .requestMatchers("/api/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
 
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .successHandler(customSuccessHandler)
+                        .failureUrl("/login?error")
                         .permitAll()
                 )
 
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
                             if (authentication != null) {
                                 String username = authentication.getName();
                                 String detail = String.format("User %s logged out from IP: %s",
                                         username, getClientIP(request));
-                                activityLogService.log("Authentication", username, "LOGOUT", detail, username);
+                                try {
+                                    activityLogService.log("Authentication", username, "LOGOUT", detail, username);
+                                } catch (Exception e) {
+                                    // Log error tapi jangan block logout
+                                    System.err.println("Failed to log logout activity: " + e.getMessage());
+                                }
                             }
                             response.sendRedirect("/login?logout");
                         })
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
 
                 .exceptionHandling(ex -> ex
-                        .accessDeniedHandler((request, response, accessDeniedException) ->
-                                response.sendError(HttpStatus.FORBIDDEN.value(), "Forbidden"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.sendRedirect("/access-denied");
+                        })
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendRedirect("/login");
+                        })
+                )
+
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
                 );
 
         return http.build();
@@ -74,10 +103,10 @@ public class SecurityConfig {
 
     private String getClientIP(jakarta.servlet.http.HttpServletRequest request) {
         String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader == null) {
+        if (xfHeader == null || xfHeader.trim().isEmpty()) {
             return request.getRemoteAddr();
         }
-        return xfHeader.split(",")[0];
+        return xfHeader.split(",")[0].trim();
     }
 
     @Bean
