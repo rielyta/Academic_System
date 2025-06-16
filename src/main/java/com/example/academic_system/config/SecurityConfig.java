@@ -1,7 +1,5 @@
 package com.example.academic_system.config;
 
-import com.example.academic_system.services.ActivityLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -12,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -23,9 +22,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           CustomSuccessHandler customSuccessHandler,
-                                           ActivityLogService activityLogService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
 
@@ -48,26 +45,14 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .successHandler(customSuccessHandler)
+                        .successHandler(new CustomLoginSuccessHandler())
                         .failureUrl("/login?error")
                         .permitAll()
                 )
 
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            if (authentication != null) {
-                                String username = authentication.getName();
-                                String detail = String.format("User %s logged out from IP: %s",
-                                        username, getClientIP(request));
-                                try {
-                                    activityLogService.log("Authentication", username, "LOGOUT", detail, username);
-                                } catch (Exception e) {
-                                    System.err.println("Failed to log logout activity: " + e.getMessage());
-                                }
-                            }
-                            response.sendRedirect("/login?logout");
-                        })
+                        .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
@@ -89,18 +74,5 @@ public class SecurityConfig {
                 );
 
         return http.build();
-    }
-
-    private String getClientIP(jakarta.servlet.http.HttpServletRequest request) {
-        String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader == null || xfHeader.trim().isEmpty()) {
-            return request.getRemoteAddr();
-        }
-        return xfHeader.split(",")[0].trim();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }
