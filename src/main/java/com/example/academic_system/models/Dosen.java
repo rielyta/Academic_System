@@ -28,6 +28,9 @@ public class Dosen extends Pengguna {
     }
 
     // Getters and Setters
+    public String getNama() { return nama; }
+    public void setNama(String nama) { this.nama = nama; }
+
     public String getNip() { return nip; }
     public void setNip(String nip) { this.nip = nip; }
 

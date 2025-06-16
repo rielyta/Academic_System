@@ -10,7 +10,7 @@ public class Pengguna {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nama;
+    public String nama;
 
     @Column(unique = true, nullable = false)
     private String email;

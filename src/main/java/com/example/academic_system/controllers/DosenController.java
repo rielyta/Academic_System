@@ -7,6 +7,9 @@ import com.example.academic_system.services.MahasiswaService;
 import com.example.academic_system.services.MataKuliahService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -15,8 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
-@RestController
-@RequestMapping("/api/dosen")
+@Controller  // Ganti dari @RestController
+@RequestMapping("/dosen")  // Hapus /api
 public class DosenController {
 
     private final DosenService dosenService;
@@ -35,20 +38,24 @@ public class DosenController {
         this.mataKuliahService = mataKuliahService;
     }
 
-    @GetMapping
+    // Semua method API - tambahin @ResponseBody dan /api
+    @GetMapping("/api")
+    @ResponseBody
     public ResponseEntity<List<Dosen>> getAllDosen() {
         List<Dosen> dosenList = dosenService.findAll();
         return ResponseEntity.ok(dosenList);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/{id}")
+    @ResponseBody
     public ResponseEntity<Dosen> getDosenById(@PathVariable Long id) {
         Optional<Dosen> dosen = dosenService.findById(id);
         return dosen.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{id}/statistics")
+    @GetMapping("/api/{id}/statistics")
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> getDosenStatistics(@PathVariable Long id) {
         Optional<Dosen> dosen = dosenService.findById(id);
 
@@ -65,19 +72,20 @@ public class DosenController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping("/api")
+    @ResponseBody
     public ResponseEntity<Dosen> createDosen(@RequestBody Dosen dosen) {
         Dosen createdDosen = dosenService.createDosen(dosen);
         return ResponseEntity.ok(createdDosen);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/api/{id}")
+    @ResponseBody
     public ResponseEntity<Dosen> updateDosen(@PathVariable Long id, @RequestBody Dosen dosenDetails) {
         Optional<Dosen> existingDosen = dosenService.findById(id);
 
         if (existingDosen.isPresent()) {
             Dosen dosen = existingDosen.get();
-            // Update fields - adjust based on your Dosen model
             if (dosenDetails.getNama() != null) {
                 dosen.setNama(dosenDetails.getNama());
             }
@@ -87,7 +95,6 @@ public class DosenController {
             if (dosenDetails.getEmail() != null) {
                 dosen.setEmail(dosenDetails.getEmail());
             }
-            // Add other fields as needed
 
             Dosen updatedDosen = dosenService.save(dosen);
             return ResponseEntity.ok(updatedDosen);
@@ -96,7 +103,8 @@ public class DosenController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/{id}")
+    @ResponseBody
     public ResponseEntity<Void> deleteDosen(@PathVariable Long id) {
         Optional<Dosen> dosen = dosenService.findById(id);
 
@@ -106,5 +114,16 @@ public class DosenController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    // Method baru untuk halaman profil
+    @GetMapping("/profil")
+    public String profilDosen(Model model, Authentication authentication) {
+        if (authentication != null) {
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+            model.addAttribute("dosen", dosen);
+        }
+        return "profil-dosen"; // nama file HTML template
     }
 }

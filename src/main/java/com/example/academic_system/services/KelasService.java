@@ -26,8 +26,6 @@ public class KelasService {
         return kelasRepository.findByMahasiswaTerdaftarContaining(mahasiswa);
     }
 
-
-
     public Optional<Kelas> getKelasById(Long id) {
         return kelasRepository.findById(id);
     }
@@ -46,5 +44,9 @@ public class KelasService {
 
     public int countByDosenId(Long dosenId) {
         return kelasRepository.countByDosenId(dosenId);
+    }
+
+    public List<Kelas> findByDosenId(Long dosenId) {
+        return kelasRepository.findByDosenId(dosenId);
     }
 }

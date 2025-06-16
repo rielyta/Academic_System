@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" x-data="{ sidebarOpen: false }" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Dosen</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/alpinejs" defer></script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,10 +22,11 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="font-sans bg-[#f3f1d9]" x-data="{ sidebarOpen: false }">
 <div class="flex h-screen">
     <!-- Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-green-900 text-white">
+        :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
         <div class="flex flex-col px-6 py-6 items-center border-b border-green-800">
             <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
             <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
@@ -35,15 +36,15 @@
                 <i class="fas fa-tachometer-alt"></i>
                 Dasbor
             </div>
-            <a th:href="@{/dosen/kelas_dosen}" class="hover:bg-green-700 rounded-md px-3 py-2 flex items-center gap-2 block">
+            <a href="/dosen/kelas_dosen" class="hover:bg-green-700 rounded-md px-3 py-2 flex items-center gap-2 block">
                 <i class="fas fa-chalkboard-teacher"></i>
                 Kelas Saya
             </a>
-            <a th:href="@{/dosen/jadwal_mengajar}" class="block px-3 py-2 rounded-md hover:bg-green-700">
+            <a href="/dosen/jadwal_mengajar_dosen" class="block px-3 py-2 rounded-md hover:bg-green-700">
                 <i class="fas fa-calendar-alt mr-2"></i>
                 Jadwal Mengajar
             </a>
-            <a th:href="@{/dosen/mahasiswa_dosen}" class="block px-3 py-2 rounded-md hover:bg-green-700">
+            <a href="/dosen/mahasiswa_dosen" class="block px-3 py-2 rounded-md hover:bg-green-700">
                 <i class="fas fa-users mr-2"></i>
                 Mahasiswa
             </a>
@@ -71,7 +72,7 @@
                 <div class="flex items-center gap-4">
                     <i class="fas fa-bell text-gray-600"></i>
                     <i class="fas fa-user-circle text-gray-600"></i>
-                    <span class="text-sm font-medium text-gray-800" th:text="${dosen?.nama ?: 'Nama Dosen'}"></span>
+                    <span class="text-sm font-medium text-gray-800" th:text="${#authentication.name}"></span>
                 </div>
             </div>
         </header>
@@ -87,56 +88,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <p class="text-sm text-gray-600">Nama Dosen</p>
-                        <p class="font-medium text-gray-800" th:text="${dosen?.nama ?: '-'}"></p>
+                        <p class="font-medium text-gray-800" th:text="${dosen?.nama ?: 'Data tidak ditemukan'}"></p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Nomor Induk Pegawai</p>
-                        <p class="font-medium text-gray-800" th:text="${dosen?.nip ?: '-'}"></p>
+                        <p class="font-medium text-gray-800" th:text="${dosen?.nip ?: 'Data tidak ditemukan'}"></p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Email</p>
-                        <p class="font-medium text-gray-800" th:text="${dosen?.email ?: '-'}"></p>
+                        <p class="font-medium text-gray-800" th:text="${#authentication.name}"></p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">No. Telepon</p>
                         <p class="font-medium text-gray-800" th:text="${dosen?.noTelepon ?: '-'}"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Statistik Card -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div class="bg-white rounded-lg shadow-sm p-6 border border-green-200">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-green-100 text-green-800">
-                            <i class="fas fa-chalkboard-teacher text-lg"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-xl font-semibold text-gray-800" th:text="${totalKelas ?: 0}"></h3>
-                            <p class="text-sm text-gray-600">Total Kelas</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-sm p-6 border border-green-200">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-green-100 text-green-800">
-                            <i class="fas fa-users text-lg"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-xl font-semibold text-gray-800" th:text="${totalMahasiswa ?: 0}"></h3>
-                            <p class="text-sm text-gray-600">Total Mahasiswa</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-sm p-6 border border-green-200">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-green-100 text-green-800">
-                            <i class="fas fa-book text-lg"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-xl font-semibold text-gray-800" th:text="${totalMataKuliah ?: 0}"></h3>
-                            <p class="text-sm text-gray-600">Mata Kuliah</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -175,7 +139,7 @@
                                 <div class="flex items-center text-green-800">
                                     <i class="fas fa-book-open mr-2"></i>
                                     <p class="text-sm text-gray-800">
-                                        <span th:text="${kelas.mataKuliah?.nama ?: (kelas.mataKuliah?.namaMK ?: 'Mata Kuliah tidak tersedia')}"></span>
+                                        <span th:text="${kelas.mataKuliah?.namaMK ?: 'Mata Kuliah tidak tersedia'}"></span>
                                     </p>
                                 </div>
                                 <div class="flex items-center text-green-800">
@@ -187,7 +151,7 @@
                                 <div class="flex items-center text-green-800">
                                     <i class="fas fa-users mr-2"></i>
                                     <p class="text-sm text-gray-800">
-                                        Mahasiswa: <span th:text="${kelas.mahasiswaList?.size() ?: (kelas.mahasiswaTerdaftar?.size() ?: 0)}"></span>
+                                        Mahasiswa: <span th:text="${kelas.mahasiswaTerdaftar?.size() ?: 0}"></span>
                                     </p>
                                 </div>
                                 <div th:if="${kelas.semester != null}" class="flex items-center text-green-800">

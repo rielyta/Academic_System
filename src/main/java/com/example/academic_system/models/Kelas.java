@@ -61,7 +61,6 @@ public class Kelas {
     @Enumerated(EnumType.STRING)
     private DayOfWeek hariKelas;
 
-
     // Getter dan Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
