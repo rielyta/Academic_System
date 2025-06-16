@@ -1,127 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <title>Kelas Saya</title>
 </head>
 
 <body>
-    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
-           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
-            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
-            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
-        </div>
-        <nav class="px-4 py-4 space-y-2">
-            <a href="/mahasiswa/dashboard_mahasiswa" class="block px-3 py-2 rounded-md hover:bg-green-800">Dasbor</a>
-            <a href="/mahasiswa/KelasSaya" class="block px-3 py-2 bg-green-900 rounded-md">Kelas Saya</a>
-            <a href="/mahasiswa/daftarKelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Daftar Kelas</a>
-        </nav>
-        <div class="p-4 absolute bottom-0 w-64">
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="w-full flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    Keluar
-                </button>
-            </form>
-        </div>
-    </aside>
+<aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0">
+    <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
+        <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+        <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
+    </div>
+    <nav class="px-4 py-4 space-y-2">
+        <a href="/mahasiswa/dashboard_mahasiswa" class="block px-3 py-2 rounded-md hover:bg-green-800">Dasbor</a>
+        <a href="/mahasiswa/KelasSaya" class="block px-3 py-2 bg-green-900 rounded-md">Kelas Saya</a>
+        <a href="/mahasiswa/daftarKelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Daftar Kelas</a>
+    </nav>
+    <div class="p-4 absolute bottom-0 w-64">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="flex items-center justify-center w-full px-3 py-2 text-sm font-semibold text-center text-gray-100 transition-colors duration-150 bg-red-600 rounded-md hover:bg-red-700">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Keluar
+            </button>
+        </form>
+    </div>
+</aside>
 
-    <header class="fixed top-0 left-0 right-0 z-40 bg-[#F3F1D9]">
-        <nav class="flex items-center justify-end px-6 py-4 ml-64 space-x-4 text-lg whitespace-nowrap">
-                <i class="fa-solid fa-user"></i>
-                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
-        </nav>
-    </header>
+<header class="fixed top-0 left-0 right-0 z-40 bg-[#F3F1D9]">
+    <nav class="flex items-center justify-end px-6 py-4 ml-64 space-x-4 text-lg whitespace-nowrap">
+        <a href="/mahasiswa/profil_mahasiswa" class="flex items-center justify-end px-6 py-4 ml-64 space-x-4 text-lg whitespace-nowrap hover:underline">
+            <i class="fa-solid fa-user"></i>
+            <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+        </a>
+    </nav>
+</header>
 
-    <!--main content-->
-    <div class="flex-1 overflow-y-auto bg-[#F3F1D9] ml-64 pt-20 pl-6 h-screen">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800 mb-3">Kelas Saya</h1>
+<!--main content-->
+<div class="ml-64 pt-16 min-h-screen bg-[#F3F1D9]">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 mb-2">Kelas Saya</h1>
+                <!-- Info Mahasiswa -->
+                <div th:if="${mhs}" class="text-sm text-gray-600">
+                    <span th:text="${mhs.nama}">Nama Mahasiswa</span>
+                    (<span th:text="${mhs.nim}">NIM</span>) -
+                    <span th:text="${mhs.prodi}">Program Studi</span>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-sm text-gray-600">Total Kelas Terdaftar</p>
+                <p class="text-2xl font-bold text-[#072D17]" th:text="${kelasSaya != null ? kelasSaya.size() : 0}">0</p>
+            </div>
         </div>
-        <div class="flex-grow relative max-w-full mr-6">
-            <input type="text" placeholder="Cari kelas..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-[#2C7148] focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
+
+        <!-- Search Bar -->
+        <div class="flex-grow relative max-w-full mb-6">
+            <input type="text" id="searchInput" placeholder="Cari kelas..."
+                   class="w-full pl-10 pr-4 py-2 rounded-lg border border-[#2C7148] focus:outline-none focus:ring-2 focus:ring-[#2C7148]"
+                   onkeyup="searchKelas()">
             <i class="fas fa-search absolute left-3 top-3 text-[#514D4D]"></i>
         </div>
 
-        <!-- card kelas -->
-        <div class="grid grid-cols-3 gap-8 mt-6 mr-6">
-            <!-- Card 1 -->
-            <div class="relative bg-white shadow-lg hover:shadow-xl rounded-2xl overflow-hidden  border border-gray-300 hover:border-[#072D17] transition-all duration-300">
-                <!-- Icon-->
-                <div class="bg-[#C8CFBE] h-45 flex items-center justify-center">
-                    <div class="flex items-center justify-center gap-3">
-                        <i class="fas fa-play text-white text-3xl"></i>
-                        <i class="fas fa-cog text-white text-3xl"></i>
-                        <i class="fas fa-cube text-white text-3xl"></i>
-                    </div>
-                </div>
-                <!-- Info Kelas -->
-                <div class="flex flex-row bg-[#FFFBDF] p-4 gap-4">
-                    <div class="flex flex-col">
-                        <div class="flex flex-row gap-4 items-center">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Pemrograman Berorientasi Objek</h3>
-                            <div class="bg-[#20452F] px-2 py-1 rounded text-center text-xs text-white font-medium w-17 h-6 justify-center">
-                                ILK2201
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-600">Genap T.A 2024/2025</p>
-                    </div>
-                </div>
-            </div>
+        <!-- Kelas Cards -->
+        <div th:if="${kelasSaya != null and !kelasSaya.empty}">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="kelasContainer">
+                <div th:each="kelas : ${kelasSaya}"
+                     class="kelas-card relative bg-white shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-gray-300 hover:border-[#072D17] transition-all duration-300"
+                     th:data-nama="${kelas.namaKelas}"
+                     th:data-kode="${kelas.mataKuliah?.kodeMK}"
+                     th:data-dosen="${kelas.dosen?.nama}">
 
-            <!-- Card 2 -->
-            <div class="relative bg-white shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-gray-300 hover:border-[#072D17] transition-all duration-300">
-                <!-- Icon-->
-                <div class="bg-[#C8CFBE] h-45 flex items-center justify-center">
-                    <div class="flex items-center justify-center gap-3">
-                        <i class="fas fa-play text-white text-3xl"></i>
-                        <i class="fas fa-cog text-white text-3xl"></i>
-                        <i class="fas fa-cube text-white text-3xl"></i>
-                    </div>
-                </div>
-                <!-- Info Kelas -->
-                <div class="flex flex-row bg-[#FFFBDF] p-4 gap-4">
-                    <div class="flex flex-col">
-                        <div class="flex flex-row gap-4 items-center">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-1">Pemrograman Berorientasi Objek</h3>
-                            <div class="bg-[#20452F] px-2 py-1 rounded text-center text-xs text-white font-medium w-17 h-6 justify-center">
-                                ILK2201
-                            </div>
+                    <!-- Header card -->
+                    <div class="bg-gradient-to-r from-[#C8CFBE] to-[#A8B5A0] h-24 flex items-center justify-center relative">
+                        <div class="flex items-center justify-center gap-3">
+                            <!-- icon sampul -->
+                            <i class="text-white text-2xl"
+                               th:classappend="${kelas.mataKuliah?.kodeMK?.startsWith('IF') ? ' fas fa-code' :
+                                kelas.mataKuliah?.kodeMK?.startsWith('MAT') ? ' fas fa-calculator' :
+                                kelas.mataKuliah?.kodeMK?.startsWith('FIS') ? ' fas fa-atom' :
+                                ' fas fa-book'}"></i>
+                            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                            <i class="fas fa-users text-white text-2xl"></i>
                         </div>
-                        <p class="text-sm text-gray-600">Genap T.A 2024/2025</p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Card 3 -->
-            <div class="relative bg-white shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-gray-300 hover:border-[#072D17] transition-all duration-300">
-                <!-- Icon-->
-                <div class="bg-[#C8CFBE] h-45 flex items-center justify-center">
-                    <div class="flex items-center justify-center gap-3">
-                        <i class="fas fa-play text-white text-3xl"></i>
-                        <i class="fas fa-cog text-white text-3xl"></i>
-                        <i class="fas fa-cube text-white text-3xl"></i>
                     </div>
-                </div>
-                <!-- Info Kelas -->
-                <div class="flex flex-row bg-[#FFFBDF] p-4 gap-4">
-                    <div class="flex flex-col">
-                        <div class="flex flex-row gap-4 items-center">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-1">Pemrograman Berorientasi Objek</h3>
-                            <div class="bg-[#20452F] px-2 py-1 rounded text-center text-xs text-white font-medium w-17 h-6 justify-center">
-                                ILK2201
+
+                    <!-- Info Kelas -->
+                    <div class="bg-[#FFFBDF] p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-1 leading-tight"
+                                    th:text="${kelas.namaKelas}">Nama Kelas</h3>
+
+                                <!-- Mata Kuliah Info -->
+                                <div class="flex items-center gap-2 mb-2">
+                                        <span class="bg-[#20452F] px-2 py-1 rounded text-xs text-white font-medium"
+                                              th:text="${kelas.mataKuliah?.kodeMK ?: 'N/A'}">Kode MK</span>
+                                    <span class="text-xs text-gray-600"
+                                          th:text="'SKS: ' + ${kelas.mataKuliah?.sks ?: 'N/A'}">SKS: 3</span>
+                                </div>
+
+                                <!-- Dosen -->
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fas fa-chalkboard-teacher text-gray-500 text-xs"></i>
+                                    <span class="text-sm text-gray-600"
+                                          th:text="${kelas.dosen?.nama ?: 'N/A'}">Nama Dosen</span>
+                                </div>
+
+                                <!-- Jadwal -->
+                                <div class="flex items-center gap-2 mb-2" th:if="${kelas.hariKelas}">
+                                    <i class="fas fa-clock text-gray-500 text-xs"></i>
+                                    <span class="text-sm text-gray-600"
+                                          th:text="${kelas.hariKelas} + ', ' + ${kelas.jamMulai ?: ''} + ' - ' + ${kelas.jamKeluar ?: ''}">
+                                            Jadwal
+                                        </span>
+                                </div>
+
+                                <!-- Ruangan -->
+                                <div class="flex items-center gap-2 mb-2" th:if="${kelas.ruangan}">
+                                    <i class="fas fa-door-open text-gray-500 text-xs"></i>
+                                    <span class="text-sm text-gray-600"
+                                          th:text="'Ruangan: ' + ${kelas.ruangan}">Ruangan</span>
+                                </div>
+
+                                <!-- Semester & Tahun Ajar -->
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-calendar text-gray-500 text-xs"></i>
+                                    <span class="text-sm text-gray-600"
+                                          th:text="'Semester ' + ${kelas.semester ?: ''} + ' - ' + ${kelas.semester ?: ''}">
+                                            Semester & Tahun
+                                        </span>
+                                </div>
                             </div>
                         </div>
-                        <p class="text-sm text-gray-600">Genap T.A 2024/2025</p>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2 mt-4">
+                            <button class="flex-1 bg-[#072D17] text-white py-2 px-3 rounded-md hover:bg-[#0a3d1f] transition-colors text-sm">
+                                <i class="fas fa-eye mr-2"></i>Lihat Detail
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
+        <!-- Empty State -->
+        <div th:if="${kelasSaya == null or kelasSaya.empty}" class="text-center py-16">
+            <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
+                <i class="fas fa-book-open text-6xl text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">Belum Ada Kelas Terdaftar</h3>
+                <p class="text-gray-500 mb-6">Anda belum mendaftar di kelas manapun. Mulai daftar kelas untuk memulai pembelajaran!</p>
+            </div>
+        </div>
+
+        <!-- No Search Results -->
+        <div id="noResults" class="text-center py-16 hidden">
+            <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
+                <i class="fas fa-search text-6xl text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">Kelas Tidak Ditemukan</h3>
+                <p class="text-gray-500 mb-6">Tidak ada kelas yang sesuai dengan pencarian Anda.</p>
+                <button onclick="clearSearch()"
+                        class="inline-flex items-center bg-[#072D17] text-white px-6 py-3 rounded-lg hover:bg-[#0a3d1f] transition-colors">
+                    <i class="fas fa-times mr-2"></i>
+                    Clear Pencarian
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchKelas() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const kelasCards = document.querySelectorAll('.kelas-card');
+        const noResults = document.getElementById('noResults');
+        let visibleCount = 0;
+
+        kelasCards.forEach(card => {
+            const nama = card.getAttribute('data-nama')?.toLowerCase() || '';
+            const kode = card.getAttribute('data-kode')?.toLowerCase() || '';
+            const dosen = card.getAttribute('data-dosen')?.toLowerCase() || '';
+
+            const isVisible = nama.includes(searchTerm) ||
+                kode.includes(searchTerm) ||
+                dosen.includes(searchTerm);
+
+            if (isVisible) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Show/hide no results message
+        if (visibleCount === 0 && searchTerm !== '' && kelasCards.length > 0) {
+            noResults.classList.remove('hidden');
+        } else {
+            noResults.classList.add('hidden');
+        }
+    }
+
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        searchKelas();
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchKelas();
+        }
+    });
+</script>
 </body>
 </html>

@@ -36,6 +36,10 @@ public class MahasiswaService {
         return mahasiswaRepository.findByEmail(email);
     }
 
+    public Optional<Mahasiswa> findByEmailWithKelas(String email) {
+        return mahasiswaRepository.findByEmailWithKelas(email);
+    }
+
     public Mahasiswa createMahasiswa(Mahasiswa mahasiswa) {
         return mahasiswaRepository.save(mahasiswa);
     }
