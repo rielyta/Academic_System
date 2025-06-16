@@ -4,7 +4,6 @@ import com.example.academic_system.services.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,23 +17,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomSuccessHandler customSuccessHandler;
-    private final ActivityLogService activityLogService;
-
-    // Constructor injection untuk menghindari circular dependency
-    public SecurityConfig(@Lazy CustomSuccessHandler customSuccessHandler,
-                          ActivityLogService activityLogService) {
-        this.customSuccessHandler = customSuccessHandler;
-        this.activityLogService = activityLogService;
-    }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           CustomSuccessHandler customSuccessHandler,
+                                           ActivityLogService activityLogService) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
 
@@ -72,7 +63,6 @@ public class SecurityConfig {
                                 try {
                                     activityLogService.log("Authentication", username, "LOGOUT", detail, username);
                                 } catch (Exception e) {
-                                    // Log error tapi jangan block logout
                                     System.err.println("Failed to log logout activity: " + e.getMessage());
                                 }
                             }
