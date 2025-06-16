@@ -31,7 +31,7 @@
             <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
         </div>
         <nav class="px-4 py-4 space-y-2">
-            <a href="manajemen_mahasiswa" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
+            <a href="/dosen/dashboard_dosen" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
                 <i class="fas fa-tachometer-alt"></i>
                 Dasbor
             </a>
@@ -39,11 +39,11 @@
                 <i class="fas fa-chalkboard-teacher"></i>
                 Kelas Saya
             </div>
-            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
+            <a href="/dosen/jadwal_mengajar_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
                 <i class="fas fa-calendar-alt mr-2"></i>
                 Jadwal Mengajar
             </a>
-            <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
+            <a href="/dosen/mahasiswa_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
                 <i class="fas fa-users mr-2"></i>
                 Mahasiswa
             </a>
@@ -71,7 +71,7 @@
                 <div class="flex items-center gap-4">
                     <i class="fas fa-bell text-[#514D4D]"></i>
                     <i class="fas fa-user-circle text-[#514D4D]"></i>
-                    <span class="text-sm font-medium text-[rgba(0,0,0,0.8)]">Nama Dosen</span>
+                    <span class="text-sm font-medium text-gray-800" th:text="${#authentication.name}"></span>
                 </div>
             </div>
         </header>
@@ -104,14 +104,19 @@
             </div>
 
             <!-- Class Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Class Card 1 -->
-                <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm border border-[#2C7148] overflow-hidden card-hover">
+            <div th:if="${kelasList != null and not #lists.isEmpty(kelasList)}"
+                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div th:each="kelas : ${kelasList}"
+                     class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm border border-[#2C7148] overflow-hidden card-hover">
                     <div class="p-6">
                         <div class="flex items-start justify-between mb-4">
                             <div class="flex-1">
-                                <span class="inline-block bg-[rgba(44,113,72,0.2)] text-[#20452F] text-xs px-2 py-1 rounded mb-2">CS201</span>
-                                <h3 class="font-semibold text-[rgba(0,0,0,0.8)] text-sm leading-tight mb-2">Pemrograman Berorientasi Objek</h3>
+                                <span class="inline-block bg-[rgba(44,113,72,0.2)] text-[#20452F] text-xs px-2 py-1 rounded mb-2"
+                                      th:text="${kelas.kodeKelas}">CS101</span>
+                                <h3 class="font-semibold text-[rgba(0,0,0,0.8)] text-sm leading-tight mb-2"
+                                    th:text="${kelas.mataKuliah?.namaMK != null ? kelas.mataKuliah.namaMK : 'Mata Kuliah tidak tersedia'}">
+                                    Nama MK
+                                </h3>
                             </div>
                             <button class="text-[#514D4D] hover:text-[rgba(0,0,0,0.8)]">
                                 <i class="fas fa-ellipsis-v"></i>
@@ -121,165 +126,55 @@
                         <div class="space-y-2 mb-4">
                             <div class="flex items-center text-sm text-[rgba(0,0,0,0.7)]">
                                 <i class="fas fa-users w-4 mr-2 text-[#20452F]"></i>
-                                <span>25 Mahasiswa</span>
+                                <span th:text="'Mahasiswa: ' + ${kelas.mahasiswaTerdaftar != null ? kelas.mahasiswaTerdaftar.size() : 0}">
+                                    Mahasiswa: 0
+                                </span>
                             </div>
                             <div class="flex items-center text-sm text-[rgba(0,0,0,0.7)]">
                                 <i class="fas fa-book w-4 mr-2 text-[#20452F]"></i>
-                                <span>3 SKS</span>
+                                <span th:text="'SKS: ' + ${kelas.mataKuliah?.sks != null ? kelas.mataKuliah.sks : 0}">
+                                    3 SKS
+                                </span>
                             </div>
                         </div>
 
                         <div class="flex gap-2 pt-4 border-t border-[#2C7148] border-opacity-20">
-                            <button class="flex-1 bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white py-2 px-3 rounded text-sm transition-colors">
+                            <a th:href="@{'/dosen/kelas/' + ${kelas.id}}"
+                               class="flex-1 bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white py-2 px-3 rounded text-sm transition-colors">
                                 <i class="fas fa-eye mr-1"></i>
                                 Kelola
-                            </button>
-                            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-[#20452F] py-2 px-3 rounded text-sm transition-colors">
+                            </a>
+                            <a th:href="@{'/dosen/kelas/' + ${kelas.id} + '/mahasiswa'}"
+                               class="flex-1 bg-gray-200 hover:bg-gray-300 text-[#20452F] py-2 px-3 rounded text-sm transition-colors">
                                 <i class="fas fa-users mr-1"></i>
                                 Anggota
-                            </button>
+                            </a>
                         </div>
                     </div>
 
                     <div class="bg-[rgba(44,113,72,0.1)] px-6 py-3 text-xs text-[rgba(0,0,0,0.7)] border-t border-[#2C7148] border-opacity-20">
                         <div class="flex justify-between">
-                            <span>Semester Genap 2024/2025</span>
-                            <span>Senin 08:00-10:30</span>
+                            <span>
+                                Semester
+                                <span th:text="${kelas.semester != null ? kelas.semester : '-'}">-</span>
+                                <span th:text="${kelas.tahunAjar != null ? kelas.tahunAjar : ''}"></span>
+                            </span>
+                            <span th:if="${kelas.hariKelas != null and kelas.jamMulai != null and kelas.jamKeluar != null}"
+                                  th:text="${#strings.capitalize(kelas.hariKelas.toString().toLowerCase()) + ' ' + kelas.jamMulai + ' - ' + kelas.jamKeluar}">
+                                Jadwal
+                            </span>
+                            <span th:unless="${kelas.hariKelas != null and kelas.jamMulai != null and kelas.jamKeluar != null}">
+                                Jadwal belum diatur
+                            </span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Class Card 2 -->
-                <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm border border-[#2C7148] overflow-hidden card-hover">
-                    <div class="p-6">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex-1">
-                                <span class="inline-block bg-[rgba(44,113,72,0.2)] text-[#20452F] text-xs px-2 py-1 rounded mb-2">CS301</span>
-                                <h3 class="font-semibold text-[rgba(0,0,0,0.8)] text-sm leading-tight mb-2">Pemrograman Berorientasi Objek</h3>
-                            </div>
-                            <button class="text-[#514D4D] hover:text-[rgba(0,0,0,0.8)]">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center text-sm text-[rgba(0,0,0,0.7)]">
-                                <i class="fas fa-users w-4 mr-2 text-[#20452F]"></i>
-                                <span>25 Mahasiswa</span>
-                            </div>
-                            <div class="flex items-center text-sm text-[rgba(0,0,0,0.7)]">
-                                <i class="fas fa-book w-4 mr-2 text-[#20452F]"></i>
-                                <span>3 SKS</span>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-2 pt-4 border-t border-[#2C7148] border-opacity-20">
-                            <button class="flex-1 bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white py-2 px-3 rounded text-sm transition-colors">
-                                <i class="fas fa-eye mr-1"></i>
-                                Kelola
-                            </button>
-                            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-[#20452F] py-2 px-3 rounded text-sm transition-colors">
-                                <i class="fas fa-users mr-1"></i>
-                                Anggota
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-[rgba(44,113,72,0.1)] px-6 py-3 text-xs text-[rgba(0,0,0,0.7)] border-t border-[#2C7148] border-opacity-20">
-                        <div class="flex justify-between">
-                            <span>Semester Genap 2024/2025</span>
-                            <span>Rabu 08:00-10:30</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Class Card 3 -->
-                <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm border border-[#2C7148] overflow-hidden card-hover">
-                    <div class="p-6">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex-1">
-                                <span class="inline-block bg-[rgba(44,113,72,0.2)] text-[#20452F] text-xs px-2 py-1 rounded mb-2">CS401</span>
-                                <h3 class="font-semibold text-[rgba(0,0,0,0.8)] text-sm leading-tight mb-2">Pemrograman Berorientasi Objek</h3>
-                            </div>
-                            <button class="text-[#514D4D] hover:text-[rgba(0,0,0,0.8)]">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center text-sm text-[rgba(0,0,0,0.7)]">
-                                <i class="fas fa-users w-4 mr-2 text-[#20452F]"></i>
-                                <span>25 Mahasiswa</span>
-                            </div>
-                            <div class="flex items-center text-sm text-[rgba(0,0,0,0.7)]">
-                                <i class="fas fa-book w-4 mr-2 text-[#20452F]"></i>
-                                <span>3 SKS</span>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-2 pt-4 border-t border-[#2C7148] border-opacity-20">
-                            <button class="flex-1 bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white py-2 px-3 rounded text-sm transition-colors">
-                                <i class="fas fa-eye mr-1"></i>
-                                Kelola
-                            </button>
-                            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-[#20452F] py-2 px-3 rounded text-sm transition-colors">
-                                <i class="fas fa-users mr-1"></i>
-                                Anggota
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-[rgba(44,113,72,0.1)] px-6 py-3 text-xs text-[rgba(0,0,0,0.7)] border-t border-[#2C7148] border-opacity-20">
-                        <div class="flex justify-between">
-                            <span>Semester Genap 2024/2025</span>
-                            <span>Jumat 08:00-10:30</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Class Card 4 -->
-                <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm border border-[#2C7148] overflow-hidden card-hover">
-                    <div class="p-6">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex-1">
-                                <span class="inline-block bg-[rgba(44,113,72,0.2)] text-[#20452F] text-xs px-2 py-1 rounded mb-2">CS501</span>
-                                <h3 class="font-semibold text-[rgba(0,0,0,0.8)] text-sm leading-tight mb-2">Pemrograman Berorientasi Objek</h3>
-                            </div>
-                            <button class="text-[#514D4D] hover:text-[rgba(0,0,0,0.8)]">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center text-sm text-[rgba(0,0,0,0.7)]">
-                                <i class="fas fa-users w-4 mr-2 text-[#20452F]"></i>
-                                <span>25 Mahasiswa</span>
-                            </div>
-                            <div class="flex items-center text-sm text-[rgba(0,0,0,0.7)]">
-                                <i class="fas fa-book w-4 mr-2 text-[#20452F]"></i>
-                                <span>3 SKS</span>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-2 pt-4 border-t border-[#2C7148] border-opacity-20">
-                            <button class="flex-1 bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white py-2 px-3 rounded text-sm transition-colors">
-                                <i class="fas fa-eye mr-1"></i>
-                                Kelola
-                            </button>
-                            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-[#20452F] py-2 px-3 rounded text-sm transition-colors">
-                                <i class="fas fa-users mr-1"></i>
-                                Anggota
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-[rgba(44,113,72,0.1)] px-6 py-3 text-xs text-[rgba(0,0,0,0.7)] border-t border-[#2C7148] border-opacity-20">
-                        <div class="flex justify-between">
-                            <span>Semester Genap 2024/2025</span>
-                            <span>Sabtu 08:00-10:30</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Jika tidak ada kelas -->
+            <div th:if="${kelasList == null or #lists.isEmpty(kelasList)}" class="text-center py-8">
+                <i class="fas fa-chalkboard-teacher text-4xl text-gray-400 mb-4"></i>
+                <p class="text-gray-600">Belum ada kelas yang diampu</p>
             </div>
         </main>
     </div>

@@ -25,8 +25,8 @@
 <body class="font-sans bg-[#f3f1d9]" x-data="{ sidebarOpen: false }">
 <div class="flex h-screen">
     <!-- Sidebar -->
-    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-green-900 text-white">
-        :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
+           :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
         <div class="flex flex-col px-6 py-6 items-center border-b border-green-800">
             <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
             <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
@@ -172,6 +172,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </main>

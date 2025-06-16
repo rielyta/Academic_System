@@ -126,4 +126,28 @@ public class DosenController {
         }
         return "profil-dosen"; // nama file HTML template
     }
+
+    @GetMapping("/kelas_dosen")
+    public String lihatKelasDosen(Model model, Authentication authentication) {
+        if (authentication != null) {
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            model.addAttribute("dosen", dosen);
+            model.addAttribute("kelasList", kelasService.findByDosenId(dosen.getId()));
+        }
+
+        return "dosen/kelas_dosen";
+    }
+
+    @GetMapping("/jadwal_mengajar_dosen")
+    public String lihatJadwal(Model model) {
+        return "dosen/jadwal_mengajar_dosen";
+    }
+
+    @GetMapping("/mahasiswa_dosen")
+    public String lihatMahasiswa(Model model) {
+        return "dosen/mahasiswa_dosen";
+    }
+
 }
