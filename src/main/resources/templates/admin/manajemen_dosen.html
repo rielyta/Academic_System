@@ -34,6 +34,16 @@
             <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Kelas</a>
             <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mata Kuliah</a>
             <a href="/admin/activity_log" class="block px-3 py-2 mt-4 hover:bg-green-800 rounded-md">Log Aktivitas</a>
+            <div class="px-4 py-6 border-t border-[#20452F]">
+                <form th:action="@{/logout}" method="post">
+                    <button
+                            type="submit"
+                            class="flex items-center justify-center w-full px-3 py-2 text-sm font-semibold text-center text-gray-100 transition-colors duration-150 bg-red-600 rounded-md hover:bg-red-700">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Keluar
+                    </button>
+                </form>
+            </div>
         </nav>
     </aside>
 
@@ -49,9 +59,10 @@
                 <input id="searchInput" type="text" placeholder="Cari kelas..." class="w-full px-4 py-2 border border-[#002E1F] rounded-md" />
                 <button id="searchButton" class="px-4 py-2 bg-green-900 text-white rounded-md hover:bg-green-800">Cari</button>
             </div>
-            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap cursor-pointer hover:underline"
+                 onclick="window.location.href='/admin/profile'">
                 <i class="fa-solid fa-user"></i>
-                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+                <span class="font-medium" th:text="${#authentication.name}"></span>
             </div>
         </header>
 

@@ -8,24 +8,33 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/alpinejs" defer></script>
 </head>
-<body class="bg-[#F3F1D9] font-sans text-gray-900" x-cloak>
-
+<body class="font-sans bg-[#f3f1d9]" x-data="{ sidebarOpen: false }">
 <div class="flex h-screen">
 
     <!-- Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
         <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
-            <p class="text-lg font-bold text-center">Learning Management System</p>
-            <i class="fa-solid fa-school text-6xl text-yellow-300 mt-4"></i>
+            <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
         </div>
         <nav class="px-4 py-2 space-y-2">
-            <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md bg-green-900">Dasbor</a>
+            <a href="/admin/dashboard_admin" class="block px-3 py-2 rounded-md bg-green-900 hover:bg-green-800">Dasbor</a>
             <a href="/admin/manajemen_mahasiswa" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mahasiswa</a>
             <a href="/admin/manajemen_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Dosen</a>
             <a href="/admin/manajemen_kelas" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Kelas</a>
             <a href="/admin/manajemen_matakuliah" class="block px-3 py-2 rounded-md hover:bg-green-800">Manajemen Mata Kuliah</a>
             <a href="/admin/activity_log" class="block px-3 py-2 mt-4 hover:bg-green-800 rounded-md">Log Aktivitas</a>
+            <div class="px-4 py-6 border-t border-[#20452F]">
+                <form th:action="@{/logout}" method="post">
+                    <button
+                            type="submit"
+                            class="flex items-center justify-center w-full px-3 py-2 text-sm font-semibold text-center text-white transition-colors duration-150 bg-red-600 rounded-md hover:bg-red-700">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Keluar
+                    </button>
+                </form>
+            </div>
         </nav>
     </aside>
 
@@ -34,9 +43,10 @@
         <header class="p-4 flex justify-between items-center border-b border-gray-300">
             <button class="text-2xl lg:hidden" @click="sidebarOpen = !sidebarOpen">☰</button>
             <h1 class="text-xl font-bold">Dashboard Admin</h1>
-            <div class="flex items-center space-x-4 text-lg whitespace-nowrap">
+            <div class="flex items-center space-x-4 text-lg whitespace-nowrap cursor-pointer hover:underline"
+                 onclick="window.location.href='/admin/profile'">
                 <i class="fa-solid fa-user"></i>
-                <span class="font-medium" th:text="${#authentication.name}">Jane Doe</span>
+                <span class="font-medium" th:text="${#authentication.name}"></span>
             </div>
         </header>
 

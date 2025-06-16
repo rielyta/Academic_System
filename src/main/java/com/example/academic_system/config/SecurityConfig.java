@@ -1,7 +1,6 @@
 package com.example.academic_system.config;
 
 import com.example.academic_system.services.ActivityLogService;
-import com.example.academic_system.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/css/**", "/js/**", "/public/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/dosen/**").hasRole("DOSEN")
+                        .requestMatchers("/mahasiswa/**").hasRole("MAHASISWA")
                         .anyRequest().authenticated()
                 )
 
