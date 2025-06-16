@@ -31,12 +31,16 @@ public class DosenService {
     }
 
     public Dosen createDosen(Dosen dosen) {
+        // Add validation before save if needed
         return dosenRepository.save(dosen);
     }
 
+    // ADD THIS METHOD:
     public Dosen save(Dosen dosen) {
         return dosenRepository.save(dosen);
     }
+
+
 
     public Dosen updateDosen(Long id, Dosen dosenDetails) {
         Optional<Dosen> existingDosen = dosenRepository.findById(id);
@@ -113,9 +117,5 @@ public class DosenService {
     public boolean isEmailAvailableForUpdate(String email, Long dosenId) {
         Optional<Dosen> existingDosen = dosenRepository.findByEmail(email);
         return existingDosen.isEmpty() || existingDosen.get().getId().equals(dosenId);
-    }
-
-    public Dosen getDosenByEmail(String email) {
-        return dosenRepository.findByEmail(email).orElse(null);
     }
 }

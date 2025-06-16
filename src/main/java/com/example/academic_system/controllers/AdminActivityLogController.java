@@ -6,14 +6,13 @@ import com.example.academic_system.models.ActivityLog;
 import com.example.academic_system.repositories.UserRepository;
 import com.example.academic_system.services.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -26,14 +25,10 @@ public class AdminActivityLogController {
     private UserRepository userRepository;
 
     @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    @Autowired
     private ActivityLogService activityLogService;
-
-
-    private final PasswordEncoder passwordEncoder;
-
-    public AdminActivityLogController(@Lazy PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @GetMapping("/admin/activity_log")
     public String viewActivityLog(Model model, @RequestParam(required = false) String search,
@@ -71,7 +66,7 @@ public class AdminActivityLogController {
         model.addAttribute("logList", logs);
         model.addAttribute("totalLogs", logs.size());
 
-
+        // Add statistics
         long createCount = logs.stream().filter(log -> "CREATE".equals(log.getAction())).count();
         long updateCount = logs.stream().filter(log -> "UPDATE".equals(log.getAction())).count();
         long deleteCount = logs.stream().filter(log -> "DELETE".equals(log.getAction())).count();
@@ -108,21 +103,20 @@ public class AdminActivityLogController {
             redirectAttributes.addFlashAttribute("error", "Pengguna tidak ditemukan.");
             return "redirect:/admin/profile";
         }
-
-
+        // Simpan detail sebelum dan sesudah
         String oldDetails = String.format("Sebelum: Nama = %s, Kata Sandi = [PROTECTED]",
                 existing.getNama());
 
         existing.setNama(formPengguna.getNama());
 
-
-        existing.setKataSandi(passwordEncoder.encode(formPengguna.getKataSandi()));
+        // Hash password sebelum menyimpan
+        existing.setKataSandi(passwordEncoder.encode(formPengguna.getKataSandi()) );
 
         userRepository.save(existing);
         String newDetails = String.format("Sesudah: Nama = %s, Kata Sandi = [PROTECTED]",
                 existing.getNama());
 
-
+        // Simpan ke activity log
         activityLogService.log("Pengguna", existing.getId().toString(), "UPDATE",
                 oldDetails + " -> " + newDetails, principal.getName());
 

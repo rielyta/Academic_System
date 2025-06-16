@@ -19,6 +19,8 @@ public class Kelas {
     @Column(name = "nama_kelas", nullable = false, unique = true)
     private String namaKelas;
 
+    @Column(name = "kodeMK", unique = true)
+    private String kodeMK;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "kode_mk", nullable = false)
@@ -60,6 +62,7 @@ public class Kelas {
     @Column(name = "hari_kelas", nullable = false)
     @Enumerated(EnumType.STRING)
     private DayOfWeek hariKelas;
+
 
     // Getter dan Setter
     public Long getId() { return id; }

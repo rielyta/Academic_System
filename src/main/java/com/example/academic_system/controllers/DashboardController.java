@@ -8,10 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.example.academic_system.models.Dosen;
-import com.example.academic_system.services.DosenService;
-import com.example.academic_system.services.MataKuliahService;
-import com.example.academic_system.models.Dosen;
 
 import java.security.Principal;
 import java.util.List;
@@ -22,20 +18,12 @@ public class DashboardController {
 
     private final MahasiswaService mahasiswaService;
     private KelasService kelasService;
-    private final DosenService dosenService;
-    private final MataKuliahService mataKuliahService;
 
     @Autowired
-    public DashboardController(MahasiswaService mahasiswaService,
-                               KelasService kelasService,
-                               DosenService dosenService,
-                               MataKuliahService mataKuliahService) {
-        this.mahasiswaService = mahasiswaService;
+    public DashboardController(MahasiswaService mahasiswaService, KelasService kelasService) {
         this.kelasService = kelasService;
-        this.dosenService = dosenService;
-        this.mataKuliahService = mataKuliahService;
+        this.mahasiswaService = mahasiswaService;
     }
-
 
     @GetMapping("/mahasiswa/dashboard_mahasiswa")
     public String mahasiswaDashboard(Model model, Principal principal) {
@@ -53,23 +41,7 @@ public class DashboardController {
     }
 
     @GetMapping("/dosen/dashboard_dosen")
-    public String dosenDashboard(Model model, Principal principal) {
-        String email = principal.getName();
-        Dosen dosen = dosenService.getDosenByEmail(email);
-
-        if (dosen == null) {
-            return "redirect:/login?error"; // atau tampilkan pesan error
-        }
-
-        model.addAttribute("dosen", dosen);
-        model.addAttribute("totalKelas", kelasService.countByDosenId(dosen.getId()));
-        model.addAttribute("totalMahasiswa", mahasiswaService.countByDosenId(dosen.getId()));
-        model.addAttribute("totalMataKuliah", mataKuliahService.countByDosenId(dosen.getId()));
-
-        List<Kelas> kelasList = kelasService.findByDosenId(dosen.getId()); // atau .findByDosen(dosen)
-        model.addAttribute("dosen", dosen);
-        model.addAttribute("kelasList", kelasList);
-
+    public String dosenDashboard() {
         return "dosen/dashboard_dosen";
     }
 }
