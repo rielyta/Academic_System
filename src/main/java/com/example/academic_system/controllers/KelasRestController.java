@@ -9,12 +9,9 @@ import com.example.academic_system.repositories.MataKuliahRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-<<<<<<< HEAD
 import java.util.List;
-=======
 import java.time.DayOfWeek;
 import java.time.LocalTime;
->>>>>>> f40eb66698ebccee87e20e903b33aa53b8bed8aa
 
 @RestController
 @RequestMapping("/api/kelas")
@@ -101,9 +98,4 @@ public class KelasRestController {
         public LocalTime getJamKeluar() { return jamKeluar; }
         public void setJamKeluar(LocalTime jamKeluar) { this.jamKeluar = jamKeluar; }
     }
-<<<<<<< HEAD
 
-}
-=======
-}
->>>>>>> f40eb66698ebccee87e20e903b33aa53b8bed8aa
