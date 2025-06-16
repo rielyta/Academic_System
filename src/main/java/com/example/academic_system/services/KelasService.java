@@ -28,12 +28,11 @@ public class KelasService {
         return kelasRepository.findAll();
     }
 
-    // Menggunakan query yang sudah diperbaiki
     public List<Kelas> findByMahasiswa(Mahasiswa mahasiswa) {
         try {
             System.out.println("=== Finding kelas for mahasiswa ID: " + mahasiswa.getId() + " ===");
 
-            // Gunakan native query yang sudah diperbaiki
+            // Gunakan JPQL query yang lebih reliable
             List<Kelas> kelasList = kelasRepository.findByMahasiswaId(mahasiswa.getId());
             System.out.println("Found " + kelasList.size() + " kelas for mahasiswa");
 
@@ -74,6 +73,7 @@ public class KelasService {
         return kelasRepository.countByDosenId(dosenId);
     }
 
+    // PERBAIKAN: Handle semester parameter dengan benar
     public List<Kelas> findKelasWithFilters(String fakultas, String tahunAjar,
                                             String kode, String namaKelas, String semester) {
         try {
@@ -97,7 +97,6 @@ public class KelasService {
         }
     }
 
-    // Method untuk mendaftarkan mahasiswa ke kelas
     @Transactional
     public boolean daftarMahasiswaKeKelas(Mahasiswa mahasiswa, Kelas kelas) {
         try {
