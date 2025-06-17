@@ -1,5 +1,6 @@
 package com.example.academic_system.repositories;
 
+import com.example.academic_system.models.Dosen;
 import com.example.academic_system.models.Kelas;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -88,4 +89,6 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
     Long countDistinctMataKuliahByDosenId(@Param("dosenId") Long dosenId);
 
     List<Kelas> findByDosen_Id(Long dosenId);
+
+    List<Kelas> findByDosen(Dosen dosen);
 }

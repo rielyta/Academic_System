@@ -1,5 +1,6 @@
 package com.example.academic_system.services;
 
+import com.example.academic_system.models.Dosen;
 import com.example.academic_system.models.Kelas;
 import com.example.academic_system.models.Mahasiswa;
 import com.example.academic_system.repositories.KelasRepository;
@@ -166,5 +167,9 @@ public class KelasService {
 
     public List<Kelas> findByDosenId(Long dosenId) {
         return kelasRepository.findByDosen_Id(dosenId);
+    }
+
+    public List<Kelas> findByDosen(Dosen dosen) {
+        return kelasRepository.findByDosen(dosen);
     }
 }
