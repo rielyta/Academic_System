@@ -1,50 +1,46 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ sidebarOpen: false }" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Dosen</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/alpinejs" defer></script>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
     <style>
         body {
             font-family: 'Open Sans', sans-serif;
         }
         .kelas-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
-<body class="font-sans bg-[#f3f1d9]" x-data="{ sidebarOpen: false }">
+<body class="bg-[#F3F1D9] font-sans" x-data="{ sidebarOpen: false }">
 <div class="flex h-screen">
     <!-- Sidebar -->
-    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#002E1F] text-white transform transition-transform duration-300 lg:translate-x-0"
+    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white transform transition-transform duration-300 lg:translate-x-0"
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
-        <div class="flex flex-col px-6 py-6 items-center border-b border-green-800">
+        <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
             <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
             <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
         </div>
         <nav class="px-4 py-4 space-y-2">
-            <div class="bg-green-800 rounded-md px-3 py-2 flex items-center gap-2">
+            <div class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">
                 <i class="fas fa-tachometer-alt"></i>
                 Dasbor
             </div>
-            <a href="/dosen/kelas_dosen" class="hover:bg-green-700 rounded-md px-3 py-2 flex items-center gap-2 block">
+            <a href="/dosen/kelas_dosen" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
                 <i class="fas fa-chalkboard-teacher"></i>
                 Kelas Saya
             </a>
-            <a href="/dosen/jadwal_mengajar_dosen" class="block px-3 py-2 rounded-md hover:bg-green-700">
+            <a href="/dosen/jadwal_mengajar_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
                 <i class="fas fa-calendar-alt mr-2"></i>
                 Jadwal Mengajar
             </a>
-            <a href="/dosen/mahasiswa_dosen" class="block px-3 py-2 rounded-md hover:bg-green-700">
+            <a href="/dosen/mahasiswa_dosen" class="block px-3 py-2 rounded-md hover:bg-green-800">
                 <i class="fas fa-users mr-2"></i>
                 Mahasiswa
             </a>
@@ -60,68 +56,65 @@
     </aside>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64 bg-yellow-50">
+    <div class="flex-1 ml-64 bg-[#F3F1D9]">
         <!-- Header -->
-        <header class="bg-white shadow-sm border-b border-green-200">
+        <header class="bg-[rgba(255,251,223,0.9)] shadow-sm border-b border-[#2C7148]">
             <div class="flex items-center justify-between px-6 py-4">
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-tachometer-alt text-green-800 text-xl"></i>
-                    <h1 class="text-xl font-semibold text-gray-800">Dashboard Dosen</h1>
+                    <i class="fas fa-tachometer-alt text-[#20452F] text-xl"></i>
+                    <h1 class="text-xl font-semibold text-[rgba(0,0,0,0.8)]">Dashboard Dosen</h1>
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <i class="fas fa-bell text-gray-600"></i>
-                    <i class="fas fa-user-circle text-gray-600"></i>
-                    <span class="text-sm font-medium text-gray-800" th:text="${#authentication.name}"></span>
+                    <i class="fas fa-bell text-[#514D4D]"></i>
+                    <i class="fas fa-user-circle text-[#514D4D]"></i>
+                    <span class="text-sm font-medium text-[rgba(0,0,0,0.8)]" th:text="${#authentication.name}"></span>
                 </div>
             </div>
         </header>
 
         <!-- Content -->
         <main class="p-6">
+
             <!-- Profile Card -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-green-200">
+            <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 mb-6 border border-[#2C7148] border-opacity-20">
                 <div class="flex items-center gap-4 mb-4">
-                    <i class="fas fa-user-tie text-green-800 text-xl"></i>
-                    <h2 class="text-lg font-semibold text-gray-800">Profil Dosen</h2>
+                    <i class="fas fa-user-tie text-[#20452F] text-xl"></i>
+                    <h2 class="text-lg font-semibold text-[rgba(0,0,0,0.8)]">Profil Dosen</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <p class="text-sm text-gray-600">Nama Dosen</p>
-                        <p class="font-medium text-gray-800" th:text="${dosen?.nama ?: 'Data tidak ditemukan'}"></p>
+                        <p class="text-sm text-[#514D4D]">Nama Dosen</p>
+                        <p class="font-medium text-[rgba(0,0,0,0.8)]" th:text="${dosen?.nama ?: 'Data tidak ditemukan'}"></p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-600">Nomor Induk Pegawai</p>
-                        <p class="font-medium text-gray-800" th:text="${dosen?.nip ?: 'Data tidak ditemukan'}"></p>
+                        <p class="text-sm text-[#514D4D]">Nomor Induk Pegawai</p>
+                        <p class="font-medium text-[rgba(0,0,0,0.8)]" th:text="${dosen?.nip ?: 'Data tidak ditemukan'}"></p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-600">Email</p>
-                        <p class="font-medium text-gray-800" th:text="${#authentication.name}"></p>
+                        <p class="text-sm text-[#514D4D]">Email</p>
+                        <p class="font-medium text-[rgba(0,0,0,0.8)]" th:text="${#authentication.name}"></p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-600">No. Telepon</p>
-                        <p class="font-medium text-gray-800" th:text="${dosen?.noTelepon ?: '-'}"></p>
+                        <p class="text-sm text-[#514D4D]">No. Telepon</p>
+                        <p class="font-medium text-[rgba(0,0,0,0.8)]" th:text="${dosen?.noTelepon ?: '-'}"></p>
                     </div>
                 </div>
             </div>
 
             <!-- Daftar Kelas -->
-            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-green-200">
-                <div class="bg-green-800 text-white p-4">
+            <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm overflow-hidden border border-[#2C7148] border-opacity-20">
+                <div class="bg-[#20452F] text-white p-4">
                     <div class="flex justify-between items-center">
                         <h2 class="text-lg font-semibold">
                             <i class="fas fa-chalkboard-teacher mr-2"></i>
                             Daftar Kelas Saya
                         </h2>
-                        <a th:href="@{/dosen/kelas_dosen}" class="bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
-                            <i class="fas fa-eye mr-2"></i>
-                            Lihat Semua Kelas
-                        </a>
                     </div>
                 </div>
 
                 <div class="p-6">
-                    <!-- Pesan jika tidak ada kelas -->
+                    <!-- Jika Tidak Ada Kelas -->
                     <div th:if="${kelasList == null or #lists.isEmpty(kelasList)}" class="text-center py-8">
                         <i class="fas fa-chalkboard-teacher text-4xl text-gray-400 mb-4"></i>
                         <p class="text-gray-600">Belum ada kelas yang diampu</p>
@@ -129,52 +122,44 @@
 
                     <!-- Grid Kelas -->
                     <div th:if="${kelasList != null and not #lists.isEmpty(kelasList)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div th:each="kelas : ${kelasList}" class="kelas-card bg-green-50 border border-green-200 rounded-lg p-4 transition-all duration-200">
+                        <div th:each="kelas : ${kelasList}" class="kelas-card bg-[#FFFBEF] border border-[#2C7148] border-opacity-20 rounded-lg p-4 transition-all duration-200">
                             <div class="flex justify-between items-start mb-3">
-                                <h3 class="font-semibold text-gray-800" th:text="${kelas.namaKelas ?: 'Nama Kelas'}"></h3>
-                                <span class="bg-green-800 text-white text-xs px-2 py-1 rounded" th:text="${kelas.kodeKelas ?: 'Kode'}"></span>
+                                <h3 class="font-semibold text-[rgba(0,0,0,0.8)]" th:text="${kelas.namaKelas ?: 'Nama Kelas'}"></h3>
+                                <span class="bg-[#20452F] text-white text-xs px-2 py-1 rounded" th:text="${kelas.kodeKelas ?: 'Kode'}"></span>
                             </div>
 
                             <div class="space-y-2 mb-4">
-                                <div class="flex items-center text-green-800">
+                                <div class="flex items-center text-[#20452F]">
                                     <i class="fas fa-book-open mr-2"></i>
-                                    <p class="text-sm text-gray-800">
+                                    <p class="text-sm text-[rgba(0,0,0,0.8)]">
                                         <span th:text="${kelas.mataKuliah?.namaMK ?: 'Mata Kuliah tidak tersedia'}"></span>
                                     </p>
                                 </div>
-                                <div class="flex items-center text-green-800">
+                                <div class="flex items-center text-[#20452F]">
                                     <i class="fas fa-credit-card mr-2"></i>
-                                    <p class="text-sm text-gray-800">
+                                    <p class="text-sm text-[rgba(0,0,0,0.8)]">
                                         SKS: <span th:text="${kelas.mataKuliah?.sks ?: 0}"></span>
                                     </p>
                                 </div>
-                                <div class="flex items-center text-green-800">
+                                <div class="flex items-center text-[#20452F]">
                                     <i class="fas fa-users mr-2"></i>
-                                    <p class="text-sm text-gray-800">
+                                    <p class="text-sm text-[rgba(0,0,0,0.8)]">
                                         Mahasiswa: <span th:text="${kelas.mahasiswaTerdaftar?.size() ?: 0}"></span>
                                     </p>
                                 </div>
-                                <div th:if="${kelas.semester != null}" class="flex items-center text-green-800">
+                                <div th:if="${kelas.semester != null}" class="flex items-center text-[#20452F]">
                                     <i class="fas fa-calendar mr-2"></i>
-                                    <p class="text-sm text-gray-800">
+                                    <p class="text-sm text-[rgba(0,0,0,0.8)]">
                                         Semester: <span th:text="${kelas.semester}"></span>
                                     </p>
                                 </div>
                             </div>
 
-                            <div class="flex gap-2">
-                                <a th:href="@{'/dosen/kelas/' + ${kelas.id}}" class="flex-1 text-center bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-sm transition-colors">
-                                    <i class="fas fa-eye mr-1"></i> Kelola
-                                </a>
-                                <a th:href="@{'/dosen/kelas/' + ${kelas.id} + '/mahasiswa'}" class="flex-1 text-center bg-green-100 hover:bg-green-200 text-green-800 py-2 px-3 rounded text-sm transition-colors">
-                                    <i class="fas fa-users mr-1"></i> Anggota
-                                </a>
-                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
+
         </main>
     </div>
 </div>

@@ -1,6 +1,8 @@
 package com.example.academic_system.controllers;
 
 import com.example.academic_system.models.Dosen;
+import com.example.academic_system.models.Kelas;
+import com.example.academic_system.models.Mahasiswa;
 import com.example.academic_system.services.DosenService;
 import com.example.academic_system.services.KelasService;
 import com.example.academic_system.services.MahasiswaService;
@@ -141,13 +143,25 @@ public class DosenController {
     }
 
     @GetMapping("/jadwal_mengajar_dosen")
-    public String lihatJadwal(Model model) {
+    public String lihatJadwal(Model model, Authentication authentication) {
+        if (authentication != null) {
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            List<Kelas> kelasList = kelasService.findByDosenId(dosen.getId());
+            model.addAttribute("kelasList", kelasList);
+        }
         return "dosen/jadwal_mengajar_dosen";
     }
 
     @GetMapping("/mahasiswa_dosen")
-    public String lihatMahasiswa(Model model) {
+    public String lihatMahasiswaDosen(Model model, Authentication auth) {
+        String email = auth.getName();
+        Dosen dosen = dosenService.getDosenByEmail(email);
+
+        List<Mahasiswa> mahasiswaList = mahasiswaService.findAllByDosen(dosen);
+        model.addAttribute("mahasiswaList", mahasiswaList);
+
         return "dosen/mahasiswa_dosen";
     }
-
 }

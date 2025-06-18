@@ -1,23 +1,29 @@
 package com.example.academic_system.services;
 
 import com.example.academic_system.models.Dosen;
+import com.example.academic_system.models.Kelas;
 import com.example.academic_system.models.Mahasiswa;
 import com.example.academic_system.repositories.DosenRepository;
+import com.example.academic_system.repositories.KelasRepository;
 import com.example.academic_system.repositories.MahasiswaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MahasiswaService {
 
+    private final KelasRepository kelasRepository;
+
     private final MahasiswaRepository mahasiswaRepository;
 
     @Autowired
-    public MahasiswaService(MahasiswaRepository mahasiswaRepository) {
+    public MahasiswaService(MahasiswaRepository mahasiswaRepository, KelasRepository kelasRepository) {
         this.mahasiswaRepository = mahasiswaRepository;
+        this.kelasRepository = kelasRepository;
     }
 
     public List<Mahasiswa> findAll() {
@@ -127,4 +133,16 @@ public class MahasiswaService {
         Optional<Mahasiswa> existingMahasiswa = mahasiswaRepository.findByEmail(email);
         return existingMahasiswa.isEmpty() || existingMahasiswa.get().getId().equals(mahasiswaId);
     }
+
+    public List<Mahasiswa> findAllByDosen(Dosen dosen) {
+        List<Kelas> kelasList = kelasRepository.findByDosen(dosen);
+        System.out.println("Jumlah kelas ditemukan: " + kelasList.size());
+
+        return kelasList.stream()
+                .flatMap(k -> k.getMahasiswaTerdaftar().stream())
+                .distinct()
+                .peek(m -> System.out.println("Mahasiswa: " + m.getNama()))
+                .collect(Collectors.toList());
+    }
+
 }

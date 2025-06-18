@@ -1,5 +1,6 @@
 package com.example.academic_system.repositories;
 
+import com.example.academic_system.models.Dosen;
 import com.example.academic_system.models.Kelas;
 import com.example.academic_system.models.Mahasiswa;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,4 +39,8 @@ public interface MahasiswaRepository extends JpaRepository<Mahasiswa, Long> {
     // Query untuk mendapatkan mahasiswa dengan kelas yang diikuti berdasarkan email
     @Query("SELECT m FROM Mahasiswa m LEFT JOIN FETCH m.kelasDiikuti WHERE m.email = :email")
     Optional<Mahasiswa> findByEmailWithKelas(@Param("email") String email);
+
+    @Query("SELECT DISTINCT m FROM Mahasiswa m JOIN m.kelasDiikuti k WHERE k.dosen = :dosen")
+    List<Mahasiswa> findAllByDosen(@Param("dosen") Dosen dosen);
+
 }

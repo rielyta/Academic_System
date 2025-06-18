@@ -78,30 +78,6 @@
 
         <!-- Content -->
         <main class="p-6">
-            <!-- Search and Filter Section -->
-            <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 mb-6">
-                <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
-                    <div class="flex-1 max-w-md">
-                        <div class="relative">
-                            <i class="fas fa-search absolute left-3 top-3 text-[#514D4D]"></i>
-                            <input type="text" placeholder="Cari kelas..."
-                                   class="w-full pl-10 pr-4 py-2 border border-[#2C7148] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C7148] focus:border-transparent">
-                        </div>
-                    </div>
-
-                    <div class="flex gap-3">
-                        <select class="px-4 py-2 border border-[#2C7148] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2C7148]">
-                            <option>Semester Genap 2024/2025</option>
-                            <option>Semester Ganjil 2024/2025</option>
-                        </select>
-
-                        <button class="bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                            <i class="fas fa-plus"></i>
-                            Daftar Kelas Baru
-                        </button>
-                    </div>
-                </div>
-            </div>
 
             <!-- Class Cards Grid -->
             <div th:if="${kelasList != null and not #lists.isEmpty(kelasList)}"
@@ -138,18 +114,6 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-2 pt-4 border-t border-[#2C7148] border-opacity-20">
-                            <a th:href="@{'/dosen/kelas/' + ${kelas.id}}"
-                               class="flex-1 bg-[#20452F] hover:bg-[rgba(32,69,47,0.9)] text-white py-2 px-3 rounded text-sm transition-colors">
-                                <i class="fas fa-eye mr-1"></i>
-                                Kelola
-                            </a>
-                            <a th:href="@{'/dosen/kelas/' + ${kelas.id} + '/mahasiswa'}"
-                               class="flex-1 bg-gray-200 hover:bg-gray-300 text-[#20452F] py-2 px-3 rounded text-sm transition-colors">
-                                <i class="fas fa-users mr-1"></i>
-                                Anggota
-                            </a>
-                        </div>
                     </div>
 
                     <div class="bg-[rgba(44,113,72,0.1)] px-6 py-3 text-xs text-[rgba(0,0,0,0.7)] border-t border-[#2C7148] border-opacity-20">
