@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface KelasRepository extends JpaRepository<Kelas, Long> {
@@ -91,4 +92,12 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
     List<Kelas> findByDosen_Id(Long dosenId);
 
     List<Kelas> findByDosen(Dosen dosen);
+
+    // Query untuk load semua kelas dengan mahasiswa terdaftar
+    @Query("SELECT DISTINCT k FROM Kelas k LEFT JOIN FETCH k.mahasiswaTerdaftar")
+    List<Kelas> findAllWithMahasiswa();
+
+    // Query untuk load kelas by ID dengan mahasiswa terdaftar
+    @Query("SELECT DISTINCT k FROM Kelas k LEFT JOIN FETCH k.mahasiswaTerdaftar WHERE k.id = :id")
+    Optional<Kelas> findByIdWithMahasiswa(@Param("id") Long id);
 }

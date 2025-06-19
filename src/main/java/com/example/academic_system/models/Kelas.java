@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,13 +34,13 @@ public class Kelas {
     @JoinColumn(name = "dosen_id", nullable = false)
     private Dosen dosen;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "kelas_mahasiswa",
-            joinColumns = @JoinColumn(name = "kelas_id"),
-            inverseJoinColumns = @JoinColumn(name = "mahasiswa_id")
+            name = "mahasiswa_kelas_diikuti",
+            joinColumns = @JoinColumn(name = "kelas_diikuti_id"),
+            inverseJoinColumns = @JoinColumn(name = "mahasiswa_terdaftar_id")
     )
-    private List<Mahasiswa> mahasiswaTerdaftar;
+    private List<Mahasiswa> mahasiswaTerdaftar = new ArrayList<>();
 
     @Transient
     private int jumlahMahasiswa;

@@ -5,6 +5,7 @@ import com.example.academic_system.repositories.KelasRepository;
 import com.example.academic_system.repositories.DosenRepository;
 import com.example.academic_system.repositories.MataKuliahRepository;
 import com.example.academic_system.services.ActivityLogService;
+import com.example.academic_system.services.KelasService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,9 @@ public class AdminKelasController {
     @Autowired
     private ActivityLogService activityLogService;
 
+    @Autowired
+    private KelasService kelasService;
+
     private void injectDropdowns(Model model) {
         model.addAttribute("daftarSemester", List.of("1", "2", "3", "4", "5", "6", "7", "8"));
         model.addAttribute("daftarTahunAjar", List.of("2023/2024", "2024/2025", "2025/2026"));
@@ -57,7 +61,16 @@ public class AdminKelasController {
 
     @GetMapping("/admin/manajemen_kelas")
     public String listKelas(Model model) {
-        List<Kelas> kelasList = kelasRepository.findAll();
+        // PERBAIKAN: Gunakan method yang load mahasiswa terdaftar
+        List<Kelas> kelasList = kelasService.getAllKelasWithMahasiswa();
+
+        // Debug info
+        System.out.println("=== Admin: Loading manajemen kelas ===");
+        for (Kelas kelas : kelasList) {
+            System.out.println("Kelas: " + kelas.getNamaKelas() +
+                    " - Jumlah Mahasiswa: " + kelas.getJumlahMahasiswa());
+        }
+
         model.addAttribute("kelasList", kelasList);
         model.addAttribute("kelas", new Kelas());
         injectDropdowns(model);

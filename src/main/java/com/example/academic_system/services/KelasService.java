@@ -29,6 +29,16 @@ public class KelasService {
         return kelasRepository.findAll();
     }
 
+    // Method untuk mendapatkan semua kelas dengan mahasiswa terdaftar
+    public List<Kelas> getAllKelasWithMahasiswa() {
+        try {
+            return kelasRepository.findAllWithMahasiswa();
+        } catch (Exception e) {
+            System.out.println("Error loading kelas with mahasiswa: " + e.getMessage());
+            return kelasRepository.findAll();
+        }
+    }
+
     public List<Kelas> findByMahasiswa(Mahasiswa mahasiswa) {
         try {
             System.out.println("=== Finding kelas for mahasiswa ID: " + mahasiswa.getId() + " ===");
@@ -111,17 +121,27 @@ public class KelasService {
                 return false;
             }
 
-            mahasiswa = mhsOpt.get();
+            // PERBAIKAN: Load kelas dengan mahasiswa terdaftar
+            Optional<Kelas> kelasOpt = kelasRepository.findByIdWithMahasiswa(kelas.getId());
+            if (!kelasOpt.isPresent()) {
+                System.out.println("ERROR: Kelas not found");
+                return false;
+            }
+
+            // PERBAIKAN: Gunakan variabel baru untuk menghindari lambda issue
+            Mahasiswa mahasiswaFromDb = mhsOpt.get();
+            Kelas kelasFromDb = kelasOpt.get();
 
             // Initialize kelasDiikuti if null
-            if (mahasiswa.getKelasDiikuti() == null) {
-                mahasiswa.setKelasDiikuti(new ArrayList<>());
+            if (mahasiswaFromDb.getKelasDiikuti() == null) {
+                mahasiswaFromDb.setKelasDiikuti(new ArrayList<>());
                 System.out.println("INFO: Initialized kelasDiikuti collection");
             }
 
-            // Check if already enrolled
-            boolean alreadyExists = mahasiswa.getKelasDiikuti().stream()
-                    .anyMatch(k -> k.getId().equals(kelas.getId()));
+            // Check if already enrolled - gunakan variabel final
+            final Long kelasId = kelasFromDb.getId();
+            boolean alreadyExists = mahasiswaFromDb.getKelasDiikuti().stream()
+                    .anyMatch(k -> k.getId().equals(kelasId));
 
             if (alreadyExists) {
                 System.out.println("WARNING: Already enrolled");
@@ -129,37 +149,23 @@ public class KelasService {
             }
 
             // Add kelas to mahasiswa's kelasDiikuti
-            mahasiswa.getKelasDiikuti().add(kelas);
-            System.out.println("INFO: Added kelas to collection. Size: " + mahasiswa.getKelasDiikuti().size());
+            mahasiswaFromDb.getKelasDiikuti().add(kelasFromDb);
+            System.out.println("INFO: Added kelas to mahasiswa collection. Size: " + mahasiswaFromDb.getKelasDiikuti().size());
 
-            // Save mahasiswa
-            mahasiswaRepository.save(mahasiswa);
-            System.out.println("INFO: Saved mahasiswa successfully");
+            // Add mahasiswa to kelas's mahasiswaTerdaftar
+            kelasFromDb.getMahasiswaTerdaftar().add(mahasiswaFromDb);
+            System.out.println("INFO: Added mahasiswa to kelas collection. Size: " + kelasFromDb.getMahasiswaTerdaftar().size());
+
+            // Save both entities
+            mahasiswaRepository.save(mahasiswaFromDb);
+            kelasRepository.save(kelasFromDb);
+            System.out.println("INFO: Saved both mahasiswa and kelas successfully");
 
             System.out.println("=== KelasService: Registration successful ===");
             return true;
 
         } catch (Exception e) {
             System.out.println("=== KelasService: Exception occurred ===");
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Transactional
-    public boolean batalkanPendaftaran(Mahasiswa mahasiswa, Kelas kelas) {
-        try {
-            Optional<Mahasiswa> mhsOpt = mahasiswaRepository.findByIdWithKelas(mahasiswa.getId());
-            if (!mhsOpt.isPresent()) return false;
-
-            mahasiswa = mhsOpt.get();
-
-            if (mahasiswa.getKelasDiikuti() != null) {
-                mahasiswa.getKelasDiikuti().removeIf(k -> k.getId().equals(kelas.getId()));
-                mahasiswaRepository.save(mahasiswa);
-            }
-            return true;
-        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
