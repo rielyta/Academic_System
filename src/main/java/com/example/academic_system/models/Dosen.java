@@ -27,31 +27,13 @@ public class Dosen extends Pengguna {
         super(nama, email, password);
     }
 
-    // Getters and Setters
     public String getNip() { return nip; }
     public void setNip(String nip) { this.nip = nip; }
 
     public String getFakultas() { return fakultas; }
     public void setFakultas(String fakultas) { this.fakultas = fakultas; }
 
-    public List<Kelas> getKelasDiajar() { return kelasDiajar; }
-    public void setKelasDiajar(List<Kelas> kelasDiajar) {
-        this.kelasDiajar = kelasDiajar;
-    }
-
-    public String getNidn() {
-        return nidn;
-    }
-
-    public void setNidn(String nidn) {
-        this.nidn = nidn;
-    }
-
     public String getNoTelepon() {
         return noTelepon;
-    }
-
-    public void setNoTelepon(String noTelepon) {
-        this.noTelepon = noTelepon;
     }
 }

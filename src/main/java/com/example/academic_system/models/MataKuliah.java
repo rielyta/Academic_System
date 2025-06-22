@@ -20,9 +20,6 @@ public class MataKuliah {
     @OneToMany(mappedBy = "mataKuliah", cascade = CascadeType.ALL)
     private List<Kelas> kelasList;
 
-    @Transient
-    private int jumlahKelas;
-
     @Column(name = "tipe_matakuliah", nullable = false)
     private String tipeMatakuliah;
 

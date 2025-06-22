@@ -52,10 +52,10 @@ public class Kelas {
     private LocalTime jamKeluar;
 
     @Column(nullable = false)
-    private Integer semester; // Ganjil/Genap
+    private Integer semester;
 
     @Column(name = "tahun_ajar", nullable = false)
-    private String tahunAjar; // Format: 2023/2024
+    private String tahunAjar;
 
     @Column(name = "ruangan_kelas", nullable = false)
     private String ruangan;
@@ -65,7 +65,6 @@ public class Kelas {
     private DayOfWeek hariKelas;
 
 
-    // Getter dan Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -79,10 +78,6 @@ public class Kelas {
     public void setDosen(Dosen dosen) { this.dosen = dosen; }
 
     public List<Mahasiswa> getMahasiswaTerdaftar() { return mahasiswaTerdaftar; }
-    public void setMahasiswaTerdaftar(List<Mahasiswa> mahasiswaTerdaftar) {
-        this.mahasiswaTerdaftar = mahasiswaTerdaftar;
-        this.jumlahMahasiswa = mahasiswaTerdaftar != null ? mahasiswaTerdaftar.size() : 0;
-    }
 
     public int getJumlahMahasiswa() {
         return mahasiswaTerdaftar != null ? mahasiswaTerdaftar.size() : 0;
@@ -102,10 +97,6 @@ public class Kelas {
 
     public String getRuangan() { return ruangan; }
     public void setRuangan(String ruangan) { this.ruangan = ruangan; }
-
-    public void updateJumlahMahasiswa() {
-        this.jumlahMahasiswa = this.mahasiswaTerdaftar != null ? this.mahasiswaTerdaftar.size() : 0;
-    }
 
     public DayOfWeek getHariKelas() {
         return hariKelas;
@@ -144,7 +135,6 @@ public class Kelas {
     public void setKodeKelas(String kodeKelas) {
         this.kodeKelas = kodeKelas;
     }
-
 
     public String getFakultas() {
         return fakultas;

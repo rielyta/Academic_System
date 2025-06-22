@@ -29,17 +29,14 @@ public class AdminController {
 
     @GetMapping("/admin/dashboard_admin")
     public String adminDashboard(Model model) {
-        // Basic counts
         model.addAttribute("totalDosen", dosenRepository.count());
         model.addAttribute("totalMahasiswa", mahasiswaRepository.count());
         model.addAttribute("totalKelas", kelasRepository.count());
         model.addAttribute("totalMatkul", mataKuliahRepository.count());
 
-        // Recent activity logs
         List<ActivityLog> recentLogs = activityLogRepository.findTop10ByOrderByTimestampDesc();
         model.addAttribute("recentLogs", recentLogs);
 
-        // Activity statistics
         List<ActivityLog> allLogs = activityLogRepository.findAll();
         long totalActivities = allLogs.size();
         long todayActivities = allLogs.stream()

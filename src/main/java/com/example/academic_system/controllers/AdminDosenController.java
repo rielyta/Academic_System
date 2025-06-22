@@ -54,7 +54,6 @@ public class AdminDosenController {
 
         dosenRepository.save(dosenForm);
 
-        // Logging
         String detail = String.format("Dosen %s (%s), Fakultas: %s, Email: %s", dosenForm.getNama(), generatedNip, dosenForm.getFakultas(), dosenForm.getEmail());
         activityLogService.log("Dosen", generatedNip, "CREATE", detail, principal.getName());
 

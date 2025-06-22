@@ -48,7 +48,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),  // email tetap jadi principal
+                user.getEmail(),
                 user.getKataSandi(),
                 List.of(new SimpleGrantedAuthority(user.getPeran()))
         );

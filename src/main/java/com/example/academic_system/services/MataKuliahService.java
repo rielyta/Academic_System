@@ -17,10 +17,6 @@ public class MataKuliahService {
         this.mataKuliahRepository = mataKuliahRepository;
     }
 
-    public List<MataKuliah> getAllMataKuliah() {
-        return mataKuliahRepository.findAll();
-    }
-
     public long count() {
         return mataKuliahRepository.count();
     }

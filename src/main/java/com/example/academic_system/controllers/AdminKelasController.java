@@ -1,22 +1,27 @@
 package com.example.academic_system.controllers;
 
+import com.example.academic_system.models.Dosen;
 import com.example.academic_system.models.Kelas;
-import com.example.academic_system.repositories.KelasRepository;
+import com.example.academic_system.models.MataKuliah;
 import com.example.academic_system.repositories.DosenRepository;
+import com.example.academic_system.repositories.KelasRepository;
 import com.example.academic_system.repositories.MataKuliahRepository;
 import com.example.academic_system.services.ActivityLogService;
 import com.example.academic_system.services.KelasService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.security.Principal;
 
 @Controller
 public class AdminKelasController {
@@ -35,6 +40,7 @@ public class AdminKelasController {
 
     @Autowired
     private KelasService kelasService;
+
 
     private void injectDropdowns(Model model) {
         model.addAttribute("daftarSemester", List.of("1", "2", "3", "4", "5", "6", "7", "8"));
@@ -61,10 +67,8 @@ public class AdminKelasController {
 
     @GetMapping("/admin/manajemen_kelas")
     public String listKelas(Model model) {
-        // PERBAIKAN: Gunakan method yang load mahasiswa terdaftar
         List<Kelas> kelasList = kelasService.getAllKelasWithMahasiswa();
 
-        // Debug info
         System.out.println("=== Admin: Loading manajemen kelas ===");
         for (Kelas kelas : kelasList) {
             System.out.println("Kelas: " + kelas.getNamaKelas() +
@@ -99,7 +103,6 @@ public class AdminKelasController {
     @Transactional
     public String hapusKelas(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, Principal principal) {
         kelasRepository.findById(id).ifPresent(kelas -> {
-            // SHORTENED LOG
             String detail = String.format("Hapus: %s (%s) - %s oleh %s",
                     kelas.getNamaKelas(),
                     kelas.getKodeKelas(),
@@ -132,7 +135,6 @@ public class AdminKelasController {
     public String editKelas(@ModelAttribute Kelas kelasForm, RedirectAttributes redirectAttributes, Principal principal) {
         Kelas existing = kelasRepository.findById(kelasForm.getId()).orElse(null);
         if (existing != null) {
-            // SHORTENED LOG - Simple and concise
             String detail = String.format("Edit: %s (%s) → MK: %s, Dosen: %s, Ruang: %s",
                     existing.getNamaKelas(),
                     existing.getKodeKelas(),
@@ -159,4 +161,5 @@ public class AdminKelasController {
         }
         return "redirect:/admin/manajemen_kelas";
     }
+
 }

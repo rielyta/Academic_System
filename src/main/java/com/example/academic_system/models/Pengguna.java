@@ -31,14 +31,6 @@ public class Pengguna {
         this.kataSandi = kataSandi;
     }
 
-    public Pengguna(String nama, String email, String kataSandi, String peran) {
-        this.nama = nama;
-        this.email = email;
-        this.kataSandi = kataSandi;
-        this.peran = peran;
-    }
-
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -54,7 +46,6 @@ public class Pengguna {
     public String getPeran() { return peran; }
     public void setPeran(String peran) { this.peran = peran; }
 
-    public String getKataSandiAsli() { return kataSandiAsli; }
     public void setKataSandiAsli(String kataSandiAsli) {
         this.kataSandiAsli = kataSandiAsli;
     }

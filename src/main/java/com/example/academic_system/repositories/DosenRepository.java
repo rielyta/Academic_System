@@ -10,21 +10,7 @@ import java.util.Optional;
 @Repository
 public interface DosenRepository extends JpaRepository<Dosen, Long> {
 
-    // Find dosen by NIP
     Optional<Dosen> findByNip(String nip);
 
-    // Find dosen by email
     Optional<Dosen> findByEmail(String email);
-
-    // Search dosen by nama (case insensitive)
-    List<Dosen> findByNamaContainingIgnoreCase(String nama);
-
-    // Search dosen by email (case insensitive)
-    List<Dosen> findByEmailContainingIgnoreCase(String email);
-
-    // Check if NIP exists
-    boolean existsByNip(String nip);
-
-    // Check if email exists
-    boolean existsByEmail(String email);
 }

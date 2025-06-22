@@ -66,7 +66,7 @@ public class AdminActivityLogController {
         model.addAttribute("logList", logs);
         model.addAttribute("totalLogs", logs.size());
 
-        // Add statistics
+        // Menambah Statistik
         long createCount = logs.stream().filter(log -> "CREATE".equals(log.getAction())).count();
         long updateCount = logs.stream().filter(log -> "UPDATE".equals(log.getAction())).count();
         long deleteCount = logs.stream().filter(log -> "DELETE".equals(log.getAction())).count();

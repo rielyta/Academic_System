@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
-@Controller  // Ganti dari @RestController
-@RequestMapping("/dosen")  // Hapus /api
+@Controller
+@RequestMapping("/dosen")
 public class DosenController {
 
     private final DosenService dosenService;

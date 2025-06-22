@@ -8,9 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MataKuliahRepository extends JpaRepository<MataKuliah, String> {
-    MataKuliah findByKodeMK(String kodeMK);
-
-
     @Query("SELECT COUNT(DISTINCT mk) FROM MataKuliah mk " +
             "JOIN mk.kelasList k WHERE k.dosen.id = :dosenId")
     int countByDosenId(@Param("dosenId") Long dosenId);

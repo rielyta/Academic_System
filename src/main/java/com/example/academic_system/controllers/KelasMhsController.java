@@ -41,7 +41,6 @@ public class KelasMhsController {
             if (mahasiswaOpt.isPresent()) {
                 Mahasiswa mahasiswa = mahasiswaOpt.get();
 
-                // Get filtered kelas or all kelas
                 List<Kelas> semuaKelas;
                 if (hasAnyFilter(fakultas, tahunAjar, kode, namaKelas, semester)) {
                     semuaKelas = kelasService.findKelasWithFilters(fakultas, tahunAjar, kode, namaKelas, semester);
@@ -51,7 +50,6 @@ public class KelasMhsController {
 
                 List<Kelas> kelasSaya = kelasService.findByMahasiswa(mahasiswa);
 
-                // Data for dropdowns
                 List<String> daftarFakultas = kelasService.findDistinctFakultas();
                 List<String> daftarTahunAjaran = kelasService.findDistinctTahunAjar();
 
@@ -61,7 +59,6 @@ public class KelasMhsController {
                 model.addAttribute("daftarFakultas", daftarFakultas);
                 model.addAttribute("daftarTahunAjaran", daftarTahunAjaran);
 
-                // Keep filter values in form
                 model.addAttribute("inputFakultas", fakultas);
                 model.addAttribute("inputTahunAjar", tahunAjar);
                 model.addAttribute("inputKode", kode);
@@ -101,15 +98,12 @@ public class KelasMhsController {
                 Mahasiswa mahasiswa = mahasiswaOpt.get();
                 Kelas kelas = kelasOpt.get();
 
-                // Check if already enrolled
                 List<Kelas> kelasSaya = kelasService.findByMahasiswa(mahasiswa);
                 if (kelasSaya.contains(kelas)) {
                     redirectAttributes.addFlashAttribute("errorMessage",
                             "Anda sudah terdaftar di kelas " + kelas.getNamaKelas());
                     return "redirect:/mahasiswa/daftarKelas";
                 }
-
-                // Add mahasiswa to kelas
                 boolean success = kelasService.daftarMahasiswaKeKelas(mahasiswa, kelas);
 
                 if (success) {

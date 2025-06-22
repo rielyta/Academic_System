@@ -36,10 +36,6 @@ public class ActivityLog {
         this.entityName = entityName;
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
-
     public void setEntityId(String entityId) {
         this.entityId = entityId;
     }

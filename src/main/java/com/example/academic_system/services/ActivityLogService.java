@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -16,7 +19,7 @@ public class ActivityLogService {
 
     public void log(String entityName, String entityId, String action, String detail, String performedBy) {
         if (entityId == null || entityId.trim().isEmpty()) {
-            entityId = UUID.randomUUID().toString(); // auto-generate ID
+            entityId = UUID.randomUUID().toString();
         }
 
         ActivityLog log = new ActivityLog();
@@ -29,4 +32,5 @@ public class ActivityLogService {
 
         activityLogRepository.save(log);
     }
+
 }

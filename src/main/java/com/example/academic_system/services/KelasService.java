@@ -43,7 +43,6 @@ public class KelasService {
         try {
             System.out.println("=== Finding kelas for mahasiswa ID: " + mahasiswa.getId() + " ===");
 
-            // Gunakan JPQL query yang lebih reliable
             List<Kelas> kelasList = kelasRepository.findByMahasiswaId(mahasiswa.getId());
             System.out.println("Found " + kelasList.size() + " kelas for mahasiswa");
 
@@ -68,34 +67,24 @@ public class KelasService {
         return kelasRepository.findById(id);
     }
 
-    public Kelas saveKelas(Kelas kelas) {
-        return kelasRepository.save(kelas);
-    }
-
-    public void deleteKelas(Long id) {
-        kelasRepository.deleteById(id);
-    }
-
     public long count() {
         return kelasRepository.count();
     }
 
-    public int countByDosenId(Long dosenId) {
-        return kelasRepository.countByDosenId(dosenId);
+    public Long countByDosenId(Long dosenId) {
+        Long count = kelasRepository.countByDosenId(dosenId);
+        return count != null ? count : 0L;
     }
 
-    // PERBAIKAN: Handle semester parameter dengan benar
     public List<Kelas> findKelasWithFilters(String fakultas, String tahunAjar,
                                             String kode, String namaKelas, String semester) {
         try {
-            // Convert semester string to integer jika tidak null/empty
             Integer semesterInt = null;
             if (semester != null && !semester.trim().isEmpty()) {
                 try {
                     semesterInt = Integer.parseInt(semester.trim());
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid semester format: " + semester);
-                    // Jika format salah, set ke null agar tidak memfilter berdasarkan semester
                     semesterInt = null;
                 }
             }
@@ -114,31 +103,26 @@ public class KelasService {
             System.out.println("=== KelasService: Starting registration ===");
             System.out.println("Mahasiswa ID: " + mahasiswa.getId() + ", Kelas ID: " + kelas.getId());
 
-            // Refresh mahasiswa dengan eager loading
             Optional<Mahasiswa> mhsOpt = mahasiswaRepository.findByIdWithKelas(mahasiswa.getId());
             if (!mhsOpt.isPresent()) {
                 System.out.println("ERROR: Mahasiswa not found");
                 return false;
             }
 
-            // PERBAIKAN: Load kelas dengan mahasiswa terdaftar
             Optional<Kelas> kelasOpt = kelasRepository.findByIdWithMahasiswa(kelas.getId());
             if (!kelasOpt.isPresent()) {
                 System.out.println("ERROR: Kelas not found");
                 return false;
             }
 
-            // PERBAIKAN: Gunakan variabel baru untuk menghindari lambda issue
             Mahasiswa mahasiswaFromDb = mhsOpt.get();
             Kelas kelasFromDb = kelasOpt.get();
 
-            // Initialize kelasDiikuti if null
             if (mahasiswaFromDb.getKelasDiikuti() == null) {
                 mahasiswaFromDb.setKelasDiikuti(new ArrayList<>());
                 System.out.println("INFO: Initialized kelasDiikuti collection");
             }
 
-            // Check if already enrolled - gunakan variabel final
             final Long kelasId = kelasFromDb.getId();
             boolean alreadyExists = mahasiswaFromDb.getKelasDiikuti().stream()
                     .anyMatch(k -> k.getId().equals(kelasId));
@@ -148,15 +132,12 @@ public class KelasService {
                 return false;
             }
 
-            // Add kelas to mahasiswa's kelasDiikuti
             mahasiswaFromDb.getKelasDiikuti().add(kelasFromDb);
             System.out.println("INFO: Added kelas to mahasiswa collection. Size: " + mahasiswaFromDb.getKelasDiikuti().size());
 
-            // Add mahasiswa to kelas's mahasiswaTerdaftar
             kelasFromDb.getMahasiswaTerdaftar().add(mahasiswaFromDb);
             System.out.println("INFO: Added mahasiswa to kelas collection. Size: " + kelasFromDb.getMahasiswaTerdaftar().size());
 
-            // Save both entities
             mahasiswaRepository.save(mahasiswaFromDb);
             kelasRepository.save(kelasFromDb);
             System.out.println("INFO: Saved both mahasiswa and kelas successfully");
