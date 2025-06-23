@@ -30,7 +30,6 @@ public class KelasService {
         return kelasRepository.findAll();
     }
 
-    // Method untuk mendapatkan semua kelas dengan mahasiswa terdaftar
     public List<Kelas> getAllKelasWithMahasiswa() {
         try {
             return kelasRepository.findAllWithMahasiswa();

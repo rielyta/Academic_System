@@ -116,19 +116,9 @@
                     <div th:each="kelas : ${kelasSenin}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
-                                <p class="text-sm text-gray-600 mt-1">
-                                    <span th:text="${kelas.namaKelas}"></span> •
-                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
-                                    <span th:text="${kelas.tahunAjar}"></span>
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-4 font-semibold text-gray-800">
-                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
-                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                                <h3 class="mb-1 font-semibold text-gray-800 text-base" th:text="${kelas.namaKelas + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <span class="font-medium bg-[#9FAC93] text-[#20452F] px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                ,<span class="font-medium px-2 py-1 rounded text-sm" th:text="'Ruang: ' + ${kelas.ruangan}"></span>
                             </div>
                         </div>
                     </div>
@@ -144,19 +134,9 @@
                     <div th:each="kelas : ${kelasSelasa}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
-                                <p class="text-sm text-gray-600 mt-1">
-                                    <span th:text="${kelas.namaKelas}"></span> •
-                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
-                                    <span th:text="${kelas.tahunAjar}"></span>
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-4 font-semibold text-gray-800">
-                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
-                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                                <h3 class="mb-1 font-semibold text-gray-800 text-base" th:text="${kelas.namaKelas + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <span class="font-medium  bg-[#9FAC93] text-[#20452F] px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                ,<span class="font-medium px-2 py-1 rounded text-sm" th:text="'Ruang: ' + ${kelas.ruangan}"></span>
                             </div>
                         </div>
                     </div>
@@ -172,19 +152,9 @@
                     <div th:each="kelas : ${kelasRabu}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
-                                <p class="text-sm text-gray-600 mt-1">
-                                    <span th:text="${kelas.namaKelas}"></span> •
-                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
-                                    <span th:text="${kelas.tahunAjar}"></span>
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-4 font-semibold text-gray-800">
-                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
-                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                                <h3 class="mb-1 font-semibold text-gray-800 text-base" th:text="${kelas.namaKelas + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <span class="font-medium bg-[#9FAC93] text-[#20452F] px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                ,<span class="font-medium px-2 py-1 rounded text-sm" th:text="'Ruang: ' + ${kelas.ruangan}"></span>
                             </div>
                         </div>
                     </div>
@@ -200,19 +170,9 @@
                     <div th:each="kelas : ${kelasKamis}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
-                                <p class="text-sm text-gray-600 mt-1">
-                                    <span th:text="${kelas.namaKelas}"></span> •
-                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
-                                    <span th:text="${kelas.tahunAjar}"></span>
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-4 font-semibold text-gray-800">
-                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
-                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                                <h3 class="mb-1 font-semibold text-gray-800 text-base" th:text="${kelas.namaKelas + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <span class="font-medium  bg-[#9FAC93] text-[#20452F] px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                ,<span class="font-medium px-2 py-1 rounded text-sm" th:text="'Ruang: ' + ${kelas.ruangan}"></span>
                             </div>
                         </div>
                     </div>
@@ -228,19 +188,9 @@
                     <div th:each="kelas : ${kelasJumat}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
-                                <p class="text-sm text-gray-600 mt-1">
-                                    <span th:text="${kelas.namaKelas}"></span> •
-                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
-                                    <span th:text="${kelas.tahunAjar}"></span>
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-4 font-semibold text-gray-800">
-                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
-                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                                <h3 class="mb-1 font-semibold text-gray-800 text-base" th:text="${kelas.namaKelas + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <span class="font-medium  bg-[#9FAC93] text-[#20452F] px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                ,<span class="font-medium px-2 py-1 rounded text-sm" th:text="'Ruang: ' + ${kelas.ruangan}"></span>
                             </div>
                         </div>
                     </div>
@@ -256,19 +206,9 @@
                     <div th:each="kelas : ${kelasSabtu}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
-                                <p class="text-sm text-gray-600 mt-1">
-                                    <span th:text="${kelas.namaKelas}"></span> •
-                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
-                                    <span th:text="${kelas.tahunAjar}"></span>
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-4 font-semibold text-gray-800">
-                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
-                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                                <h3 class="mb-1 font-semibold text-gray-800 text-base" th:text="${kelas.namaKelas + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <span class="font-medium  bg-[#9FAC93] text-[#20452F] px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                ,<span class="font-medium px-2 py-1 rounded text-sm" th:text="'Ruang: ' + ${kelas.ruangan}"></span>
                             </div>
                         </div>
                     </div>
