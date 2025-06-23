@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" x-data="{ sidebarOpen: false, formOpen: false }">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" x-data="{ sidebarOpen: false, activeDay: 'MONDAY' }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <title>Dashboard Mahasiswa</title>
 </head>
@@ -42,7 +43,7 @@
 <!--main content-->
 <div class="flex-1 overflow-y-auto bg-[#F3F1D9] ml-64 pt-20 h-screen">
     <main class="p-6">
-        <!-- Profile Card -->
+        <!-- profil -->
         <div class="rounded-lg shadow-md p-6 mb-6 bg-[rgba(255,251,223,0.9)]">
             <h1 class="text-2xl font-bold text-gray-800 mb-3">Detail Mahasiswa</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -72,25 +73,204 @@
 
         <!--jadwal kelas-->
         <div class="rounded-lg shadow-md p-6 mt-3 bg-[rgba(255,251,223,0.9)]">
-            <!-- Tab Days -->
+            <!-- tab days -->
             <div class="flex w-full mb-6 gap-4 font-bold text-m bg-[rgba(255,251,223,0.9)] rounded-md overflow-hidden">
-                <button class="flex-1 py-2 rounded-md text-center border border-gray-400 text-gray-700 ">Senin</button>
-                <button class="flex-1 py-2 rounded-md text-center bg-[#072D17] text-white border border-gray-400">Selasa</button>
-                <button class="flex-1 py-2 rounded-md text-center border border-gray-400 text-gray-700 ">Rabu</button>
-                <button class="flex-1 py-2 rounded-md text-center border border-gray-400 text-gray-700 ">Kamis</button>
-                <button class="flex-1 py-2 rounded-md text-center border border-gray-400 text-gray-700 ">Jumat</button>
-                <button class="flex-1 py-2 rounded-md text-center border border-gray-400 text-gray-700">Sabtu</button>
+                <button @click="activeDay = 'MONDAY'"
+                        :class="activeDay === 'MONDAY' ? 'bg-[#072D17] text-white' : 'text-gray-700'"
+                        class="flex-1 py-2 rounded-md text-center border border-gray-400 transition-colors">
+                    Senin
+                </button>
+                <button @click="activeDay = 'TUESDAY'"
+                        :class="activeDay === 'TUESDAY' ? 'bg-[#072D17] text-white' : 'text-gray-700'"
+                        class="flex-1 py-2 rounded-md text-center border border-gray-400 transition-colors">
+                    Selasa
+                </button>
+                <button @click="activeDay = 'WEDNESDAY'"
+                        :class="activeDay === 'WEDNESDAY' ? 'bg-[#072D17] text-white' : 'text-gray-700'"
+                        class="flex-1 py-2 rounded-md text-center border border-gray-400 transition-colors">
+                    Rabu
+                </button>
+                <button @click="activeDay = 'THURSDAY'"
+                        :class="activeDay === 'THURSDAY' ? 'bg-[#072D17] text-white' : 'text-gray-700'"
+                        class="flex-1 py-2 rounded-md text-center border border-gray-400 transition-colors">
+                    Kamis
+                </button>
+                <button @click="activeDay = 'FRIDAY'"
+                        :class="activeDay === 'FRIDAY' ? 'bg-[#072D17] text-white' : 'text-gray-700'"
+                        class="flex-1 py-2 rounded-md text-center border border-gray-400 transition-colors">
+                    Jumat
+                </button>
+                <button @click="activeDay = 'SATURDAY'"
+                        :class="activeDay === 'SATURDAY' ? 'bg-[#072D17] text-white' : 'text-gray-700'"
+                        class="flex-1 py-2 rounded-md text-center border border-gray-400 transition-colors">
+                    Sabtu
+                </button>
             </div>
 
-
-            <div class="bg-[rgba(255,251,223,0.9)] rounded-lg p-2 border border-gray-400 shadow-sm">
-                <div class="flex flex-col items-left justify-between">
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-gray-800 text-base">Pemrograman Berorientasi Objek | ILK2201</h3>
+            <div x-show="activeDay === 'MONDAY'">
+                <div th:if="${#lists.isEmpty(kelasSenin)}" class="text-center py-8 text-gray-500">
+                    <i class="fa-regular fa-calendar-xmark text-4xl mb-4"></i>
+                    <p>Tidak ada kelas pada hari Senin</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(kelasSenin)}" class="space-y-4">
+                    <div th:each="kelas : ${kelasSenin}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <span th:text="${kelas.namaKelas}"></span> •
+                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
+                                    <span th:text="${kelas.tahunAjar}"></span>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-4 font-semibold text-gray-800">
+                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-4 font-semibold text-gray-800">
-                        <span class="bg-[#072D17] text-white px-2 py-1 rounded text-xs">08:00 - 10:30</span>
-                        <span>D-103</span>
+                </div>
+            </div>
+
+            <div x-show="activeDay === 'TUESDAY'">
+                <div th:if="${#lists.isEmpty(kelasSelasa)}" class="text-center py-8 text-gray-500">
+                    <i class="fa-regular fa-calendar-xmark text-4xl mb-4"></i>
+                    <p>Tidak ada kelas pada hari Selasa</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(kelasSelasa)}" class="space-y-4">
+                    <div th:each="kelas : ${kelasSelasa}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <span th:text="${kelas.namaKelas}"></span> •
+                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
+                                    <span th:text="${kelas.tahunAjar}"></span>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-4 font-semibold text-gray-800">
+                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="activeDay === 'WEDNESDAY'">
+                <div th:if="${#lists.isEmpty(kelasRabu)}" class="text-center py-8 text-gray-500">
+                    <i class="fa-regular fa-calendar-xmark text-4xl mb-4"></i>
+                    <p>Tidak ada kelas pada hari Rabu</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(kelasRabu)}" class="space-y-4">
+                    <div th:each="kelas : ${kelasRabu}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <span th:text="${kelas.namaKelas}"></span> •
+                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
+                                    <span th:text="${kelas.tahunAjar}"></span>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-4 font-semibold text-gray-800">
+                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="activeDay === 'THURSDAY'">
+                <div th:if="${#lists.isEmpty(kelasKamis)}" class="text-center py-8 text-gray-500">
+                    <i class="fa-regular fa-calendar-xmark text-4xl mb-4"></i>
+                    <p>Tidak ada kelas pada hari Kamis</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(kelasKamis)}" class="space-y-4">
+                    <div th:each="kelas : ${kelasKamis}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <span th:text="${kelas.namaKelas}"></span> •
+                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
+                                    <span th:text="${kelas.tahunAjar}"></span>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-4 font-semibold text-gray-800">
+                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="activeDay === 'FRIDAY'">
+                <div th:if="${#lists.isEmpty(kelasJumat)}" class="text-center py-8 text-gray-500">
+                    <i class="fa-regular fa-calendar-xmark text-4xl mb-4"></i>
+                    <p>Tidak ada kelas pada hari Jumat</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(kelasJumat)}" class="space-y-4">
+                    <div th:each="kelas : ${kelasJumat}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <span th:text="${kelas.namaKelas}"></span> •
+                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
+                                    <span th:text="${kelas.tahunAjar}"></span>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-4 font-semibold text-gray-800">
+                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="activeDay === 'SATURDAY'">
+                <div th:if="${#lists.isEmpty(kelasSabtu)}" class="text-center py-8 text-gray-500">
+                    <i class="fa-regular fa-calendar-xmark text-4xl mb-4"></i>
+                    <p>Tidak ada kelas pada hari Sabtu</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(kelasSabtu)}" class="space-y-4">
+                    <div th:each="kelas : ${kelasSabtu}" class="bg-[rgba(255,251,223,0.9)] rounded-lg p-4 border border-gray-400 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-800 text-base" th:text="${kelas.mataKuliah.namaMK + ' | ' + kelas.mataKuliah.kodeMK}"></h3>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <span th:text="${kelas.namaKelas}"></span> •
+                                    <span th:text="'Dosen: ' + ${kelas.dosen.nama}"></span>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <span th:text="'Semester ' + ${kelas.semester}"></span> •
+                                    <span th:text="${kelas.tahunAjar}"></span>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-4 font-semibold text-gray-800">
+                                <span class="bg-[#072D17] text-white px-3 py-1 rounded text-sm" th:text="${#temporals.format(kelas.jamMulai, 'HH:mm')} + ' - ' + ${#temporals.format(kelas.jamKeluar, 'HH:mm')}"></span>
+                                <span class="bg-gray-200 px-3 py-1 rounded text-sm" th:text="${kelas.ruangan}"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,7 +278,74 @@
     </main>
 </div>
 
-<!-- Alpine.js Script -->
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('dashboardData', () => ({
+            activeDay: (() => {
+                const today = new Date().getDay();
+                const dayMap = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+                return dayMap[today] === 'SUNDAY' ? 'MONDAY' : dayMap[today];
+            })()
+        }));
+    });
+</script>
+
+
+<script>
+    function jadwalKuliah() {
+        return {
+            activeDay: 'MONDAY',
+            currentClasses: [],
+            allClasses: {},
+
+            init() {
+                // Load data dari window.kelasData
+                this.allClasses = window.kelasData || {};
+
+                // Set hari aktif ke hari ini
+                const today = new Date().getDay();
+                const dayMap = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+                this.activeDay = dayMap[today] === 'SUNDAY' ? 'MONDAY' : dayMap[today];
+
+                this.updateCurrentClasses();
+            },
+
+            selectDay(day) {
+                this.activeDay = day;
+                this.updateCurrentClasses();
+            },
+
+            updateCurrentClasses() {
+                this.currentClasses = this.allClasses[this.activeDay] || [];
+
+                // Sort berdasarkan jam mulai
+                this.currentClasses.sort((a, b) => {
+                    const timeA = a.jamMulai || '00:00:00';
+                    const timeB = b.jamMulai || '00:00:00';
+                    return timeA.localeCompare(timeB);
+                });
+            },
+
+            formatTime(timeString) {
+                if (!timeString) return '';
+                // Handle format HH:mm:ss atau HH:mm
+                return timeString.substring(0, 5);
+            },
+
+            getDayName(day) {
+                const dayNames = {
+                    'MONDAY': 'Senin',
+                    'TUESDAY': 'Selasa',
+                    'WEDNESDAY': 'Rabu',
+                    'THURSDAY': 'Kamis',
+                    'FRIDAY': 'Jumat',
+                    'SATURDAY': 'Sabtu'
+                };
+                return dayNames[day] || day;
+            }
+        }
+    }
+</script>
+
 </body>
 </html>

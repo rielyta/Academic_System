@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class KelasService {
@@ -44,9 +45,21 @@ public class KelasService {
             System.out.println("=== Finding kelas for mahasiswa ID: " + mahasiswa.getId() + " ===");
 
             List<Kelas> kelasList = kelasRepository.findByMahasiswaId(mahasiswa.getId());
-            System.out.println("Found " + kelasList.size() + " kelas for mahasiswa");
 
-            return kelasList;
+            // mastiin gaada data duplikat
+            List<Kelas> distinctKelas = kelasList.stream()
+                    .collect(Collectors.toMap(
+                            Kelas::getId,
+                            kelas -> kelas,
+                            (existing, replacement) -> existing
+                    ))
+                    .values()
+                    .stream()
+                    .collect(Collectors.toList());
+
+            System.out.println("Found " + kelasList.size() + " total records, " + distinctKelas.size() + " distinct kelas for mahasiswa");
+
+            return distinctKelas;
 
         } catch (Exception e) {
             System.out.println("Error in findByMahasiswa: " + e.getMessage());
