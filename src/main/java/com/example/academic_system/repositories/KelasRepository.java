@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface KelasRepository extends JpaRepository<Kelas, Long> {
 
-    // Count method untuk statistik - Changed return type to Long
-    Long countByDosenId(Long dosenId);
+    @Query("SELECT COUNT(k) FROM Kelas k WHERE k.dosen.id = :dosenId")
+    Long countByDosenId(@Param("dosenId") Long dosenId);
 
     @Query("SELECT DISTINCT k.fakultas FROM Kelas k WHERE k.fakultas IS NOT NULL")
     List<String> findDistinctFakultas();
@@ -50,4 +50,38 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
 
     @Query("SELECT DISTINCT k FROM Kelas k LEFT JOIN FETCH k.mahasiswaTerdaftar WHERE k.id = :id")
     Optional<Kelas> findByIdWithMahasiswa(@Param("id") Long id);
+
+    @Query("SELECT k FROM Kelas k WHERE " +
+            "(k.dosen IS NULL OR k.dosen.id = :dosenId) " +
+            "ORDER BY k.tahunAjar DESC, k.semester ASC, k.namaKelas ASC")
+    List<Kelas> findAvailableKelasForDosen(@Param("dosenId") Long dosenId);
+
+    @Query("SELECT k FROM Kelas k WHERE " +
+            "(k.dosen IS NULL OR k.dosen.nip = :dosenNip) AND " +
+            "(:fakultas IS NULL OR :fakultas = '' OR k.fakultas = :fakultas) AND " +
+            "(:tahunAjar IS NULL OR :tahunAjar = '' OR k.tahunAjar = :tahunAjar) AND " +
+            "(:semester IS NULL OR :semester = '' OR k.semester = :semesterInt) AND " +
+            "(:namaKelas IS NULL OR :namaKelas = '' OR LOWER(k.namaKelas) LIKE LOWER(CONCAT('%', :namaKelas, '%'))) " +
+            "ORDER BY k.tahunAjar DESC, k.semester ASC, k.namaKelas ASC")
+    List<Kelas> findAvailableKelasWithFilters(@Param("dosenNip") String dosenNip,
+                                              @Param("fakultas") String fakultas,
+                                              @Param("tahunAjar") String tahunAjar,
+                                              @Param("semester") String semester,
+                                              @Param("namaKelas") String namaKelas,
+                                              @Param("semesterInt") Integer semesterInt);
+
+    @Query("SELECT k FROM Kelas k WHERE k.dosen IS NULL " +
+            "ORDER BY k.tahunAjar DESC, k.semester ASC, k.namaKelas ASC")
+    List<Kelas> findKelasWithoutDosen();
+
+    @Query("SELECT COUNT(k) > 0 FROM Kelas k WHERE k.id = :kelasId AND " +
+            "(k.dosen IS NULL OR k.dosen.nip = :dosenNip)")
+    boolean isKelasAvailableForDosen(@Param("kelasId") Long kelasId, @Param("dosenNip") String dosenNip);
+
+    @Query("SELECT k FROM Kelas k WHERE " +
+            "(k.dosen IS NULL OR k.dosen.nip = :dosenNip) AND " +
+            "k.mataKuliah.kodeMK = :mataKuliahKode " +
+            "ORDER BY k.tahunAjar DESC, k.semester ASC")
+    List<Kelas> findAvailableKelasByMataKuliah(@Param("dosenNip") String dosenNip,
+                                               @Param("mataKuliahKode") String mataKuliahKode);
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,6 @@ public class DosenController {
         this.mataKuliahService = mataKuliahService;
     }
 
-    // Semua method API - tambahin @ResponseBody dan /api
     @GetMapping("/api")
     @ResponseBody
     public ResponseEntity<List<Dosen>> getAllDosen() {
@@ -118,7 +118,6 @@ public class DosenController {
         return ResponseEntity.notFound().build();
     }
 
-    // Method baru untuk halaman profil
     @GetMapping("/profil")
     public String profilDosen(Model model, Authentication authentication) {
         if (authentication != null) {
@@ -163,5 +162,242 @@ public class DosenController {
         model.addAttribute("mahasiswaList", mahasiswaList);
 
         return "dosen/mahasiswa_dosen";
+    }
+
+    @GetMapping("/cari_kelas")
+    public String cariKelas(Model model, Authentication authentication) {
+        if (authentication != null) {
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            // Ambil kelas yang belum memiliki dosen atau bisa diambil
+            List<Kelas> kelasAvailable = kelasService.findAvailableKelasForDosen(dosen);
+
+            model.addAttribute("dosen", dosen);
+            model.addAttribute("kelasAvailable", kelasAvailable);
+            model.addAttribute("daftarFakultas", kelasService.findDistinctFakultas());
+            model.addAttribute("daftarTahunAjar", kelasService.findDistinctTahunAjar());
+        }
+        return "dosen/cari_kelas";
+    }
+
+    @GetMapping("/cari_kelas/api")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getKelasAvailableApi(
+            @RequestParam(required = false) String fakultas,
+            @RequestParam(required = false) String tahunAjar,
+            @RequestParam(required = false) String semester,
+            @RequestParam(required = false) String namaKelas,
+            @RequestParam(required = false) String _t, // timestamp parameter untuk prevent caching
+            Authentication authentication) {
+
+        try {
+            if (authentication == null) {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("success", false);
+                errorResponse.put("error", "Authentication required");
+                return ResponseEntity.status(401).body(errorResponse);
+            }
+
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            List<Kelas> kelasAvailable;
+            if (fakultas != null || tahunAjar != null || semester != null || namaKelas != null) {
+                kelasAvailable = kelasService.findAvailableKelasWithFilters(
+                        dosen, fakultas, tahunAjar, semester, namaKelas);
+            } else {
+                kelasAvailable = kelasService.findAvailableKelasForDosen(dosen);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("kelasAvailable", kelasAvailable);
+            response.put("timestamp", System.currentTimeMillis());
+            response.put("totalKelas", kelasAvailable.size());
+
+            response.put("dosenId", dosen.getId());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", "Gagal memuat data: " + e.getMessage());
+            errorResponse.put("timestamp", System.currentTimeMillis());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+
+    @PostMapping("/enroll_kelas/{kelasId}")
+    public String enrollKeKelas(@PathVariable Long kelasId,
+                                RedirectAttributes redirectAttributes,
+                                Authentication authentication) {
+        try {
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            boolean success = kelasService.enrollDosenToKelas(dosen, kelasId);
+
+            if (success) {
+                redirectAttributes.addFlashAttribute("sukses", "Berhasil mengambil kelas!");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Gagal mengambil kelas. Kelas mungkin sudah memiliki dosen.");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Terjadi kesalahan: " + e.getMessage());
+        }
+
+        return "redirect:/dosen/cari_kelas";
+    }
+
+    @PostMapping("/enroll_kelas/{kelasId}/api")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> enrollKeKelasApi(@PathVariable Long kelasId,
+                                                                Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            if (authentication == null) {
+                response.put("success", false);
+                response.put("error", "Authentication required");
+                return ResponseEntity.status(401).body(response);
+            }
+
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            boolean success = kelasService.enrollDosenToKelas(dosen, kelasId);
+
+            if (success) {
+                response.put("success", true);
+                response.put("message", "Berhasil mengambil kelas!");
+            } else {
+                response.put("success", false);
+                response.put("error", "Gagal mengambil kelas. Kelas mungkin sudah memiliki dosen.");
+            }
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("error", "Terjadi kesalahan: " + e.getMessage());
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/keluar_kelas/{kelasId}")
+    public String keluarDariKelas(@PathVariable Long kelasId,
+                                  RedirectAttributes redirectAttributes,
+                                  Authentication authentication) {
+        try {
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            boolean success = kelasService.removeDosenFromKelas(dosen, kelasId);
+
+            if (success) {
+                redirectAttributes.addFlashAttribute("sukses", "Berhasil keluar dari kelas!");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Gagal keluar dari kelas.");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Terjadi kesalahan: " + e.getMessage());
+        }
+
+        return "redirect:/dosen/kelas_dosen";
+    }
+
+    @PostMapping("/keluar_kelas/{kelasId}/api")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> keluarDariKelasApi(@PathVariable Long kelasId,
+                                                                  Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            if (authentication == null) {
+                response.put("success", false);
+                response.put("error", "Authentication required");
+                return ResponseEntity.status(401).body(response);
+            }
+
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            boolean success = kelasService.removeDosenFromKelas(dosen, kelasId);
+
+            if (success) {
+                response.put("success", true);
+                response.put("message", "Berhasil keluar dari kelas!");
+            } else {
+                response.put("success", false);
+                response.put("error", "Gagal keluar dari kelas.");
+            }
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("error", "Terjadi kesalahan: " + e.getMessage());
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/cari_kelas/filter")
+    public String filterKelasAvailable(@RequestParam(required = false) String fakultas,
+                                       @RequestParam(required = false) String tahunAjar,
+                                       @RequestParam(required = false) String semester,
+                                       @RequestParam(required = false) String namaKelas,
+                                       Model model,
+                                       Authentication authentication) {
+        if (authentication != null) {
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            List<Kelas> kelasAvailable = kelasService.findAvailableKelasWithFilters(
+                    dosen, fakultas, tahunAjar, semester, namaKelas);
+
+            model.addAttribute("dosen", dosen);
+            model.addAttribute("kelasAvailable", kelasAvailable);
+            model.addAttribute("daftarFakultas", kelasService.findDistinctFakultas());
+            model.addAttribute("daftarTahunAjar", kelasService.findDistinctTahunAjar());
+
+            // Preserve filter values
+            model.addAttribute("selectedFakultas", fakultas);
+            model.addAttribute("selectedTahunAjar", tahunAjar);
+            model.addAttribute("selectedSemester", semester);
+            model.addAttribute("selectedNamaKelas", namaKelas);
+        }
+        return "dosen/cari_kelas";
+    }
+
+    @GetMapping("/dashboard/stats/api")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getDashboardStats(Authentication authentication) {
+        Map<String, Object> stats = new HashMap<>();
+
+        try {
+            if (authentication == null) {
+                stats.put("success", false);
+                stats.put("error", "Authentication required");
+                return ResponseEntity.status(401).body(stats);
+            }
+
+            String email = authentication.getName();
+            Dosen dosen = dosenService.getDosenByEmail(email);
+
+            List<Kelas> myKelas = kelasService.findByDosenId(dosen.getId());
+            List<Kelas> availableKelas = kelasService.findAvailableKelasForDosen(dosen);
+
+            stats.put("success", true);
+            stats.put("totalKelasAmpu", myKelas.size());
+            stats.put("totalKelasAvailable", availableKelas.size());
+            stats.put("timestamp", System.currentTimeMillis());
+
+            return ResponseEntity.ok(stats);
+
+        } catch (Exception e) {
+            stats.put("success", false);
+            stats.put("error", e.getMessage());
+            return ResponseEntity.status(500).body(stats);
+        }
     }
 }

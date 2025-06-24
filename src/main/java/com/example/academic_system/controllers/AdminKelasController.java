@@ -10,15 +10,12 @@ import com.example.academic_system.services.ActivityLogService;
 import com.example.academic_system.services.KelasService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.time.DayOfWeek;
-import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +37,6 @@ public class AdminKelasController {
 
     @Autowired
     private KelasService kelasService;
-
 
     private void injectDropdowns(Model model) {
         model.addAttribute("daftarSemester", List.of("1", "2", "3", "4", "5", "6", "7", "8"));
@@ -67,99 +63,233 @@ public class AdminKelasController {
 
     @GetMapping("/admin/manajemen_kelas")
     public String listKelas(Model model) {
-        List<Kelas> kelasList = kelasService.getAllKelasWithMahasiswa();
+        try {
+            List<Kelas> kelasList = kelasService.getAllKelasWithMahasiswa();
 
-        System.out.println("=== Admin: Loading manajemen kelas ===");
-        for (Kelas kelas : kelasList) {
-            System.out.println("Kelas: " + kelas.getNamaKelas() +
-                    " - Jumlah Mahasiswa: " + kelas.getJumlahMahasiswa());
+            System.out.println("=== Admin: Loading manajemen kelas ===");
+            for (Kelas kelas : kelasList) {
+                System.out.println("Kelas: " + kelas.getNamaKelas() +
+                        " - Jumlah Mahasiswa: " + kelas.getJumlahMahasiswa() +
+                        " - Dosen: " + (kelas.getDosen() != null ? kelas.getDosen().getNama() : "Belum ada dosen") +
+                        " - MataKuliah: " + (kelas.getMataKuliah() != null ? kelas.getMataKuliah().getNamaMK() : "Tidak ada"));
+            }
+
+            model.addAttribute("kelasList", kelasList);
+            model.addAttribute("kelas", new Kelas());
+            injectDropdowns(model);
+            return "admin/manajemen_kelas";
+        } catch (Exception e) {
+            System.out.println("Error in listKelas: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("error", "Terjadi kesalahan saat memuat data kelas: " + e.getMessage());
+            model.addAttribute("kelasList", List.of());
+            model.addAttribute("kelas", new Kelas());
+            injectDropdowns(model);
+            return "admin/manajemen_kelas";
         }
-
-        model.addAttribute("kelasList", kelasList);
-        model.addAttribute("kelas", new Kelas());
-        injectDropdowns(model);
-        return "admin/manajemen_kelas";
     }
 
     @PostMapping("/admin/tambah_kelas")
-    public String tambahKelas(@ModelAttribute Kelas kelasForm, RedirectAttributes redirectAttributes, Principal principal) {
-        kelasRepository.save(kelasForm);
+    public String tambahKelas(@ModelAttribute Kelas kelasForm,
+                              @RequestParam(name = "mataKuliah", required = false) String kodeMK,
+                              @RequestParam(name = "dosen.id", required = false) Long dosenId,
+                              RedirectAttributes redirectAttributes,
+                              Principal principal) {
+        try {
+            System.out.println("=== Processing tambah kelas ===");
+            System.out.println("Received kodeMK: " + kodeMK);
+            System.out.println("KelasForm mataKuliah: " + kelasForm.getMataKuliah());
 
-        String detail = String.format("Tambah: %s (%s) - %s oleh %s, Sem %s, TA %s",
-                kelasForm.getNamaKelas(),
-                kelasForm.getKodeKelas(),
-                kelasForm.getMataKuliah().getNamaMK(),
-                kelasForm.getDosen().getNama(),
-                kelasForm.getSemester(),
-                kelasForm.getTahunAjar());
+            if (kodeMK == null || kodeMK.trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Mata kuliah harus dipilih.");
+                return "redirect:/admin/manajemen_kelas";
+            }
 
-        activityLogService.log("Kelas", String.valueOf(kelasForm.getId()), "CREATE", detail, principal.getName());
+            MataKuliah mataKuliah = mataKuliahRepository.findById(kodeMK).orElse(null);
+            if (mataKuliah == null) {
+                redirectAttributes.addFlashAttribute("error", "Mata kuliah dengan kode " + kodeMK + " tidak ditemukan.");
+                return "redirect:/admin/manajemen_kelas";
+            }
 
-        redirectAttributes.addFlashAttribute("sukses", "Kelas berhasil ditambahkan.");
+            kelasForm.setMataKuliah(mataKuliah);
+
+            if (dosenId != null) {
+                Dosen dosen = dosenRepository.findById(dosenId)
+                        .orElseThrow(() -> new IllegalArgumentException("Dosen tidak ditemukan"));
+                kelasForm.setDosen(dosen);
+            } else {
+                kelasForm.setDosen(null); // jika tidak dipilih
+            }
+
+
+            if (kelasForm.getMataKuliah() == null) {
+                redirectAttributes.addFlashAttribute("error", "Mata kuliah harus dipilih.");
+                return "redirect:/admin/manajemen_kelas";
+            }
+
+            if (kelasForm.getKodeKelas() == null || kelasForm.getKodeKelas().trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Kode kelas harus diisi.");
+                return "redirect:/admin/manajemen_kelas";
+            }
+
+            if (kelasForm.getNamaKelas() == null || kelasForm.getNamaKelas().trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Nama kelas harus diisi.");
+                return "redirect:/admin/manajemen_kelas";
+            }
+
+            if (kelasForm.getFakultas() == null || kelasForm.getFakultas().trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Fakultas harus dipilih.");
+                return "redirect:/admin/manajemen_kelas";
+            }
+
+            if (kelasForm.getDosen() != null && kelasForm.getDosen().getId() != null) {
+                Dosen dosen = dosenRepository.findById(kelasForm.getDosen().getId()).orElse(null);
+                kelasForm.setDosen(dosen); // replace transient instance with persistent
+            }
+
+
+            Kelas savedKelas = kelasRepository.save(kelasForm);
+
+            String dosenNama = kelasForm.getDosen() != null ? kelasForm.getDosen().getNama() : "Belum ada dosen";
+            String detail = String.format("Tambah: %s (%s) - %s oleh %s, Sem %s, TA %s",
+                    kelasForm.getNamaKelas(),
+                    kelasForm.getKodeKelas(),
+                    kelasForm.getMataKuliah().getNamaMK(),
+                    dosenNama,
+                    kelasForm.getSemester() != null ? kelasForm.getSemester() : "N/A",
+                    kelasForm.getTahunAjar() != null ? kelasForm.getTahunAjar() : "N/A");
+
+            activityLogService.log("Kelas", String.valueOf(savedKelas.getId()), "CREATE", detail, principal.getName());
+
+            redirectAttributes.addFlashAttribute("sukses", "Kelas berhasil ditambahkan.");
+
+        } catch (Exception e) {
+            System.out.println("Error adding kelas: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Gagal menambah kelas: " + e.getMessage());
+        }
+
         return "redirect:/admin/manajemen_kelas";
     }
 
     @GetMapping("/admin/manajemen_kelas/{id}")
     @Transactional
     public String hapusKelas(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, Principal principal) {
-        kelasRepository.findById(id).ifPresent(kelas -> {
-            String detail = String.format("Hapus: %s (%s) - %s oleh %s",
-                    kelas.getNamaKelas(),
-                    kelas.getKodeKelas(),
-                    kelas.getMataKuliah().getNamaMK(),
-                    kelas.getDosen().getNama());
+        try {
+            kelasRepository.findById(id).ifPresent(kelas -> {
+                String dosenNama = kelas.getDosen() != null ? kelas.getDosen().getNama() : "Belum ada dosen";
+                String mataKuliahNama = kelas.getMataKuliah() != null ? kelas.getMataKuliah().getNamaMK() : "Mata kuliah tidak ada";
+                String detail = String.format("Hapus: %s (%s) - %s oleh %s",
+                        kelas.getNamaKelas(),
+                        kelas.getKodeKelas(),
+                        mataKuliahNama,
+                        dosenNama);
 
-            kelasRepository.delete(kelas);
-            activityLogService.log("Kelas", String.valueOf(kelas.getId()), "DELETE", detail, principal.getName());
-        });
+                kelasRepository.delete(kelas);
+                activityLogService.log("Kelas", String.valueOf(kelas.getId()), "DELETE", detail, principal.getName());
+            });
 
-        redirectAttributes.addFlashAttribute("sukses", "Kelas berhasil dihapus.");
+            redirectAttributes.addFlashAttribute("sukses", "Kelas berhasil dihapus.");
+        } catch (Exception e) {
+            System.out.println("Error deleting kelas: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Gagal menghapus kelas: " + e.getMessage());
+        }
         return "redirect:/admin/manajemen_kelas";
     }
 
     @GetMapping("/admin/manajemen_kelas/edit/{id}")
     @Transactional
     public String editKelasForm(@PathVariable("id") Long id, Model model) {
-        Kelas kelas = kelasRepository.findById(id).orElse(null);
-        if (kelas == null) return "redirect:/admin/manajemen_kelas";
+        try {
+            Kelas kelas = kelasRepository.findById(id).orElse(null);
+            if (kelas == null) {
+                model.addAttribute("error", "Kelas tidak ditemukan.");
+                return "redirect:/admin/manajemen_kelas";
+            }
 
-        model.addAttribute("kelas", kelas);
-        model.addAttribute("editMode", true);
-        model.addAttribute("kelasList", kelasRepository.findAll());
-        injectDropdowns(model);
-        return "admin/manajemen_kelas";
+            model.addAttribute("kelas", kelas);
+            model.addAttribute("editMode", true);
+            model.addAttribute("kelasList", kelasRepository.findAll());
+            injectDropdowns(model);
+            return "admin/manajemen_kelas";
+        } catch (Exception e) {
+            System.out.println("Error in editKelasForm: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("error", "Terjadi kesalahan: " + e.getMessage());
+            return "redirect:/admin/manajemen_kelas";
+        }
     }
 
     @PostMapping("/admin/manajemen_kelas/edit/{id}")
     @Transactional
-    public String editKelas(@ModelAttribute Kelas kelasForm, RedirectAttributes redirectAttributes, Principal principal) {
-        Kelas existing = kelasRepository.findById(kelasForm.getId()).orElse(null);
-        if (existing != null) {
-            String detail = String.format("Edit: %s (%s) → MK: %s, Dosen: %s, Ruang: %s",
-                    existing.getNamaKelas(),
-                    existing.getKodeKelas(),
-                    kelasForm.getMataKuliah().getNamaMK(),
-                    kelasForm.getDosen().getNama(),
-                    kelasForm.getRuangan());
+    public String editKelas(@ModelAttribute Kelas kelasForm,
+                            @RequestParam(name = "mataKuliah", required = false) String kodeMK,
+                            @RequestParam(name = "dosen.id", required = false) Long dosenId,
+                            RedirectAttributes redirectAttributes,
+                            Principal principal) {
+        try {
+            Kelas existing = kelasRepository.findById(kelasForm.getId()).orElse(null);
+            if (existing != null) {
+                // Manual conversion for MataKuliah
+                if (kodeMK != null && !kodeMK.trim().isEmpty()) {
+                    MataKuliah mataKuliah = mataKuliahRepository.findById(kodeMK).orElse(null);
+                    if (mataKuliah == null) {
+                        redirectAttributes.addFlashAttribute("error", "Mata kuliah dengan kode " + kodeMK + " tidak ditemukan.");
+                        return "redirect:/admin/manajemen_kelas";
+                    }
+                    kelasForm.setMataKuliah(mataKuliah);
+                }
 
-            existing.setKodeKelas(kelasForm.getKodeKelas());
-            existing.setNamaKelas(kelasForm.getNamaKelas());
-            existing.setFakultas(kelasForm.getFakultas());
-            existing.setMataKuliah(kelasForm.getMataKuliah());
-            existing.setDosen(kelasForm.getDosen());
-            existing.setRuangan(kelasForm.getRuangan());
-            existing.setSemester(kelasForm.getSemester());
-            existing.setTahunAjar(kelasForm.getTahunAjar());
-            existing.setHariKelas(kelasForm.getHariKelas());
-            existing.setJamMulai(kelasForm.getJamMulai());
-            existing.setJamKeluar(kelasForm.getJamKeluar());
+                String dosenNama = kelasForm.getDosen() != null ? kelasForm.getDosen().getNama() : "Belum ada dosen";
+                String mataKuliahNama = kelasForm.getMataKuliah() != null ? kelasForm.getMataKuliah().getNamaMK() : "Mata kuliah tidak ada";
+                String detail = String.format("Edit: %s (%s) → MK: %s, Dosen: %s, Ruang: %s",
+                        existing.getNamaKelas(),
+                        existing.getKodeKelas(),
+                        mataKuliahNama,
+                        dosenNama,
+                        kelasForm.getRuangan());
 
-            kelasRepository.save(existing);
-            activityLogService.log("Kelas", String.valueOf(existing.getId()), "UPDATE", detail, principal.getName());
+                if (dosenId != null) {
+                    Dosen dosen = dosenRepository.findById(dosenId)
+                            .orElseThrow(() -> new IllegalArgumentException("Dosen tidak ditemukan"));
+                    existing.setDosen(dosen);
+                } else {
+                    existing.setDosen(null);
+                }
 
-            redirectAttributes.addFlashAttribute("sukses", "Data kelas berhasil diperbarui.");
+                // Update fields
+                existing.setKodeKelas(kelasForm.getKodeKelas());
+                existing.setNamaKelas(kelasForm.getNamaKelas());
+                existing.setFakultas(kelasForm.getFakultas());
+                existing.setMataKuliah(kelasForm.getMataKuliah());
+                existing.setDosen(kelasForm.getDosen()); // Can be null
+                existing.setRuangan(kelasForm.getRuangan());
+                existing.setSemester(kelasForm.getSemester());
+                existing.setTahunAjar(kelasForm.getTahunAjar());
+                existing.setHariKelas(kelasForm.getHariKelas());
+                existing.setJamMulai(kelasForm.getJamMulai());
+                existing.setJamKeluar(kelasForm.getJamKeluar());
+
+                if (kelasForm.getDosen() != null && kelasForm.getDosen().getId() != null) {
+                    Dosen dosen = dosenRepository.findById(kelasForm.getDosen().getId()).orElse(null);
+                    existing.setDosen(dosen); // replace transient instance with persistent
+                } else {
+                    existing.setDosen(null); // clear dosen jika tidak diisi
+                }
+
+
+                kelasRepository.save(existing);
+                activityLogService.log("Kelas", String.valueOf(existing.getId()), "UPDATE", detail, principal.getName());
+
+                redirectAttributes.addFlashAttribute("sukses", "Data kelas berhasil diperbarui.");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Kelas tidak ditemukan.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error updating kelas: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Gagal memperbarui kelas: " + e.getMessage());
         }
         return "redirect:/admin/manajemen_kelas";
     }
-
 }

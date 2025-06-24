@@ -13,25 +13,21 @@ public class Kelas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(name = "kode_kelas", unique = true)
     private String kodeKelas;
 
     @Column(name = "nama_kelas", nullable = false, unique = true)
     private String namaKelas;
 
-    @Column(name = "kodeMK", unique = true)
-    private String kodeMK;
-
     @ManyToOne(optional = false)
-    @JoinColumn(name = "kode_mk", nullable = false)
+    @JoinColumn(name = "kode_mk", referencedColumnName = "kode_mk", nullable = false)
     private MataKuliah mataKuliah;
 
     @Column(name = "fakultas")
     private String fakultas;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "dosen_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "dosen_id", nullable = true)
     private Dosen dosen;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -45,10 +41,10 @@ public class Kelas {
     @Transient
     private int jumlahMahasiswa;
 
-    @Column(name = "jam_mulai", nullable = false)
+    @Column(name = "jam_mulai", nullable = true)
     private LocalTime jamMulai;
 
-    @Column(name = "jam_keluar", nullable = false)
+    @Column(name = "jam_keluar", nullable = true)
     private LocalTime jamKeluar;
 
     @Column(nullable = false)
@@ -57,16 +53,31 @@ public class Kelas {
     @Column(name = "tahun_ajar", nullable = false)
     private String tahunAjar;
 
-    @Column(name = "ruangan_kelas", nullable = false)
+    @Column(name = "ruangan_kelas", nullable = true)
     private String ruangan;
 
-    @Column(name = "hari_kelas", nullable = false)
+    @Column(name = "hari_kelas", nullable = true)
     @Enumerated(EnumType.STRING)
     private DayOfWeek hariKelas;
 
+    // Constructors
+    public Kelas() {}
+
+    public Kelas(String kodeKelas, String namaKelas, MataKuliah mataKuliah,
+                 String fakultas, Integer semester, String tahunAjar) {
+        this.kodeKelas = kodeKelas;
+        this.namaKelas = namaKelas;
+        this.mataKuliah = mataKuliah;
+        this.fakultas = fakultas;
+        this.semester = semester;
+        this.tahunAjar = tahunAjar;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getKodeKelas() { return kodeKelas; }
+    public void setKodeKelas(String kodeKelas) { this.kodeKelas = kodeKelas; }
 
     public String getNamaKelas() { return namaKelas; }
     public void setNamaKelas(String namaKelas) { this.namaKelas = namaKelas; }
@@ -74,10 +85,16 @@ public class Kelas {
     public MataKuliah getMataKuliah() { return mataKuliah; }
     public void setMataKuliah(MataKuliah mataKuliah) { this.mataKuliah = mataKuliah; }
 
+    public String getFakultas() { return fakultas; }
+    public void setFakultas(String fakultas) { this.fakultas = fakultas; }
+
     public Dosen getDosen() { return dosen; }
     public void setDosen(Dosen dosen) { this.dosen = dosen; }
 
     public List<Mahasiswa> getMahasiswaTerdaftar() { return mahasiswaTerdaftar; }
+    public void setMahasiswaTerdaftar(List<Mahasiswa> mahasiswaTerdaftar) {
+        this.mahasiswaTerdaftar = mahasiswaTerdaftar;
+    }
 
     public int getJumlahMahasiswa() {
         return mahasiswaTerdaftar != null ? mahasiswaTerdaftar.size() : 0;
@@ -98,49 +115,43 @@ public class Kelas {
     public String getRuangan() { return ruangan; }
     public void setRuangan(String ruangan) { this.ruangan = ruangan; }
 
-    public DayOfWeek getHariKelas() {
-        return hariKelas;
-    }
-
-    public void setHariKelas(DayOfWeek hariKelas) {
-        this.hariKelas = hariKelas;
-    }
+    public DayOfWeek getHariKelas() { return hariKelas; }
+    public void setHariKelas(DayOfWeek hariKelas) { this.hariKelas = hariKelas; }
 
     @PostLoad
     public void initJumlahMahasiswa() {
         this.jumlahMahasiswa = this.mahasiswaTerdaftar != null ? this.mahasiswaTerdaftar.size() : 0;
     }
 
+    // Helper methods
+    public boolean hasAssignedDosen() {
+        return this.dosen != null;
+    }
+
+    public String getDosenNama() {
+        return this.dosen != null ? this.dosen.getNama() : "Belum ada dosen";
+    }
+
+    public boolean isAvailableForDosen(String dosenNip) {
+        return this.dosen == null || (this.dosen != null && this.dosen.getNip().equals(dosenNip));
+    }
 
     @Override
     public String toString() {
         return "Kelas{" +
                 "id=" + id +
+                ", kodeKelas='" + kodeKelas + '\'' +
                 ", namaKelas='" + namaKelas + '\'' +
                 ", mataKuliah=" + (mataKuliah != null ? mataKuliah.getNamaMK() : "null") +
-                ", dosen=" + (dosen != null ? dosen.getNama() : "null") +
+                ", dosen=" + (dosen != null ? dosen.getNama() : "Belum ada dosen") +
+                ", fakultas='" + fakultas + '\'' +
                 ", jumlahMahasiswa=" + jumlahMahasiswa +
-                ", jamMulai=" + jamMulai +
-                ", jamKeluar=" + jamKeluar +
-                ", semester='" + semester + '\'' +
+                ", semester=" + semester +
                 ", tahunAjar='" + tahunAjar + '\'' +
                 ", ruangan='" + ruangan + '\'' +
+                ", hariKelas=" + hariKelas +
+                ", jamMulai=" + jamMulai +
+                ", jamKeluar=" + jamKeluar +
                 '}';
-    }
-
-    public String getKodeKelas() {
-        return kodeKelas;
-    }
-
-    public void setKodeKelas(String kodeKelas) {
-        this.kodeKelas = kodeKelas;
-    }
-
-    public String getFakultas() {
-        return fakultas;
-    }
-
-    public void setFakultas(String fakultas) {
-        this.fakultas = fakultas;
     }
 }

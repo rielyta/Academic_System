@@ -84,8 +84,13 @@ public class KelasService {
     }
 
     public Long countByDosenId(Long dosenId) {
-        Long count = kelasRepository.countByDosenId(dosenId);
-        return count != null ? count : 0L;
+        try {
+            Long count = kelasRepository.countByDosenId(dosenId);
+            return count != null ? count : 0L;
+        } catch (Exception e) {
+            System.out.println("Error counting kelas by dosen: " + e.getMessage());
+            return 0L;
+        }
     }
 
     public List<Kelas> findKelasWithFilters(String fakultas, String tahunAjar,
@@ -170,5 +175,114 @@ public class KelasService {
 
     public List<Kelas> findByDosen(Dosen dosen) {
         return kelasRepository.findByDosen(dosen);
+    }
+
+    // NEW: Find kelas yang tersedia untuk dosen (belum memiliki dosen atau dapat diambil)
+    public List<Kelas> findAvailableKelasForDosen(Dosen dosen) {
+        try {
+            System.out.println("=== Finding available kelas for dosen: " + dosen.getNama() + " (NIP: " + dosen.getNip() + ") ===");
+
+            List<Kelas> availableKelas = kelasRepository.findAvailableKelasForDosen(dosen.getId());
+
+            for (Kelas k : availableKelas) {
+                System.out.println(">> " + k.getKodeKelas() + " | " + k.getNamaKelas() +
+                        " | Dosen: " + (k.getDosen() == null ? "Belum ada dosen" : k.getDosen().getNama()));
+            }
+
+            return availableKelas;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+
+    public List<Kelas> findAvailableKelasWithFilters(Dosen dosen, String fakultas,
+                                                     String tahunAjar, String semester, String namaKelas) {
+        try {
+            Integer semesterInt = null;
+            if (semester != null && !semester.trim().isEmpty()) {
+                try {
+                    semesterInt = Integer.parseInt(semester.trim());
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid semester format: " + semester);
+                }
+            }
+
+            return kelasRepository.findAvailableKelasWithFilters(
+                    dosen.getNip(), fakultas, tahunAjar, semester, namaKelas, semesterInt);
+
+        } catch (Exception e) {
+            System.out.println("Error in findAvailableKelasWithFilters: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional
+    public boolean enrollDosenToKelas(Dosen dosen, Long kelasId) {
+        try {
+            System.out.println("=== KelasService: Starting dosen enrollment ===");
+            System.out.println("Dosen NIP: " + dosen.getNip() + ", Kelas ID: " + kelasId);
+
+            Optional<Kelas> kelasOpt = kelasRepository.findById(kelasId);
+            if (!kelasOpt.isPresent()) {
+                System.out.println("ERROR: Kelas not found");
+                return false;
+            }
+
+            Kelas kelas = kelasOpt.get();
+
+            if (kelas.getDosen() != null && !kelas.getDosen().getNip().equals(dosen.getNip())) {
+                System.out.println("ERROR: Kelas already has a different dosen");
+                return false;
+            }
+
+            kelas.setDosen(dosen);
+            kelasRepository.save(kelas);
+
+            System.out.println("INFO: Successfully enrolled dosen to kelas");
+            System.out.println("=== KelasService: Dosen enrollment successful ===");
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("=== KelasService: Exception occurred during dosen enrollment ===");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean removeDosenFromKelas(Dosen dosen, Long kelasId) {
+        try {
+            System.out.println("=== KelasService: Removing dosen from kelas ===");
+            System.out.println("Dosen NIP: " + dosen.getNip() + ", Kelas ID: " + kelasId);
+
+            Optional<Kelas> kelasOpt = kelasRepository.findById(kelasId);
+            if (!kelasOpt.isPresent()) {
+                System.out.println("ERROR: Kelas not found");
+                return false;
+            }
+
+            Kelas kelas = kelasOpt.get();
+
+            if (kelas.getDosen() == null || !kelas.getDosen().getNip().equals(dosen.getNip())) {
+                System.out.println("ERROR: Dosen is not assigned to this kelas");
+                return false;
+            }
+
+            kelas.setDosen(null);
+            kelasRepository.save(kelas);
+
+            System.out.println("INFO: Successfully removed dosen from kelas");
+            System.out.println("=== KelasService: Dosen removal successful ===");
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("=== KelasService: Exception occurred during dosen removal ===");
+            e.printStackTrace();
+            return false;
+        }
     }
 }

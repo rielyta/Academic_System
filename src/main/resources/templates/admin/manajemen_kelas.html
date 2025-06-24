@@ -66,6 +66,11 @@
                 <p th:text="${sukses}"></p>
             </div>
 
+            <!-- Alert Error -->
+            <div th:if="${error}" class="bg-red-100 text-red-800 px-4 py-3 rounded mb-4 border border-red-200">
+                <p th:text="${error}"></p>
+            </div>
+
             <!-- Tombol Tambah -->
             <div class="flex justify-between items-center mb-4 mt-6">
                 <h1 class="text-2xl font-bold text-gray-800">Daftar Kelas</h1>
@@ -107,11 +112,11 @@
                         </div>
                     </div>
 
-                    <!-- Mata Kuliah -->
+                    <!-- Mata Kuliah - FIXED: Use name="mataKuliah" -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1" for="matakuliah">Mata Kuliah</label>
                         <div class="relative">
-                            <select id="matakuliah" th:field="*{mataKuliah}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                            <select id="matakuliah" name="mataKuliah" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
                                 <option value="">-- Pilih Mata Kuliah --</option>
                                 <option th:each="mk : ${daftarMataKuliah}" th:value="${mk.kodeMK}" th:text="${mk.namaMK}">Mata Kuliah</option>
                             </select>
@@ -125,10 +130,15 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1" for="dosenpengampu">Dosen Pengampu</label>
                         <div class="relative">
-                            <select id="dosenpengampu" th:field="*{dosen}" class="block appearance-none w-full bg-gray-200 border text-gray-700 py-2 px-3 pr-8 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                            <select name="dosen.id" class="..." id="dosenpengampu">
                                 <option value="">-- Pilih Dosen Pengajar --</option>
-                                <option th:each="dp : ${daftarDosen}" th:value="${dp.id}" th:text="${dp.nama}">Dosen</option>
+                                <option th:each="dp : ${daftarDosen}"
+                                        th:value="${dp.id}"
+                                        th:text="${dp.nama}"
+                                        th:selected="${kelas.dosen != null and kelas.dosen.id == dp.id}">
+                                </option>
                             </select>
+
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                 <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                             </div>
@@ -224,22 +234,28 @@
                             </select>
                         </div>
 
-                        <!-- Mata Kuliah - FIXED: Added default option -->
+                        <!-- Mata Kuliah -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Mata Kuliah</label>
-                            <select th:field="*{mataKuliah}" class="w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
+                            <select name="mataKuliah" class="w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
                                 <option value="">-- Pilih Mata Kuliah --</option>
-                                <option th:each="mk : ${daftarMataKuliah}" th:value="${mk.kodeMK}" th:text="${mk.namaMK}">Mata Kuliah</option>
+                                <option th:each="mk : ${daftarMataKuliah}" th:value="${mk.kodeMK}" th:text="${mk.namaMK}"
+                                        th:selected="${kelas.mataKuliah != null and kelas.mataKuliah.kodeMK == mk.kodeMK}">Mata Kuliah</option>
                             </select>
                         </div>
 
                         <!-- Dosen Pengampu -->
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Dosen Pengampu</label>
-                            <select th:field="*{dosen}" class="w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:bg-white focus:border-green-400" required>
-                                <option value="">-- Pilih Dosen --</option>
-                                <option th:each="dp : ${daftarDosen}" th:value="${dp.id}" th:text="${dp.nama}">Dosen</option>
+                            <select name="dosen.id" id="dosenpengampu" class="..." >
+                                <option value="">-- Pilih Dosen Pengajar --</option>
+                                <option th:each="dp : ${daftarDosen}"
+                                        th:value="${dp.id}"
+                                        th:text="${dp.nama}"
+                                        th:selected="${kelas.dosen != null and kelas.dosen.id == dp.id}">
+                                </option>
                             </select>
+
                         </div>
 
                         <!-- Ruangan -->
@@ -305,7 +321,7 @@
                 </div>
             </div>
 
-            <!-- Tabel Kelas (Fakultas TIDAK ditampilkan) -->
+            <!-- Tabel Kelas (Sederhana seperti template pertama) -->
             <div class="bg-white shadow rounded-lg overflow-x-auto mt-6">
                 <table id="kelasTable" class="min-w-full text-sm bg-[#F3F1D9] bg-opacity-50 text-gray-800">
                     <thead class="bg-[#002E1F] text-white">
@@ -323,18 +339,26 @@
                     <tbody>
                     <tr th:each="kls, iterStat : ${kelasList}">
                         <td class="px-6 py-4" th:text="${iterStat.count}"></td>
-                        <td class="px-6 py-4" th:text="${kls.kodeKelas}"></td>
+                        <td class="px-6 py-4" th:text="${kls.kodeKelas ?: '-'}"></td>
                         <td class="px-6 py-4" th:text="${kls.namaKelas}"></td>
-                        <td class="px-6 py-4" th:text="${kls.mataKuliah.namaMK}"></td>
-                        <td class="px-6 py-4" th:text="${kls.dosen.nama}"></td>
-                        <td class="px-6 py-4" th:text="${kls.jumlahMahasiswa}"></td>
-                        <td class="px-6 py-4" th:text="${kls.ruangan}"></td>
+                        <td class="px-6 py-4" th:text="${kls.mataKuliah != null ? kls.mataKuliah.namaMK : 'Tidak ada'}"></td>
+                        <td class="px-6 py-4" th:text="${kls.dosen != null ? kls.dosen.nama : 'Belum ada dosen'}"></td>
+                        <td class="px-6 py-4" th:text="${kls.jumlahMahasiswa ?: 0}"></td>
+                        <td class="px-6 py-4" th:text="${kls.ruangan ?: '-'}"></td>
                         <td class="px-6 py-4">
                             <a th:href="@{'/admin/manajemen_kelas/edit/' + ${kls.id}}"
                                class="text-green-600 hover:underline mr-2">Edit</a>
                             <a th:href="@{'/admin/manajemen_kelas/' + ${kls.id}}"
                                class="text-red-600 hover:underline"
                                onclick="return confirm('Apakah anda yakin?')">Hapus</a>
+                        </td>
+                    </tr>
+
+                    <!-- Empty state -->
+                    <tr th:if="${kelasList == null or #lists.isEmpty(kelasList)}">
+                        <td colspan="8" class="px-6 py-8 text-center text-gray-500">
+                            <p class="text-lg font-medium">Belum ada kelas yang terdaftar</p>
+                            <p class="text-sm">Klik tombol "Tambah Kelas" untuk membuat kelas baru</p>
                         </td>
                     </tr>
                     </tbody>
@@ -355,6 +379,9 @@
             const query = searchInput.value.trim().toLowerCase();
 
             rows.forEach(row => {
+                // Skip empty state row
+                if (row.cells.length === 1) return;
+
                 const cells = Array.from(row.cells);
                 const matchFound = cells.some(cell =>
                     cell.textContent.toLowerCase().includes(query)
