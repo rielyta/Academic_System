@@ -51,7 +51,6 @@ public class AdminProfileController {
 
         existing.setNama(formPengguna.getNama());
 
-        // Hash password sebelum menyimpan
         existing.setKataSandi(passwordEncoder.encode(formPengguna.getKataSandi()) );
 
         userRepository.save(existing);

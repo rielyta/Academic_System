@@ -118,7 +118,7 @@ public class AdminKelasController {
                         .orElseThrow(() -> new IllegalArgumentException("Dosen tidak ditemukan"));
                 kelasForm.setDosen(dosen);
             } else {
-                kelasForm.setDosen(null); // jika tidak dipilih
+                kelasForm.setDosen(null);
             }
 
 
@@ -144,7 +144,7 @@ public class AdminKelasController {
 
             if (kelasForm.getDosen() != null && kelasForm.getDosen().getId() != null) {
                 Dosen dosen = dosenRepository.findById(kelasForm.getDosen().getId()).orElse(null);
-                kelasForm.setDosen(dosen); // replace transient instance with persistent
+                kelasForm.setDosen(dosen);
             }
 
 
@@ -230,7 +230,6 @@ public class AdminKelasController {
         try {
             Kelas existing = kelasRepository.findById(kelasForm.getId()).orElse(null);
             if (existing != null) {
-                // Manual conversion for MataKuliah
                 if (kodeMK != null && !kodeMK.trim().isEmpty()) {
                     MataKuliah mataKuliah = mataKuliahRepository.findById(kodeMK).orElse(null);
                     if (mataKuliah == null) {
@@ -257,12 +256,11 @@ public class AdminKelasController {
                     existing.setDosen(null);
                 }
 
-                // Update fields
                 existing.setKodeKelas(kelasForm.getKodeKelas());
                 existing.setNamaKelas(kelasForm.getNamaKelas());
                 existing.setFakultas(kelasForm.getFakultas());
                 existing.setMataKuliah(kelasForm.getMataKuliah());
-                existing.setDosen(kelasForm.getDosen()); // Can be null
+                existing.setDosen(kelasForm.getDosen());
                 existing.setRuangan(kelasForm.getRuangan());
                 existing.setSemester(kelasForm.getSemester());
                 existing.setTahunAjar(kelasForm.getTahunAjar());
@@ -272,9 +270,9 @@ public class AdminKelasController {
 
                 if (kelasForm.getDosen() != null && kelasForm.getDosen().getId() != null) {
                     Dosen dosen = dosenRepository.findById(kelasForm.getDosen().getId()).orElse(null);
-                    existing.setDosen(dosen); // replace transient instance with persistent
+                    existing.setDosen(dosen);
                 } else {
-                    existing.setDosen(null); // clear dosen jika tidak diisi
+                    existing.setDosen(null);
                 }
 
 

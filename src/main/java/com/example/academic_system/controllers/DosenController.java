@@ -125,7 +125,7 @@ public class DosenController {
             Dosen dosen = dosenService.getDosenByEmail(email);
             model.addAttribute("dosen", dosen);
         }
-        return "profil-dosen"; // nama file HTML template
+        return "profil-dosen";
     }
 
     @GetMapping("/kelas_dosen")
@@ -170,7 +170,6 @@ public class DosenController {
             String email = authentication.getName();
             Dosen dosen = dosenService.getDosenByEmail(email);
 
-            // Ambil kelas yang belum memiliki dosen atau bisa diambil
             List<Kelas> kelasAvailable = kelasService.findAvailableKelasForDosen(dosen);
 
             model.addAttribute("dosen", dosen);
@@ -188,7 +187,7 @@ public class DosenController {
             @RequestParam(required = false) String tahunAjar,
             @RequestParam(required = false) String semester,
             @RequestParam(required = false) String namaKelas,
-            @RequestParam(required = false) String _t, // timestamp parameter untuk prevent caching
+            @RequestParam(required = false) String _t,
             Authentication authentication) {
 
         try {
@@ -360,7 +359,6 @@ public class DosenController {
             model.addAttribute("daftarFakultas", kelasService.findDistinctFakultas());
             model.addAttribute("daftarTahunAjar", kelasService.findDistinctTahunAjar());
 
-            // Preserve filter values
             model.addAttribute("selectedFakultas", fakultas);
             model.addAttribute("selectedTahunAjar", tahunAjar);
             model.addAttribute("selectedSemester", semester);

@@ -54,18 +54,6 @@
             font-size: 12px;
             color: #20452F;
         }
-        .auto-refresh-indicator.active {
-            background: rgba(34, 197, 94, 0.1);
-            color: #059669;
-        }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            max-width: 400px;
-            animation: slideIn 0.3s ease-out;
-        }
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -84,7 +72,7 @@
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#072D17] text-white">
         <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
             <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
-            <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
         </div>
         <nav class="px-4 py-4 space-y-2">
             <a href="/dosen/dashboard_dosen" class="hover:bg-green-800 rounded-md px-3 py-2 flex items-center gap-2 block">
@@ -118,7 +106,6 @@
         </div>
     </aside>
 
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="bg-white p-4 rounded-lg flex items-center gap-3">
             <div class="loading-spinner"></div>
@@ -126,15 +113,12 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="flex-1 ml-64 bg-[#F3F1D9]">
-        <!-- Header -->
         <header class="bg-[rgba(255,251,223,0.9)] shadow-sm border-b border-[#2C7148]">
             <div class="flex items-center justify-between px-6 py-4">
                 <div class="flex items-center gap-4">
                     <i class="fas fa-search text-[#20452F] text-xl"></i>
                     <h1 class="text-xl font-semibold text-[rgba(0,0,0,0.8)]">Cari Kelas Tersedia</h1>
-                    <!-- Auto Refresh Indicator -->
                     <div class="auto-refresh-indicator" id="autoRefreshIndicator">
                         <i class="fas fa-sync-alt" id="refreshIcon"></i>
                         <span id="refreshStatus">Auto refresh: ON</span>
@@ -142,11 +126,9 @@
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <!-- Manual Refresh Button -->
                     <button onclick="refreshKelasData()" class="text-[#20452F] hover:text-[#2C7148] transition-colors" title="Refresh Manual">
                         <i class="fas fa-redo-alt"></i>
                     </button>
-                    <!-- Auto Refresh Toggle -->
                     <button onclick="toggleAutoRefresh()" class="text-[#20452F] hover:text-[#2C7148] transition-colors" title="Toggle Auto Refresh">
                         <i class="fas fa-toggle-on" id="toggleIcon"></i>
                     </button>
@@ -157,9 +139,7 @@
             </div>
         </header>
 
-        <!-- Content -->
         <main class="p-6">
-            <!-- Flash Messages -->
             <div id="flashMessages">
                 <div th:if="${sukses}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                     <span th:text="${sukses}"></span>
@@ -169,7 +149,6 @@
                 </div>
             </div>
 
-            <!-- Filter Section -->
             <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 mb-6 border border-[#2C7148]">
                 <h2 class="text-lg font-semibold text-[rgba(0,0,0,0.8)] mb-4">
                     <i class="fas fa-filter text-[#20452F] mr-2"></i>
@@ -225,7 +204,6 @@
                 </form>
             </div>
 
-            <!-- Available Classes Grid -->
             <div class="bg-[rgba(255,251,223,0.9)] rounded-lg shadow-sm p-6 border border-[#2C7148]">
                 <h2 class="text-lg font-semibold text-[rgba(0,0,0,0.8)] mb-4">
                     <i class="fas fa-list text-[#20452F] mr-2"></i>
@@ -238,16 +216,13 @@
                     </span>
                 </h2>
 
-                <!-- Container untuk kelas -->
                 <div id="kelasContainer">
-                    <!-- Jika tidak ada kelas tersedia -->
                     <div th:if="${kelasAvailable == null or #lists.isEmpty(kelasAvailable)}" class="text-center py-8" id="emptyState">
                         <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
                         <p class="text-gray-600">Tidak ada kelas tersedia yang sesuai dengan filter Anda</p>
                         <p class="text-sm text-gray-500 mt-2">Coba ubah kriteria pencarian atau hapus filter</p>
                     </div>
 
-                    <!-- Grid Kelas Tersedia -->
                     <div th:if="${kelasAvailable != null and not #lists.isEmpty(kelasAvailable)}"
                          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="kelasGrid">
                         <div th:each="kelas : ${kelasAvailable}"
@@ -264,7 +239,6 @@
                                         </h3>
                                         <p class="text-xs text-[#514D4D]" th:text="${kelas.namaKelas}">Nama Kelas</p>
                                     </div>
-                                    <!-- Status Badge -->
                                     <span th:if="${kelas.dosen == null}"
                                           class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
                                         Tersedia
@@ -298,7 +272,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Action Button -->
                                 <div class="flex gap-2">
                                     <form th:if="${kelas.dosen == null}"
                                           th:action="@{/dosen/enroll_kelas/{kelasId}(kelasId=${kelas.id})}"
@@ -353,24 +326,19 @@
     let lastUpdateTimestamp = Date.now();
     let currentKelasData = [];
 
-    // Store dosen ID from template
     const dosenId = /*[[${dosen?.id}]]*/ null;
 
-    // Initialize auto refresh when page loads
     document.addEventListener('DOMContentLoaded', function() {
         updateLastUpdatedTime();
         startAutoRefresh();
 
-        // Store initial kelas data
         currentKelasData = getCurrentKelasIds();
 
-        // Add event listeners for filter changes
         document.getElementById('filterForm').addEventListener('submit', function(e) {
             e.preventDefault();
             applyFilter();
         });
 
-        // Add event listeners for filter inputs to auto-apply
         const filterInputs = ['fakultasFilter', 'tahunAjarFilter', 'semesterFilter'];
         filterInputs.forEach(id => {
             document.getElementById(id).addEventListener('change', function() {
@@ -378,7 +346,6 @@
             });
         });
 
-        // Add debounced search for nama kelas
         let searchTimeout;
         document.getElementById('namaKelasFilter').addEventListener('input', function() {
             clearTimeout(searchTimeout);
@@ -463,21 +430,17 @@
     function refreshKelasData() {
         showLoading();
 
-        // Get current filter values
         const formData = new FormData(document.getElementById('filterForm'));
         const params = new URLSearchParams();
 
-        // Add non-empty filter values to params
         for (let [key, value] of formData.entries()) {
             if (value.trim() !== '') {
                 params.append(key, value);
             }
         }
 
-        // Add timestamp to prevent caching
         params.append('_t', Date.now());
 
-        // Make AJAX request
         fetch(`/dosen/cari_kelas/api?${params.toString()}`, {
             method: 'GET',
             headers: {
@@ -497,10 +460,8 @@
                     updateKelasCount(data.kelasAvailable.length);
                     updateLastUpdatedTime();
 
-                    // Check for new classes
                     checkForNewClasses(data.kelasAvailable);
 
-                    // Update current data
                     currentKelasData = data.kelasAvailable.map(k => k.id.toString());
                 } else {
                     showNotification(data.error || 'Gagal memuat data', 'error');
@@ -538,7 +499,6 @@
         }
     }
 
-    // AJAX functions untuk enroll/keluar kelas
     function enrollKelasAjax(event, kelasId) {
         event.preventDefault();
 
@@ -557,7 +517,7 @@
             .then(data => {
                 if (data.success) {
                     showNotification(data.message, 'success');
-                    refreshKelasData(); // Refresh untuk update tampilan
+                    refreshKelasData();
                 } else {
                     showNotification(data.error, 'error');
                 }

@@ -52,7 +52,6 @@ public class MhsProfileController {
                 return "redirect:/mahasiswa/profil_mahasiswa";
             }
 
-            // Validasi input
             if (formMahasiswa.getNama() == null || formMahasiswa.getNama().trim().isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "Nama tidak boleh kosong.");
                 return "redirect:/mahasiswa/profil_mahasiswa";
@@ -75,7 +74,6 @@ public class MhsProfileController {
             String newDetails = String.format("Sesudah: Nama = %s, NIM = %s, Kata Sandi = [PROTECTED]",
                     existing.getNama(), existing.getNim());
 
-            // Log activity
             if (activityLogService != null) {
                 activityLogService.log("Mahasiswa", existing.getId().toString(), "UPDATE",
                         oldDetails + " -> " + newDetails, principal.getName());

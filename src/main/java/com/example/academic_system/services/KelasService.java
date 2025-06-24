@@ -177,7 +177,6 @@ public class KelasService {
         return kelasRepository.findByDosen(dosen);
     }
 
-    // NEW: Find kelas yang tersedia untuk dosen (belum memiliki dosen atau dapat diambil)
     public List<Kelas> findAvailableKelasForDosen(Dosen dosen) {
         try {
             System.out.println("=== Finding available kelas for dosen: " + dosen.getNama() + " (NIP: " + dosen.getNip() + ") ===");
@@ -196,7 +195,6 @@ public class KelasService {
             return new ArrayList<>();
         }
     }
-
 
     public List<Kelas> findAvailableKelasWithFilters(Dosen dosen, String fakultas,
                                                      String tahunAjar, String semester, String namaKelas) {

@@ -89,7 +89,7 @@ public class AdminMataKuliahController {
 
             existing.setNamaMK(mataKuliahForm.getNamaMK());
             existing.setSks(mataKuliahForm.getSks());
-            existing.setKodeMK(mataKuliahForm.getKodeMK()); // optional, redundant
+            existing.setKodeMK(mataKuliahForm.getKodeMK());
             existing.setTipeMatakuliah(mataKuliahForm.getTipeMatakuliah());
 
             mataKuliahRepository.save(existing);

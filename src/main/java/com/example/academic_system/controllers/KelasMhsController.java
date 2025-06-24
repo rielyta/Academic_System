@@ -75,7 +75,6 @@ public class KelasMhsController {
         }
     }
 
-    // Helper method to check if any filter is applied
     private boolean hasAnyFilter(String... filters) {
         for (String filter : filters) {
             if (filter != null && !filter.trim().isEmpty()) {

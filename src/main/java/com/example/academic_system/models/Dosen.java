@@ -14,34 +14,18 @@ public class Dosen extends Pengguna {
 
     private String fakultas;
 
-    private String nidn;
-    private String noTelepon;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "dosen")
-    private List<Kelas> kelasDiajar;
-
     public Dosen() {}
 
     public Dosen(String nama, String email, String password) {
         super(nama, email, password);
     }
 
-    // Getters and Setters
     public String getNip() { return nip; }
     public void setNip(String nip) { this.nip = nip; }
 
     public String getFakultas() { return fakultas; }
     public void setFakultas(String fakultas) { this.fakultas = fakultas; }
 
-    public String getNidn() { return nidn; }
-    public void setNidn(String nidn) { this.nidn = nidn; }
-
-    public String getNoTelepon() { return noTelepon; }
-    public void setNoTelepon(String noTelepon) { this.noTelepon = noTelepon; }
-
-    public List<Kelas> getKelasDiajar() { return kelasDiajar; }
-    public void setKelasDiajar(List<Kelas> kelasDiajar) { this.kelasDiajar = kelasDiajar; }
 
     @Override
     public String toString() {
@@ -51,8 +35,6 @@ public class Dosen extends Pengguna {
                 ", nip='" + nip + '\'' +
                 ", email='" + getEmail() + '\'' +
                 ", fakultas='" + fakultas + '\'' +
-                ", nidn='" + nidn + '\'' +
-                ", noTelepon='" + noTelepon + '\'' +
                 '}';
     }
 }

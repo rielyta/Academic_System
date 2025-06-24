@@ -69,19 +69,4 @@ public interface KelasRepository extends JpaRepository<Kelas, Long> {
                                               @Param("semester") String semester,
                                               @Param("namaKelas") String namaKelas,
                                               @Param("semesterInt") Integer semesterInt);
-
-    @Query("SELECT k FROM Kelas k WHERE k.dosen IS NULL " +
-            "ORDER BY k.tahunAjar DESC, k.semester ASC, k.namaKelas ASC")
-    List<Kelas> findKelasWithoutDosen();
-
-    @Query("SELECT COUNT(k) > 0 FROM Kelas k WHERE k.id = :kelasId AND " +
-            "(k.dosen IS NULL OR k.dosen.nip = :dosenNip)")
-    boolean isKelasAvailableForDosen(@Param("kelasId") Long kelasId, @Param("dosenNip") String dosenNip);
-
-    @Query("SELECT k FROM Kelas k WHERE " +
-            "(k.dosen IS NULL OR k.dosen.nip = :dosenNip) AND " +
-            "k.mataKuliah.kodeMK = :mataKuliahKode " +
-            "ORDER BY k.tahunAjar DESC, k.semester ASC")
-    List<Kelas> findAvailableKelasByMataKuliah(@Param("dosenNip") String dosenNip,
-                                               @Param("mataKuliahKode") String mataKuliahKode);
 }

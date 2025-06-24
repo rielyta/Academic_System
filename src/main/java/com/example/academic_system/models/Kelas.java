@@ -60,7 +60,6 @@ public class Kelas {
     @Enumerated(EnumType.STRING)
     private DayOfWeek hariKelas;
 
-    // Constructors
     public Kelas() {}
 
     public Kelas(String kodeKelas, String namaKelas, MataKuliah mataKuliah,
@@ -92,9 +91,6 @@ public class Kelas {
     public void setDosen(Dosen dosen) { this.dosen = dosen; }
 
     public List<Mahasiswa> getMahasiswaTerdaftar() { return mahasiswaTerdaftar; }
-    public void setMahasiswaTerdaftar(List<Mahasiswa> mahasiswaTerdaftar) {
-        this.mahasiswaTerdaftar = mahasiswaTerdaftar;
-    }
 
     public int getJumlahMahasiswa() {
         return mahasiswaTerdaftar != null ? mahasiswaTerdaftar.size() : 0;
@@ -121,19 +117,6 @@ public class Kelas {
     @PostLoad
     public void initJumlahMahasiswa() {
         this.jumlahMahasiswa = this.mahasiswaTerdaftar != null ? this.mahasiswaTerdaftar.size() : 0;
-    }
-
-    // Helper methods
-    public boolean hasAssignedDosen() {
-        return this.dosen != null;
-    }
-
-    public String getDosenNama() {
-        return this.dosen != null ? this.dosen.getNama() : "Belum ada dosen";
-    }
-
-    public boolean isAvailableForDosen(String dosenNip) {
-        return this.dosen == null || (this.dosen != null && this.dosen.getNip().equals(dosenNip));
     }
 
     @Override

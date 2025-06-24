@@ -25,7 +25,7 @@
            :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
         <div class="flex flex-col px-6 py-6 items-center border-b border-[#20452F]">
             <p class="text-lg text-white font-bold font-medium text-center"> Learning Management System</p>
-            <i class="fas fa-graduation-cap text-2xl text-yellow-300 my-2 pt-5"></i>
+            <i class="fa-solid fa-school text-7xl text-yellow-300 my-2 pt-5" alt="Logo LMS"></i>
         </div>
         <nav class="px-4 py-4 space-y-2">
             <div class="bg-green-900 rounded-md px-3 py-2 flex items-center gap-2">
@@ -98,10 +98,6 @@
                     <div>
                         <p class="text-sm text-[#514D4D]">Email</p>
                         <p class="font-medium text-[rgba(0,0,0,0.8)]" th:text="${#authentication.name}"></p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-[#514D4D]">No. Telepon</p>
-                        <p class="font-medium text-[rgba(0,0,0,0.8)]" th:text="${dosen?.noTelepon ?: '-'}"></p>
                     </div>
                 </div>
             </div>
